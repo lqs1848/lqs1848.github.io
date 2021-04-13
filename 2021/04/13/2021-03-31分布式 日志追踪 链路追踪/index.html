@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.lqs1848.top","root":"/","images":"/images","scheme":"Muse","version":"8.3.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+  </script>
+<meta name="description" content="日志追踪码传递 MDC（Mapped Diagnostic Context，映射调试上下文）是 log4j 和 logback 提供的一种方便在多线程条件下记录日志的功能。MDC 可以看成是一个与当前线程绑定的Map，可以往其中添加键值对。   MDC内部使用的是ThreadLocal所以只有本线程才有效  slf4j MDC源码中 没有用 ThreadLocal 就是普通的Map 此处待研究">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="https://blog.lqs1848.top/2021/04/13/2021-03-31%E5%88%86%E5%B8%83%E5%BC%8F%20%E6%97%A5%E5%BF%97%E8%BF%BD%E8%B8%AA%20%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="日志追踪码传递 MDC（Mapped Diagnostic Context，映射调试上下文）是 log4j 和 logback 提供的一种方便在多线程条件下记录日志的功能。MDC 可以看成是一个与当前线程绑定的Map，可以往其中添加键值对。   MDC内部使用的是ThreadLocal所以只有本线程才有效  slf4j MDC源码中 没有用 ThreadLocal 就是普通的Map 此处待研究">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-04-13T03:14:54.742Z">
+<meta property="article:modified_time" content="2021-04-12T04:05:10.100Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.lqs1848.top/2021/04/13/2021-03-31%E5%88%86%E5%B8%83%E5%BC%8F%20%E6%97%A5%E5%BF%97%E8%BF%BD%E8%B8%AA%20%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+<title> | Hexo</title>
+  
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Hexo</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E8%BF%BD%E8%B8%AA%E7%A0%81%E4%BC%A0%E9%80%92"><span class="nav-number">1.</span> <span class="nav-text">日志追踪码传递</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%A8-%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%BD%93%E5%89%8D%E5%88%87%E6%8D%A2-%E6%9C%8D%E5%8A%A1%E4%BC%A0%E9%80%92%E8%BF%BD%E8%B8%AA%E7%A0%81"><span class="nav-number">2.</span> <span class="nav-text">在 微服务当前切换 服务传递追踪码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#gateway-%E7%BD%91%E5%85%B3%E4%BC%A0%E9%80%92"><span class="nav-number">2.1.</span> <span class="nav-text">gateway 网关传递</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Feign-Hystrix%E4%BC%A0%E9%80%92"><span class="nav-number">2.2.</span> <span class="nav-text">Feign Hystrix传递</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dubbo-%E4%BC%A0%E9%80%92"><span class="nav-number">2.3.</span> <span class="nav-text">dubbo 传递</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%88%B6%E5%AD%90%E7%BA%BF%E7%A8%8B%E4%BC%A0%E9%80%92"><span class="nav-number">2.4.</span> <span class="nav-text">父子线程传递</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E6%9B%BF%E6%8D%A2"><span class="nav-number">2.4.1.</span> <span class="nav-text">线程池替换</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Async"><span class="nav-number">2.5.</span> <span class="nav-text">@Async</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MQ%E4%BC%A0%E9%80%92"><span class="nav-number">2.6.</span> <span class="nav-text">MQ传递</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.lqs1848.top/2021/04/13/2021-03-31%E5%88%86%E5%B8%83%E5%BC%8F%20%E6%97%A5%E5%BF%97%E8%BF%BD%E8%B8%AA%20%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-04-13 11:14:54" itemprop="dateCreated datePublished" datetime="2021-04-13T11:14:54+08:00">2021-04-13</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-04-12 12:05:10" itemprop="dateModified" datetime="2021-04-12T12:05:10+08:00">2021-04-12</time>
+      </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="日志追踪码传递"><a href="#日志追踪码传递" class="headerlink" title="日志追踪码传递"></a>日志追踪码传递</h1><blockquote>
+<p>MDC（Mapped Diagnostic Context，映射调试上下文）是 log4j 和 logback 提供的一种方便在多线程条件下记录日志的功能。MDC 可以看成是一个与当前线程绑定的Map，可以往其中添加键值对。</p>
+</blockquote>
+<blockquote>
+<p>MDC内部使用的是ThreadLocal所以只有本线程才有效</p>
+</blockquote>
+<p>slf4j MDC源码中 没有用 ThreadLocal 就是普通的Map 此处待研究 </p>
+<p>slf4j 中的MDC实现的是 静态单个Map 怎么做到不同线程不同实例</p>
+<h1 id="在-微服务当前切换-服务传递追踪码"><a href="#在-微服务当前切换-服务传递追踪码" class="headerlink" title="在 微服务当前切换 服务传递追踪码"></a>在 微服务当前切换 服务传递追踪码</h1><h2 id="gateway-网关传递"><a href="#gateway-网关传递" class="headerlink" title="gateway 网关传递"></a>gateway 网关传递</h2><p>直接在转发的请求头中携带即可</p>
+<h2 id="Feign-Hystrix传递"><a href="#Feign-Hystrix传递" class="headerlink" title="Feign Hystrix传递"></a>Feign Hystrix传递</h2><p>网上的写法都是介绍 HystrixRequestVariableDefault </p>
+<blockquote>
+<p>feign 如果有用 hystrix 传递时有涉及到跨线程 需要使用 HystrixRequestVariableDefault 传递</p>
+</blockquote>
+<p>不过太麻烦了 我用的 重写 HystrixConcurrencyStrategy 去实现</p>
+<p>重写 wrapCallable 方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">Callable&lt;T&gt; <span class="title">wrapCallable</span><span class="params">(Callable&lt;T&gt; callable)</span> </span>&#123;</span><br><span class="line">    	<span class="comment">//TransmittableThreadLocal修饰原有Callable</span></span><br><span class="line">       <span class="keyword">return</span> TtlCallable.get(callable);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>还需要按最后 去替换线程池 </p>
+<p>和 在Configuration配置自定义 HystrixConcurrencyStrategy 替换默认的 HystrixConcurrencyStrategyDefault</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HystrixConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> HystrixConcurrencyStrategy <span class="title">requestContextHystrixConcurrencyStrategy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> MyHystrixConcurrencyStrategy();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>此处参考了 <a target="_blank" rel="noopener" href="https://shanhy.blog.csdn.net/article/details/108668952">https://shanhy.blog.csdn.net/article/details/108668952</a></p>
+<h2 id="dubbo-传递"><a href="#dubbo-传递" class="headerlink" title="dubbo 传递"></a>dubbo 传递</h2><p>带隐藏参数即可 在RpcContext 中携带</p>
+<h2 id="父子线程传递"><a href="#父子线程传递" class="headerlink" title="父子线程传递"></a>父子线程传递</h2><p>网上的方法都是 </p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://yanglinwei.blog.csdn.net/article/details/113503577">https://yanglinwei.blog.csdn.net/article/details/113503577</a></p>
+<p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000020083061">https://segmentfault.com/a/1190000020083061</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904128351567885">https://juejin.cn/post/6844904128351567885</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/zlt2000/article/details/99641821">https://blog.csdn.net/zlt2000/article/details/99641821</a></p>
+</blockquote>
+<p>内容都一样也不知道是谁抄谁的</p>
+<p>其中最重要的是第一行</p>
+<blockquote>
+<p>package org.slf4j;</p>
+</blockquote>
+<p>要覆盖掉 slf4j 中的MDCAdapter</p>
+<blockquote>
+<p>MDC.mdcAdapter = mdcAdapter;</p>
+</blockquote>
+<p>这个根本就不重要</p>
+<p>只要和 logback 一样实现 把 org.slf4j.impl 实现了就行 重写 StaticMDCBinder 即可</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StaticMDCBinder</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> StaticMDCBinder SINGLETON = <span class="keyword">new</span> StaticMDCBinder();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">StaticMDCBinder</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> MDCAdapter <span class="title">getMDCA</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//这里替换成功自己的自定义的MDC</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> MyMDCAdapter();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getMDCAdapterClassStr</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> MysdMDCAdapter.class.getName();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="线程池替换"><a href="#线程池替换" class="headerlink" title="线程池替换"></a>线程池替换</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 线程池配置</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadPoolConfig</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">// 核心线程池大小</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> corePoolSize = <span class="number">8</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 最大可创建的线程数</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> maxPoolSize = <span class="number">50</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 队列最大长度</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> queueCapacity = <span class="number">1000</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 线程池维护线程所允许的空闲时间</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> keepAliveSeconds = <span class="number">180</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean(name = &quot;threadPoolTaskExecutor&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ThreadPoolTaskExecutor <span class="title">threadPoolTaskExecutor</span><span class="params">()</span></span>&#123;</span><br><span class="line">    	MyThreadPoolTaskExecutor executor = <span class="keyword">new</span> MyThreadPoolTaskExecutor();</span><br><span class="line">        executor.setMaxPoolSize(maxPoolSize);</span><br><span class="line">        executor.setCorePoolSize(corePoolSize);</span><br><span class="line">        executor.setQueueCapacity(queueCapacity);</span><br><span class="line">        executor.setKeepAliveSeconds(keepAliveSeconds);</span><br><span class="line">        <span class="comment">// 线程池对拒绝任务(无线程可用)的处理策略</span></span><br><span class="line">        executor.setRejectedExecutionHandler(<span class="keyword">new</span> ThreadPoolExecutor.CallerRunsPolicy());</span><br><span class="line">        <span class="keyword">return</span> executor;</span><br><span class="line">    &#125;<span class="comment">//method</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">	@Bean</span></span><br><span class="line"><span class="comment">	public Executor taskExecutor() &#123;</span></span><br><span class="line"><span class="comment">		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();</span></span><br><span class="line"><span class="comment">		executor.setMaxPoolSize(maxPoolSize);</span></span><br><span class="line"><span class="comment">		executor.setCorePoolSize(corePoolSize);</span></span><br><span class="line"><span class="comment">		executor.setQueueCapacity(queueCapacity);</span></span><br><span class="line"><span class="comment">		executor.setKeepAliveSeconds(keepAliveSeconds);</span></span><br><span class="line"><span class="comment">		// 线程池对拒绝任务(无线程可用)的处理策略</span></span><br><span class="line"><span class="comment">		executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());</span></span><br><span class="line"><span class="comment">		return TtlExecutors.getTtlExecutor(executor);</span></span><br><span class="line"><span class="comment">	&#125;//method</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 执行周期性或定时任务</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean(name = &quot;scheduledExecutorService&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> ScheduledExecutorService <span class="title">scheduledExecutorService</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">    	ScheduledExecutorService scheduledExecutorService = <span class="keyword">new</span> ScheduledThreadPoolExecutor(corePoolSize,</span><br><span class="line">                <span class="keyword">new</span> BasicThreadFactory.Builder().namingPattern(<span class="string">&quot;schedule-pool-%d&quot;</span>).daemon(<span class="keyword">true</span>).build())</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">afterExecute</span><span class="params">(Runnable r, Throwable t)</span></span></span><br><span class="line"><span class="function">            </span>&#123;</span><br><span class="line">                <span class="keyword">super</span>.afterExecute(r, t);</span><br><span class="line">                Threads.printException(r, t);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> TtlExecutors.getTtlScheduledExecutorService(scheduledExecutorService);</span><br><span class="line">    &#125;<span class="comment">//method</span></span><br><span class="line">&#125;<span class="comment">//class</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Async"><a href="#Async" class="headerlink" title="@Async"></a>@Async</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableAsync</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AsyncConfig</span> <span class="keyword">extends</span> <span class="title">AsyncConfigurerSupport</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> ThreadPoolTaskExecutor threadPoolTaskExecutor;</span><br><span class="line">    </span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> Executor <span class="title">getAsyncExecutor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//返回你替换过的 executor</span></span><br><span class="line">        <span class="comment">//或者用默认线程池 然后设置 TaskDecorator</span></span><br><span class="line">		<span class="keyword">return</span> threadPoolTaskExecutor;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="MQ传递"><a href="#MQ传递" class="headerlink" title="MQ传递"></a>MQ传递</h2><p>我的mq调用都是用的 json格式数据</p>
+<p>传输数据时携带上 追踪码即可</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>跨线程</p>
+<p>使用 阿里的 TransmittableThreadLocal </p>
+<p>把有提供 回调修饰的方法用 TransmittableThreadLocal提供的工具修饰一下</p>
+<p>ThreadLocal&lt;&gt;  替换为 TransmittableThreadLocal&lt;&gt;</p>
+<p>再把 所有使用的线程池 换成自己的线程池即可</p>
+<p>替换线程池 和 修饰 Callable/Runnable 二者实现其一即可</p>
+<p>Hystrix的线程池我就没有替换 而是修饰了 Callable</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/11/30/2020-11-30%20%20Request%E5%A4%9A%E6%AC%A1%E8%AF%BB%E5%8F%96%E7%9A%84%E9%97%AE%E9%A2%98%20-%20%E5%89%AF%E6%9C%AC/" rel="prev" title="request多次读取">
+                  <i class="fa fa-chevron-left"></i> request多次读取
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/04/13/2021-01-27%20%20RequestBody%E8%AF%BB%E5%8F%96/" rel="next" title="">
+                   <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.lqs1848.top","root":"/","images":"/images","scheme":"Muse","version":"8.3.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+  </script>
+<meta name="description" content="根据 https:&#x2F;&#x2F;www.52pojie.cn&#x2F;thread-622023-1-1.html 做了一些改进 帖子里面没有具体代码 没有具体实现 QAQ 还要求在ubuntu下反编译 实际操作了一下,要求在ubuntu环境下主要是因为 windows 目录不区分大小写 Allatori 都是 iIIii 大小写的i混合的文件名 那用 zip操作即可 具体流程为: zip 读取Allatori.j">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sql Group By">
+<meta property="og:url" content="https://blog.lqs1848.top/2020/11/30/2021-01-18%20Allatori%E7%A0%B4%E8%A7%A3/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="根据 https:&#x2F;&#x2F;www.52pojie.cn&#x2F;thread-622023-1-1.html 做了一些改进 帖子里面没有具体代码 没有具体实现 QAQ 还要求在ubuntu下反编译 实际操作了一下,要求在ubuntu环境下主要是因为 windows 目录不区分大小写 Allatori 都是 iIIii 大小写的i混合的文件名 那用 zip操作即可 具体流程为: zip 读取Allatori.j">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-11-29T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-01-19T03:06:56.427Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Java Spring RequestBody">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.lqs1848.top/2020/11/30/2021-01-18%20Allatori%E7%A0%B4%E8%A7%A3/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+<title>Sql Group By | Hexo</title>
+  
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Hexo</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.lqs1848.top/2020/11/30/2021-01-18%20Allatori%E7%A0%B4%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Sql Group By
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2020-11-30 00:00:00" itemprop="dateCreated datePublished" datetime="2020-11-30T00:00:00+08:00">2020-11-30</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-01-19 11:06:56" itemprop="dateModified" datetime="2021-01-19T11:06:56+08:00">2021-01-19</time>
+      </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>根据 <a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-622023-1-1.html">https://www.52pojie.cn/thread-622023-1-1.html</a> 做了一些改进</p>
+<p>帖子里面没有具体代码 没有具体实现 QAQ</p>
+<p>还要求在ubuntu下反编译</p>
+<p>实际操作了一下,要求在ubuntu环境下主要是因为 windows 目录不区分大小写 <strong>Allatori</strong> 都是 iIIii 大小写的i混合的文件名</p>
+<p>那用 zip操作即可</p>
+<p>具体流程为:</p>
+<p>zip 读取<strong>Allatori</strong>.jar 找到所有的class</p>
+<p>使用 javassist 读取class的字节码</p>
+<p>判断这个类是否有 THIS_IS_DEMO_VERSION_NOT_FOR_COMMERCIAL_USE 方法</p>
+<p>然后替换这个方法的返回值</p>
+<p>String 返回值的解密全部条件都带上判断即可</p>
+<p>但是要移除</p>
+<p>System.out.println()</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">################################################</span><br><span class="line">#                                              #</span><br><span class="line">#        ## #   #    ## ### ### ##  ###        #</span><br><span class="line">#       # # #   #   # #  #  # # # #  #         #</span><br><span class="line">#       ### #   #   ###  #  # # ##   #         #</span><br><span class="line">#       # # ### ### # #  #  ### # # ###        #</span><br><span class="line">#                                              #</span><br><span class="line"># Obfuscation by Allatori Obfuscator v7.6 DEMO #</span><br><span class="line">#                                              #</span><br><span class="line">#           http:&#x2F;&#x2F;www.allatori.com            #</span><br><span class="line">#                                              #</span><br><span class="line">################################################</span><br></pre></td></tr></table></figure>
+
+
+
+<p>全部都操作完</p>
+<p>简单项目ok</p>
+<p>复杂项目加密出错…</p>
+<p>查看了一下加密信息</p>
+<p>很多的类出现了方法名称重复</p>
+<p>大概就是比较长的类</p>
+<p>原来是有一个 </p>
+<p>​    ALLATORIXDEMO方法</p>
+<p>​    还有一个随机英文大小写字符 的方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">m.insertAfter(&quot; if             ($_!&#x3D;null&amp;&amp;!$_.isEmpty()&amp;&amp;$_.equals(\&quot;ALLATORIxDEMO\&quot;)) &#123;\n&quot; +&quot;$_ &#x3D; \&quot;qtfreet00\&quot;;\n&quot; +&quot;&#125;&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>按 qtfreet00 的做法 过滤返回参数是 ALLATORIxDEMO 应该就是可行的 但是不知道为什么 一样被替换了</p>
+<p>打印方法入参进行对比</p>
+<p>第一行是参数 </p>
+<p>第二行是返回值</p>
+<p>依次交替</p>
+<blockquote>
+<p>(Lcom/mysd/common/utils/MapCache;Ljava/lang/Object;J)V<br>(Lcom/mysd/common/utils/MapCache;Ljava/lang/Object;J)V<br>c.m.common.utils.i&amp;<init>&amp;(Lcom/mysd/common/utils/MapCache;Ljava/lang/Object;J)V<br><init><br>(Lcom/mysd/common/utils/MapCache;Ljava/lang/Object;J)V<br>(Lcom/mysd/common/utils/MapCache;Ljava/lang/Object;J)V<br>c.m.common.utils.i&amp;ALLATORIxDEMO&amp;Lcom/mysd/common/utils/MapCache;<br>null<br>c.m.common.utils.MapCache&amp;AllatoriDecryptString&amp;(Ljava/lang/String;)Ljava/lang/String;<br>null<br>c.m.common.utils.MapCache&amp;keys&amp;()Ljava/util/Set;<br>keys<br>c.m.common.utils.MapCache&amp;put&amp;(Ljava/lang/Object;Ljava/lang/Object;J)Ljava/lang/Object;<br>put<br>c.m.common.utils.MapCache&amp;clear&amp;()V<br>clear<br>c.m.common.utils.MapCache&amp;get&amp;(Ljava/lang/Object;Lcom/mysd/common/utils/Callable;)Ljava/lang/Object;<br>get<br>c.m.common.utils.MapCache&amp;reSize&amp;()V<br>reSize<br>c.m.common.utils.MapCache&amp;get&amp;(Ljava/lang/Object;JLcom/mysd/common/utils/Callable;)Ljava/lang/Object;<br>get<br>c.m.common.utils.MapCache&amp;put&amp;(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;<br>put<br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;(Lcom/mysd/common/utils/i;)Z<br>null<br>c.m.common.utils.MapCache&amp;remove&amp;(Ljava/lang/Object;)V<br>remove<br>c.m.common.utils.MapCache&amp;get&amp;(Ljava/lang/Object;)Ljava/lang/Object;<br>get<br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;(Ljava/lang/String;)Ljava/lang/String;<br>ALLATORIxDEMO<br>c.m.common.utils.MapCache&amp;contains&amp;(Ljava/lang/String;)Z<br>contains<br>c.m.common.utils.MapCache&amp;size&amp;()I<br>size<br>c.m.common.utils.MapCache&amp;<init>&amp;()V<br><init><br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;Lcom/mysd/common/utils/MapEx;<br>null<br>c.m.common.utils.i&amp;ALLATORIxDEMO&amp;Lcom/mysd/common/utils/MapCache;<br>ALLATORIxDEMO<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.i&amp;<init>&amp;(Lcom/mysd/common/utils/MapCache;Ljava/lang/Object;J)V<br><init><br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;Lcom/mysd/common/utils/MapEx;<br>ALLATORIxDEMO<br>c.m.common.utils.MapCache&amp;AllatoriDecryptString&amp;(Ljava/lang/String;)Ljava/lang/String;<br>F<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;keys&amp;()Ljava/util/Set;<br>keys<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;put&amp;(Ljava/lang/Object;Ljava/lang/Object;J)Ljava/lang/Object;<br>put<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;clear&amp;()V<br>clear<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;get&amp;(Ljava/lang/Object;Lcom/mysd/common/utils/Callable;)Ljava/lang/Object;<br>get<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;reSize&amp;()V<br>reSize<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;get&amp;(Ljava/lang/Object;JLcom/mysd/common/utils/Callable;)Ljava/lang/Object;<br>get<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;put&amp;(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;<br>put<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;(Lcom/mysd/common/utils/i;)Z<br>ALLATORIxDEMO<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;remove&amp;(Ljava/lang/Object;)V<br>remove<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;get&amp;(Ljava/lang/Object;)Ljava/lang/Object;<br>get<br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;(Ljava/lang/String;)Ljava/lang/String;<br>ALLATORIxDEMO<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;contains&amp;(Ljava/lang/String;)Z<br>contains<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;size&amp;()I<br>size<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;<init>&amp;()V<br><init><br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;(Ljava/lang/String;)Ljava/lang/String;<br>ALLATORIxDEMO<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>com/mysd/common/utils/MapCache<br>null<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;AllatoriDecryptString&amp;(Ljava/lang/String;)Ljava/lang/String;<br>F<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>com/mysd/common/utils/MapCache<br>null<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;(Ljava/lang/String;)Ljava/lang/String;<br>ALLATORIxDEMO<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>com/mysd/common/utils/MapCache<br>null<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;(Ljava/lang/String;)Ljava/lang/String;<br>ALLATORIxDEMO<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>com/mysd/common/utils/MapCache<br>null<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;AllatoriDecryptString&amp;(Ljava/lang/String;)Ljava/lang/String;<br>F<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>com/mysd/common/utils/MapCache<br>null<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;AllatoriDecryptString&amp;(Ljava/lang/String;)Ljava/lang/String;<br>F<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;(Ljava/lang/String;)Ljava/lang/String;<br>ALLATORIxDEMO<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>com/mysd/common/utils/MapCache<br>null<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;(Ljava/lang/String;)Ljava/lang/String;<br>ALLATORIxDEMO<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>com/mysd/common/utils/MapCache<br>null<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;AllatoriDecryptString&amp;(Ljava/lang/String;)Ljava/lang/String;<br>F<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>com/mysd/common/utils/MapCache<br>null<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;(Ljava/lang/String;)Ljava/lang/String;<br>ALLATORIxDEMO<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>com/mysd/common/utils/MapCache<br>null<br>c.m.common.utils.i&amp;ALLATORIxDEMO&amp;Lcom/mysd/common/utils/MapCache;<br>ALLATORIxDEMO<br>Lcom/mysd/common/utils/MapCache;<br>null<br>(Lcom/mysd/common/utils/MapCache;Ljava/lang/Object;J)V<br>null<br>Lcom/mysd/common/utils/MapCache;<br>null<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>com/mysd/common/utils/MapCache<br>null<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;(Ljava/lang/String;)Ljava/lang/String;<br>ALLATORIxDEMO<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>com/mysd/common/utils/MapCache<br>null<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;(Ljava/lang/String;)Ljava/lang/String;<br>ALLATORIxDEMO<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>com/mysd/common/utils/MapCache<br>null<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;AllatoriDecryptString&amp;(Ljava/lang/String;)Ljava/lang/String;<br>F<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;(Ljava/lang/String;)Ljava/lang/String;<br>ALLATORIxDEMO<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>com/mysd/common/utils/MapCache<br>null<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;(Ljava/lang/String;)Ljava/lang/String;<br>ALLATORIxDEMO<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>com/mysd/common/utils/MapCache<br>null<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;(Ljava/lang/String;)Ljava/lang/String;<br>ALLATORIxDEMO<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>com/mysd/common/utils/MapCache<br>null<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;AllatoriDecryptString&amp;(Ljava/lang/String;)Ljava/lang/String;<br>F<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>com/mysd/common/utils/MapCache<br>null<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;AllatoriDecryptString&amp;(Ljava/lang/String;)Ljava/lang/String;<br>F<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>com/mysd/common/utils/MapCache<br>null<br>c.m.common.utils.i&amp;<init>&amp;(Lcom/mysd/common/utils/MapCache;Ljava/lang/Object;J)V<br><init><br>(Lcom/mysd/common/utils/MapCache;Ljava/lang/Object;J)V<br>null<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;reSize&amp;()V<br>reSize<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;put&amp;(Ljava/lang/Object;Ljava/lang/Object;J)Ljava/lang/Object;<br>put<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;get&amp;(Ljava/lang/Object;)Ljava/lang/Object;<br>get<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;(Lcom/mysd/common/utils/i;)Z<br>ALLATORIxDEMO<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;Lcom/mysd/common/utils/MapEx;<br>ALLATORIxDEMO<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;get&amp;(Ljava/lang/Object;JLcom/mysd/common/utils/Callable;)Ljava/lang/Object;<br>get<br>(Lcom/mysd/common/utils/MapCache;Ljava/lang/Object;J)V<br>null<br>Lcom/mysd/common/utils/MapCache;<br>null<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>com/mysd/common/utils/MapCache<br>null<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;(Ljava/lang/String;)Ljava/lang/String;<br>ALLATORIxDEMO<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>com/mysd/common/utils/MapCache<br>null<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;AllatoriDecryptString&amp;(Ljava/lang/String;)Ljava/lang/String;<br>F<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;(Ljava/lang/String;)Ljava/lang/String;<br>ALLATORIxDEMO<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>com/mysd/common/utils/MapCache<br>null<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;(Ljava/lang/String;)Ljava/lang/String;<br>ALLATORIxDEMO<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>com/mysd/common/utils/MapCache<br>null<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;(Ljava/lang/String;)Ljava/lang/String;<br>ALLATORIxDEMO<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>com/mysd/common/utils/MapCache<br>null<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>[INFO] Obfuscation completed. Writing log file…<br>c.m.common.utils.i&amp;ALLATORIxDEMO&amp;Lcom/mysd/common/utils/MapCache;<br>ALLATORIxDEMO<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache<br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;(Lcom/mysd/common/utils/i;)Z<br>ALLATORIxDEMO<br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;(Lcom/mysd/common/utils/i;)Z<br>“ s=”118” e=”118<br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;(Ljava/lang/String;)Ljava/lang/String;<br>ALLATORIxDEMO<br>c.m.common.utils.MapCache&amp;AllatoriDecryptString&amp;(Ljava/lang/String;)Ljava/lang/String;<br>F<br>c.m.common.utils.MapCache&amp;clear&amp;()V<br>clear<br>c.m.common.utils.MapCache&amp;clear&amp;()V<br>“ s=”103” e=”107<br>c.m.common.utils.MapCache&amp;contains&amp;(Ljava/lang/String;)Z<br>contains<br>c.m.common.utils.MapCache&amp;contains&amp;(Ljava/lang/String;)Z<br>“ s=”6” e=”6<br>c.m.common.utils.MapCache&amp;get&amp;(Ljava/lang/Object;)Ljava/lang/Object;<br>get<br>c.m.common.utils.MapCache&amp;get&amp;(Ljava/lang/Object;)Ljava/lang/Object;<br>“ s=”22” e=”233<br>c.m.common.utils.MapCache&amp;get&amp;(Ljava/lang/Object;JLcom/mysd/common/utils/Callable;)Ljava/lang/Object;<br>get<br>c.m.common.utils.MapCache&amp;get&amp;(Ljava/lang/Object;JLcom/mysd/common/utils/Callable;)Ljava/lang/Object;<br>“ s=”47” e=”224<br>c.m.common.utils.MapCache&amp;get&amp;(Ljava/lang/Object;Lcom/mysd/common/utils/Callable;)Ljava/lang/Object;<br>get<br>c.m.common.utils.MapCache&amp;get&amp;(Ljava/lang/Object;Lcom/mysd/common/utils/Callable;)Ljava/lang/Object;<br>“ s=”115” e=”115<br>c.m.common.utils.MapCache&amp;keys&amp;()Ljava/util/Set;<br>keys<br>c.m.common.utils.MapCache&amp;keys&amp;()Ljava/util/Set;<br>“ s=”72” e=”72<br>c.m.common.utils.MapCache&amp;put&amp;(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;<br>put<br>c.m.common.utils.MapCache&amp;put&amp;(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;<br>“ s=”3” e=”3<br>c.m.common.utils.MapCache&amp;put&amp;(Ljava/lang/Object;Ljava/lang/Object;J)Ljava/lang/Object;<br>put<br>c.m.common.utils.MapCache&amp;put&amp;(Ljava/lang/Object;Ljava/lang/Object;J)Ljava/lang/Object;<br>“ s=”112” e=”210<br>c.m.common.utils.MapCache&amp;reSize&amp;()V<br>reSize<br>c.m.common.utils.MapCache&amp;reSize&amp;()V<br>“ s=”40” e=”190<br>c.m.common.utils.MapCache&amp;remove&amp;(Ljava/lang/Object;)V<br>remove<br>c.m.common.utils.MapCache&amp;remove&amp;(Ljava/lang/Object;)V<br>“ s=”71” e=”209<br>c.m.common.utils.MapCache&amp;size&amp;()I<br>size<br>c.m.common.utils.MapCache&amp;size&amp;()I<br>“ s=”132” e=”230<br>c.m.common.utils.MapCache&amp;ALLATORIxDEMO&amp;Lcom/mysd/common/utils/MapEx;<br>ALLATORIxDEMO</p>
+</blockquote>
+<p>对比发现 入参带有 AllatoriDecryptString 的是返回 一个随机英文大小写字符</p>
+<p>修改判断代码 $_ 前面加上 $1.indexOf(&quot;AllatoriDecryptString&quot;)</p>
+<p>搞定收工</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java-Spring-RequestBody/" rel="tag"># Java Spring RequestBody</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/11/06/2020-11-06%20%20%E5%B5%8C%E5%A5%97%E4%BA%8B%E5%8A%A1%E7%9A%84%E9%97%AE%E9%A2%98/" rel="prev" title="Spring 事务嵌套的问题">
+                  <i class="fa fa-chevron-left"></i> Spring 事务嵌套的问题
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/11/30/2020-12-02%20%E4%BC%98%E5%8C%96SQL%20Group%20By/" rel="next" title="Sql Group By">
+                  Sql Group By <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
