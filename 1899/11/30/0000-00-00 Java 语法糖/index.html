@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+<a target="_blank" rel="noopener" href="https://github.com/lqs1848" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.lqs1848.top","root":"/","images":"/images","scheme":"Gemini","version":"8.3.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}};
+  </script>
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 语法糖">
+<meta property="og:url" content="https://blog.lqs1848.top/1899/11/30/0000-00-00%20Java%20%E8%AF%AD%E6%B3%95%E7%B3%96/index.html">
+<meta property="og:site_name" content="Chaos">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="1899-11-29T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-04-15T04:05:58.141Z">
+<meta property="article:author" content="lqs1848">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="语法糖">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.lqs1848.top/1899/11/30/0000-00-00%20Java%20%E8%AF%AD%E6%B3%95%E7%B3%96/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<title>Java 语法糖 | Chaos</title>
+  
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chaos" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Chaos</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Java-%E8%AF%AD%E6%B3%95%E7%B3%96"><span class="nav-number">1.</span> <span class="nav-text">Java 语法糖</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Java8"><span class="nav-number">1.1.</span> <span class="nav-text">Java8</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java9"><span class="nav-number">1.2.</span> <span class="nav-text">Java9</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%B9%E8%BF%9B%E7%9A%84-try-with-resources"><span class="nav-number">1.2.1.</span> <span class="nav-text">改进的 try-with-resources</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java10"><span class="nav-number">1.3.</span> <span class="nav-text">Java10</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#var-%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B%E6%8E%A8%E6%96%AD%EF%BC%88JEP-286%EF%BC%89"><span class="nav-number">1.3.1.</span> <span class="nav-text">var 局部变量类型推断（JEP 286）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java14"><span class="nav-number">1.4.</span> <span class="nav-text">Java14</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#instanceof-%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D"><span class="nav-number">1.4.1.</span> <span class="nav-text">instanceof 模式匹配        </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Records"><span class="nav-number">1.4.2.</span> <span class="nav-text">Records    </span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">lqs1848</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">28</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.lqs1848.top/1899/11/30/0000-00-00%20Java%20%E8%AF%AD%E6%B3%95%E7%B3%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="lqs1848">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chaos">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java 语法糖
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：1899-11-30 00:00:00" itemprop="dateCreated datePublished" datetime="1899-11-30T00:00:00+08:00">1899-11-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <span id="more"></span>
+
+<h1 id="Java-语法糖"><a href="#Java-语法糖" class="headerlink" title="Java 语法糖"></a><strong>Java 语法糖</strong></h1><p>[TOC]</p>
+<h2 id="Java8"><a href="#Java8" class="headerlink" title="Java8"></a>Java8</h2><p>​    <a target="_blank" rel="noopener" href="https://www.runoob.com/java/java8-new-features.html">https://www.runoob.com/java/java8-new-features.html</a></p>
+<h2 id="Java9"><a href="#Java9" class="headerlink" title="Java9"></a>Java9</h2><p>​    <a target="_blank" rel="noopener" href="https://www.runoob.com/java/java9-new-features.html">https://www.runoob.com/java/java9-new-features.html</a></p>
+<h3 id="改进的-try-with-resources"><a href="#改进的-try-with-resources" class="headerlink" title="改进的 try-with-resources"></a>改进的 try-with-resources</h3><p>try-with-resources 是 JDK 7 中一个新的异常处理机制，它能够很容易地关闭在 try-catch 语句块中使用的资源。所谓的资源（resource）是指在程序完成后，必须关闭的对象。try-with-resources 语句确保了每个资源在语句结束时关闭。所有实现了 java.lang.AutoCloseable 接口（其中，它包括实现了 java.io.Closeable 的所有对象），可以使用作为资源。</p>
+<p>try-with-resources 声明在 JDK 9 已得到改进。如果你已经有一个资源是 final 或等效于 final 变量,您可以在 try-with-resources 语句中使用该变量，而无需在 try-with-resources 语句中声明一个新变量。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">BufferedReader br = <span class="keyword">new</span> BufferedReader(inputString);</span><br><span class="line"><span class="keyword">try</span> (BufferedReader br1 = br) &#123;</span><br><span class="line">	<span class="keyword">return</span> br1.readLine();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">BufferedReader br = <span class="keyword">new</span> BufferedReader(inputString);</span><br><span class="line"><span class="keyword">try</span> (br) &#123;</span><br><span class="line">	<span class="keyword">return</span> br.readLine();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Java10"><a href="#Java10" class="headerlink" title="Java10"></a>Java10</h2><h3 id="var-局部变量类型推断（JEP-286）"><a href="#var-局部变量类型推断（JEP-286）" class="headerlink" title="var 局部变量类型推断（JEP 286）"></a>var 局部变量类型推断（JEP 286）</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> numbers = List.of(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>); <span class="comment">// inferred value ArrayList&lt;String&gt;</span></span><br><span class="line"><span class="comment">// Index of Enhanced For Loop</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> number : numbers) &#123;</span><br><span class="line">    System.out.println(number);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Local variable declared in a loop</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; numbers.size(); i++) &#123;</span><br><span class="line">    System.out.println(numbers.get(i));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    </p>
+<h2 id="Java14"><a href="#Java14" class="headerlink" title="Java14"></a><strong>Java14</strong></h2><h3 id="instanceof-模式匹配"><a href="#instanceof-模式匹配" class="headerlink" title="instanceof 模式匹配        "></a><strong>instanceof 模式匹配</strong>        <!--14预览 15正式--></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">demo</span><span class="params">(Object obj)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> String) &#123;            	<span class="comment">// comparison</span></span><br><span class="line">        String s = (String) obj;              	<span class="comment">// New variable &amp; explicit casting</span></span><br><span class="line">        System.out.println(s.toUpperCase());  	<span class="comment">// access member</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>简写后</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">demo</span><span class="params">(Object obj)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> String s) &#123;            	<span class="comment">// comparison</span></span><br><span class="line">        System.out.println(s.toUpperCase());  	<span class="comment">// access member</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> (obj <span class="keyword">instanceof</span> Keyboard other &amp;&amp; </span><br><span class="line">		model.equals(other.model) &amp;&amp; </span><br><span class="line">		price == other.price);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h3 id="Records"><a href="#Records" class="headerlink" title="Records    "></a><strong>Records</strong>    <!--预览--></h3><p>我们先来看看现在我们如何声明一个数据类：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">Range</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    private final int min;</span><br><span class="line">    private final int max;</span><br><span class="line"></span><br><span class="line">    public <span class="function"><span class="title">Range</span>(<span class="params">int min, int max</span>)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.min = min;</span><br><span class="line">        <span class="built_in">this</span>.max = max;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int <span class="function"><span class="title">getMin</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> min;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int <span class="function"><span class="title">getMax</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> max;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean <span class="function"><span class="title">equals</span>(<span class="params"><span class="built_in">Object</span> o</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span> == o) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">if</span> (o == <span class="literal">null</span> || getClass() != o.getClass()) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        Range range = (Range) o;</span><br><span class="line">        <span class="keyword">return</span> min == range.min &amp;&amp; max == range.max;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int <span class="function"><span class="title">hashCode</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> Objects.hash(min, max);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public <span class="built_in">String</span> <span class="function"><span class="title">toString</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Range&#123;&quot;</span> +</span><br><span class="line">          <span class="string">&quot;min=&quot;</span> + min +</span><br><span class="line">          <span class="string">&quot;, max=&quot;</span> + max +</span><br><span class="line">          <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们来看看这个类的特点：</p>
+<ul>
+<li>没有无参构造方法，需要初始化时对成员变量赋值</li>
+<li>成员变量只有 <strong>getter</strong> 方法。</li>
+<li>覆写了 超类 <code>Object</code> 的 <code>equals</code> 、<code>hashCode</code>、<code>toString</code> 方法。</li>
+</ul>
+<p>虽然我们可以借助于第三方框架或者 <strong>IDE</strong> 很容易编写这些样板代码，但是总归要写这些样板代码不是吗?</p>
+<p>上面的冗长的代码在 <strong>Java 14</strong> 中我们可以这么写：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public record <span class="function"><span class="title">Range</span>(<span class="params">int min, int max</span>)</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>没错就是这个简单！这个语法糖是不是有 “卧槽” 的感觉？我们声明这种类使用 <strong>record</strong> 标识（目前不知道 record 会不会上升到关键字的高度）。当你用 <strong>record</strong> 声明一个类时，该类将自动拥有以下功能：</p>
+<ul>
+<li>获取成员变量的简单方法，以上面代码为例 <code>min()</code> 和 <code>max()</code> 。注意区别于我们平常<strong>getter</strong>的写法。</li>
+<li>一个 <code>equals</code> 方法的实现，执行比较时会比较该类的所有成员属性</li>
+<li>重写 <code>equals</code> 当然要重写 <code>hashCode</code></li>
+<li>一个可以打印该类所有成员属性的 <code>toString</code> 方法。</li>
+<li>请注意只会有一个构造方法。</li>
+</ul>
+<p>因为这个特性是 <strong>preview feature</strong>，默认情况下是无法编译和执行的。同样以上面为例我们需要执行：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ javac -d classes --enable-preview --release <span class="number">14</span> Range.java</span><br><span class="line">$ java -classpath classes --enable-preview Range</span><br></pre></td></tr></table></figure>
+
+<p>在 <strong>Jshell</strong> 中运行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">jshell&gt; Range r = <span class="keyword">new</span> Range(<span class="number">10</span>, <span class="number">20</span>);</span><br><span class="line">r ==&gt; Range[min=<span class="number">10</span>, max=<span class="number">20</span>]</span><br><span class="line"></span><br><span class="line">jshell&gt; r.min()</span><br><span class="line">$<span class="number">5</span> ==&gt; <span class="number">10</span></span><br><span class="line"></span><br><span class="line">jshell&gt; r.toString()</span><br><span class="line">$<span class="number">6</span> ==&gt; <span class="string">&quot;Range[min=10, max=20]&quot;</span></span><br><span class="line"></span><br><span class="line">jshell&gt; r</span><br><span class="line">r ==&gt; Range[min=<span class="number">10</span>, max=<span class="number">20</span>]</span><br></pre></td></tr></table></figure>
+
+<p>虽然 <strong>record</strong> 声明的类没有 <code>final</code> 关键字，实际上它是一个不可变类。除了一些限制外，它依旧是一个普通的<code>Java</code> 类。因此，我们可以像添加普通类一样添加逻辑。我们可以在构造实例时强制执行前提条件：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public record <span class="function"><span class="title">Range</span>(<span class="params">int min, int max</span>)</span> &#123;</span><br><span class="line">    public Range &#123;</span><br><span class="line">        <span class="keyword">if</span> (min &gt;= max)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">&quot;min should be less than max&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>另外我们也可以给 <strong>Records</strong> 类增加普通方法、静态属性、静态方法，这里不再举例；</p>
+<p><strong>为了简化语法糖的推理，不能在类内声明成员属性。</strong>以下是错误的示范：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public record <span class="function"><span class="title">Range</span>(<span class="params">int min, int max</span>)</span> &#123;</span><br><span class="line">    <span class="comment">// 错误的示范</span></span><br><span class="line">    private <span class="built_in">String</span> name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    </div>
+	
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/%E8%AF%AD%E6%B3%95%E7%B3%96/" rel="tag"># 语法糖</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/1899/11/30/0000-00-00%20JavaScript%E7%AE%80%E5%86%99%E4%BC%98%E5%8C%96/" rel="prev" title="JavaScript简写优化">
+                  <i class="fa fa-chevron-left"></i> JavaScript简写优化
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2015/06/07/2015-06-07-spring-mvc-%E5%93%8D%E5%BA%94%E5%A4%B4%E7%89%B9%E5%88%AB%E5%A4%A7/" rel="next" title="解决SpringMvc的响应头特别大">
+                  解决SpringMvc的响应头特别大 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fas fa-dragon"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lqs1848</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
