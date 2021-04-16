@@ -6,7 +6,7 @@
   <link href="https://blog.lqs1848.top/atom.xml" rel="self"/>
   
   <link href="https://blog.lqs1848.top/"/>
-  <updated>2021-04-15T04:05:35.786Z</updated>
+  <updated>2021-04-16T10:31:24.681Z</updated>
   <id>https://blog.lqs1848.top/</id>
   
   <author>
@@ -15,6 +15,58 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Mysql Using join buffer (Block Nested Loop) join</title>
+    <link href="https://blog.lqs1848.top/2021/04/16/2021-04-16%20%20Mysql%20Using%20join%20buffer%20(Block%20Nested%20Loop)%20join/"/>
+    <id>https://blog.lqs1848.top/2021/04/16/2021-04-16%20%20Mysql%20Using%20join%20buffer%20(Block%20Nested%20Loop)%20join/</id>
+    <published>2021-04-15T16:00:00.000Z</published>
+    <updated>2021-04-16T10:31:24.681Z</updated>
+    
+    <content type="html"><![CDATA[<span id="more"></span><h3 id="Mysql-Using-join-buffer-Block-Nested-Loop"><a href="#Mysql-Using-join-buffer-Block-Nested-Loop" class="headerlink" title="Mysql Using join buffer (Block Nested Loop)"></a>Mysql Using join buffer (Block Nested Loop)</h3><p>EXPLAIN  中的 extra 字段 有数据是 Using where; Using join buffer (Block Nested Loop)</p><p>1.未建立索引</p><p>2.数据类型不一致</p><p> 都是 verchar 但是 编码不一致也会导致此问题</p><p> 比如一个表的字段是 utf8 编码 另一个是 utf8mb4 编码</p>]]></content>
+    
+    
+    <summary type="html">&lt;span id=&quot;more&quot;&gt;&lt;/span&gt;</summary>
+    
+    
+    
+    <category term="SQL" scheme="https://blog.lqs1848.top/categories/SQL/"/>
+    
+    <category term="MySQL" scheme="https://blog.lqs1848.top/categories/SQL/MySQL/"/>
+    
+    
+    <category term="MySQL" scheme="https://blog.lqs1848.top/tags/MySQL/"/>
+    
+    <category term="SQL" scheme="https://blog.lqs1848.top/tags/SQL/"/>
+    
+    <category term="EXPLAIN" scheme="https://blog.lqs1848.top/tags/EXPLAIN/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>分组最大N</title>
+    <link href="https://blog.lqs1848.top/2021/04/16/2021-04-16%20%20%E5%88%86%E7%BB%84%E6%9C%80%E5%A4%A7N/"/>
+    <id>https://blog.lqs1848.top/2021/04/16/2021-04-16%20%20%E5%88%86%E7%BB%84%E6%9C%80%E5%A4%A7N/</id>
+    <published>2021-04-15T16:00:00.000Z</published>
+    <updated>2021-04-16T10:01:36.600Z</updated>
+    
+    <content type="html"><![CDATA[<span id="more"></span><h3 id="分组最大N"><a href="#分组最大N" class="headerlink" title="分组最大N"></a>分组最大N</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line"><span class="built_in">MAX</span>(item_id) <span class="keyword">AS</span> item_id</span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">mall_item mi</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span></span><br><span class="line">mi.item_barcode,</span><br><span class="line">mi.item_store</span><br></pre></td></tr></table></figure><p>优化为 join</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">i1.<span class="operator">*</span></span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">mall_item i1</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> mall_item i2 <span class="keyword">ON</span> (</span><br><span class="line">i1.item_barcode <span class="operator">=</span> i2.item_barcode</span><br><span class="line"><span class="keyword">AND</span> i1.item_store <span class="operator">=</span> i2.item_store</span><br><span class="line"><span class="keyword">AND</span> i1.item_id <span class="operator">&lt;</span> i2.item_id</span><br><span class="line">)</span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">i2.item_barcode <span class="keyword">IS</span> <span class="keyword">NULL</span>;</span><br></pre></td></tr></table></figure><p>起因 数据库监控看到一条慢SQL 耗时1秒多</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">    mi.item_id,</span><br><span class="line">    mi.item_barcode,</span><br><span class="line">    mi.item_pics,</span><br><span class="line">    mi.item_name,</span><br><span class="line">    mi.item_store,</span><br><span class="line">    mi.item_unit,</span><br><span class="line">    mi.item_specification,</span><br><span class="line">    sc.item_sell_price,sc.item_original_price,sc.specs_remark,</span><br><span class="line">    sc.item_barcode,sc.source <span class="keyword">as</span> itemType,</span><br><span class="line">    IF(scuh.use_type<span class="operator">=</span><span class="string">&#x27;a&#x27;</span>,<span class="string">&#x27;1&#x27;</span>,<span class="string">&#x27;0&#x27;</span>) use_type,</span><br><span class="line">    scuh.purchase_num <span class="keyword">AS</span> quantity,</span><br><span class="line">    scuh.card_id</span><br><span class="line">    <span class="keyword">FROM</span></span><br><span class="line"></span><br><span class="line">    (</span><br><span class="line">    <span class="keyword">SELECT</span></span><br><span class="line">    <span class="built_in">MAX</span>(item_id) <span class="keyword">AS</span> item_id</span><br><span class="line">    <span class="keyword">FROM</span> mall_item mi</span><br><span class="line">    <span class="keyword">GROUP</span> <span class="keyword">BY</span> mi.item_barcode, mi.item_store</span><br><span class="line">    ) tmp</span><br><span class="line">    <span class="keyword">JOIN</span> mall_item mi <span class="keyword">ON</span> tmp.item_id <span class="operator">=</span> mi.item_id</span><br><span class="line">    <span class="keyword">join</span> shop_card sc <span class="keyword">on</span> mi.item_store<span class="operator">=</span>sc.mall_id <span class="keyword">AND</span> mi.item_barcode<span class="operator">=</span>sc.item_barcode</span><br><span class="line">    <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> shop_card_use_history scuh <span class="keyword">ON</span> scuh.purchase_num<span class="operator">&gt;</span><span class="number">0</span> <span class="keyword">and</span> scuh.use_type <span class="operator">!=</span> <span class="string">&#x27;j&#x27;</span> <span class="keyword">and</span> sc.card_id <span class="operator">=</span> scuh.card_id</span><br><span class="line">    <span class="keyword">where</span> scuh.shop_receipt_id <span class="operator">=</span> <span class="string">&#x27;ps_1382892968715325440&#x27;</span></span><br></pre></td></tr></table></figure><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">  i1.item_id,</span><br><span class="line">  i1.item_barcode,</span><br><span class="line">  i1.item_pics,</span><br><span class="line">  i1.item_name,</span><br><span class="line">  i1.item_store,</span><br><span class="line">  i1.item_unit,</span><br><span class="line">  i1.item_specification,</span><br><span class="line">  sc.item_sell_price,</span><br><span class="line">  sc.item_original_price,</span><br><span class="line">  sc.specs_remark,</span><br><span class="line">  sc.item_barcode,</span><br><span class="line">  sc.source <span class="keyword">AS</span> itemType,</span><br><span class="line"></span><br><span class="line">IF (scuh.use_type <span class="operator">=</span> <span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;0&#x27;</span>) use_type,</span><br><span class="line"> scuh.purchase_num <span class="keyword">AS</span> quantity,</span><br><span class="line"> scuh.card_id</span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">  mall_item i1</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> mall_item i2 <span class="keyword">ON</span> (</span><br><span class="line">  i1.item_barcode <span class="operator">=</span> i2.item_barcode</span><br><span class="line">  <span class="keyword">AND</span> i1.item_store <span class="operator">=</span> i2.item_store</span><br><span class="line">  <span class="keyword">AND</span> i1.item_id <span class="operator">&lt;</span> i2.item_id</span><br><span class="line">)</span><br><span class="line"><span class="keyword">JOIN</span> shop_card sc <span class="keyword">ON</span> i1.item_store <span class="operator">=</span> sc.mall_id</span><br><span class="line"><span class="keyword">AND</span> i1.item_barcode <span class="operator">=</span> sc.item_barcode</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> shop_card_use_history scuh <span class="keyword">ON</span> scuh.purchase_num <span class="operator">&gt;</span> <span class="number">0</span></span><br><span class="line"><span class="keyword">AND</span> scuh.use_type <span class="operator">!=</span> <span class="string">&#x27;j&#x27;</span></span><br><span class="line"><span class="keyword">AND</span> sc.card_id <span class="operator">=</span> scuh.card_id</span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">  scuh.shop_receipt_id <span class="operator">=</span> <span class="string">&#x27;ps_1382892968715325440&#x27;</span></span><br><span class="line"><span class="keyword">AND</span> i2.item_barcode <span class="keyword">IS</span> <span class="keyword">NULL</span>;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">&lt;span id=&quot;more&quot;&gt;&lt;/span&gt;</summary>
+    
+    
+    
+    <category term="SQL" scheme="https://blog.lqs1848.top/categories/SQL/"/>
+    
+    
+    <category term="MySQL" scheme="https://blog.lqs1848.top/tags/MySQL/"/>
+    
+    <category term="SQL" scheme="https://blog.lqs1848.top/tags/SQL/"/>
+    
+    <category term="Group By" scheme="https://blog.lqs1848.top/tags/Group-By/"/>
+    
+  </entry>
   
   <entry>
     <title>TensorFlow Java</title>
