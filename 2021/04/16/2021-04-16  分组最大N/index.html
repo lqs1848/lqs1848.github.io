@@ -29,7 +29,7 @@
 <meta property="og:site_name" content="Chaos">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-04-15T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-04-16T10:01:36.600Z">
+<meta property="article:modified_time" content="2021-04-19T01:41:17.856Z">
 <meta property="article:author" content="lqs1848">
 <meta property="article:tag" content="MySQL">
 <meta property="article:tag" content="SQL">
@@ -173,20 +173,20 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">21</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-count">30</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -284,10 +284,10 @@
 <p>起因 数据库监控看到一条慢SQL 耗时1秒多</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">    mi.item_id,</span><br><span class="line">    mi.item_barcode,</span><br><span class="line">    mi.item_pics,</span><br><span class="line">    mi.item_name,</span><br><span class="line">    mi.item_store,</span><br><span class="line">    mi.item_unit,</span><br><span class="line">    mi.item_specification,</span><br><span class="line">    sc.item_sell_price,sc.item_original_price,sc.specs_remark,</span><br><span class="line">    sc.item_barcode,sc.source <span class="keyword">as</span> itemType,</span><br><span class="line">    IF(scuh.use_type<span class="operator">=</span><span class="string">&#x27;a&#x27;</span>,<span class="string">&#x27;1&#x27;</span>,<span class="string">&#x27;0&#x27;</span>) use_type,</span><br><span class="line">    scuh.purchase_num <span class="keyword">AS</span> quantity,</span><br><span class="line">    scuh.card_id</span><br><span class="line">    <span class="keyword">FROM</span></span><br><span class="line"></span><br><span class="line">    (</span><br><span class="line">    <span class="keyword">SELECT</span></span><br><span class="line">    <span class="built_in">MAX</span>(item_id) <span class="keyword">AS</span> item_id</span><br><span class="line">    <span class="keyword">FROM</span> mall_item mi</span><br><span class="line">    <span class="keyword">GROUP</span> <span class="keyword">BY</span> mi.item_barcode, mi.item_store</span><br><span class="line">    ) tmp</span><br><span class="line">    <span class="keyword">JOIN</span> mall_item mi <span class="keyword">ON</span> tmp.item_id <span class="operator">=</span> mi.item_id</span><br><span class="line">    <span class="keyword">join</span> shop_card sc <span class="keyword">on</span> mi.item_store<span class="operator">=</span>sc.mall_id <span class="keyword">AND</span> mi.item_barcode<span class="operator">=</span>sc.item_barcode</span><br><span class="line">    <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> shop_card_use_history scuh <span class="keyword">ON</span> scuh.purchase_num<span class="operator">&gt;</span><span class="number">0</span> <span class="keyword">and</span> scuh.use_type <span class="operator">!=</span> <span class="string">&#x27;j&#x27;</span> <span class="keyword">and</span> sc.card_id <span class="operator">=</span> scuh.card_id</span><br><span class="line">    <span class="keyword">where</span> scuh.shop_receipt_id <span class="operator">=</span> <span class="string">&#x27;ps_1382892968715325440&#x27;</span></span><br></pre></td></tr></table></figure>
 
-
-
+<p>优化后</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">  i1.item_id,</span><br><span class="line">  i1.item_barcode,</span><br><span class="line">  i1.item_pics,</span><br><span class="line">  i1.item_name,</span><br><span class="line">  i1.item_store,</span><br><span class="line">  i1.item_unit,</span><br><span class="line">  i1.item_specification,</span><br><span class="line">  sc.item_sell_price,</span><br><span class="line">  sc.item_original_price,</span><br><span class="line">  sc.specs_remark,</span><br><span class="line">  sc.item_barcode,</span><br><span class="line">  sc.source <span class="keyword">AS</span> itemType,</span><br><span class="line"></span><br><span class="line">IF (scuh.use_type <span class="operator">=</span> <span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;0&#x27;</span>) use_type,</span><br><span class="line"> scuh.purchase_num <span class="keyword">AS</span> quantity,</span><br><span class="line"> scuh.card_id</span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">  mall_item i1</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> mall_item i2 <span class="keyword">ON</span> (</span><br><span class="line">  i1.item_barcode <span class="operator">=</span> i2.item_barcode</span><br><span class="line">  <span class="keyword">AND</span> i1.item_store <span class="operator">=</span> i2.item_store</span><br><span class="line">  <span class="keyword">AND</span> i1.item_id <span class="operator">&lt;</span> i2.item_id</span><br><span class="line">)</span><br><span class="line"><span class="keyword">JOIN</span> shop_card sc <span class="keyword">ON</span> i1.item_store <span class="operator">=</span> sc.mall_id</span><br><span class="line"><span class="keyword">AND</span> i1.item_barcode <span class="operator">=</span> sc.item_barcode</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> shop_card_use_history scuh <span class="keyword">ON</span> scuh.purchase_num <span class="operator">&gt;</span> <span class="number">0</span></span><br><span class="line"><span class="keyword">AND</span> scuh.use_type <span class="operator">!=</span> <span class="string">&#x27;j&#x27;</span></span><br><span class="line"><span class="keyword">AND</span> sc.card_id <span class="operator">=</span> scuh.card_id</span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">  scuh.shop_receipt_id <span class="operator">=</span> <span class="string">&#x27;ps_1382892968715325440&#x27;</span></span><br><span class="line"><span class="keyword">AND</span> i2.item_barcode <span class="keyword">IS</span> <span class="keyword">NULL</span>;</span><br></pre></td></tr></table></figure>
 
+<p>优化完只用几十毫秒</p>
 
     </div>
 	
@@ -306,8 +306,8 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2021/04/14/2021-04-14%20TensorFlow%20Java/" rel="prev" title="TensorFlow Java">
-                  <i class="fa fa-chevron-left"></i> TensorFlow Java
+                <a href="/2021/04/15/2021-04-15%20OpenCV%20Java/" rel="prev" title="OpenCV Java">
+                  <i class="fa fa-chevron-left"></i> OpenCV Java
                 </a>
             </div>
             <div class="post-nav-item">

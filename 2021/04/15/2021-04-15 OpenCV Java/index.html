@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+<a target="_blank" rel="noopener" href="https://github.com/lqs1848" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.lqs1848.top","root":"/","images":"/images","scheme":"Gemini","version":"8.3.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}};
+  </script>
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenCV Java">
+<meta property="og:url" content="https://blog.lqs1848.top/2021/04/15/2021-04-15%20OpenCV%20Java/index.html">
+<meta property="og:site_name" content="Chaos">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-04-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-04-19T02:45:52.144Z">
+<meta property="article:author" content="lqs1848">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="OpenCV">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.lqs1848.top/2021/04/15/2021-04-15%20OpenCV%20Java/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<title>OpenCV Java | Chaos</title>
+  
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chaos" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Chaos</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">创建项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DEMO"><span class="nav-number">2.</span> <span class="nav-text">DEMO</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">lqs1848</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.lqs1848.top/2021/04/15/2021-04-15%20OpenCV%20Java/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="lqs1848">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chaos">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OpenCV Java
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-04-15 00:00:00" itemprop="dateCreated datePublished" datetime="2021-04-15T00:00:00+08:00">2021-04-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/OpenCV/" itemprop="url" rel="index"><span itemprop="name">OpenCV</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <span id="more"></span>
+
+<h2 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h2><p>Maven集成 OpenCV</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.bytedeco<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>javacv-platform<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>1.5.5<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>引入的不要是 OpenPnP OpenCV 而是 <a target="_blank" rel="noopener" href="https://github.com/bytedeco">bytedeco</a>/<strong><a target="_blank" rel="noopener" href="https://github.com/bytedeco/javacv">javacv</a></strong></p>
+<p>javacv 自带了各平台 OpenCV   .dll  .so  .o .dylib  不用再自己安装 OpenCV了</p>
+<p><strong>无需加载动态库</strong></p>
+<blockquote>
+<p>URL url = ClassLoader.getSystemResource(“lib/opencv/opencv_java440.dll”);</p>
+<p>System.load(url.getPath())</p>
+<p>或者 </p>
+<p>System.loadLibrary(Core.NATIVE_LIBRARY_NAME);  <em>//加载动态链接库</em></p>
+</blockquote>
+<p>使用 bytedeco 有一点要注意</p>
+<p>OpenCV 原本的 import 路径为  org.opencv</p>
+<p>JavaCV import 路径为 org.bytedeco.opencv</p>
+<p>路径不是完全对应的  比如 <strong>Imgcodecs</strong></p>
+<p>原API 路径为: org.opencv.imgcodecs.Imgcodecs</p>
+<p>bytedeco 路径为: org.bytedeco.opencv.global.opencv_imgcodecs</p>
+<h2 id="DEMO"><a href="#DEMO" class="headerlink" title="DEMO"></a>DEMO</h2><p>网上随便找了个示例 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.opencv.core.*;</span><br><span class="line"><span class="keyword">import</span> org.opencv.highgui.HighGui;</span><br><span class="line"><span class="keyword">import</span> org.opencv.imgcodecs.Imgcodecs;</span><br><span class="line"><span class="keyword">import</span> org.opencv.imgproc.Imgproc;</span><br><span class="line"><span class="keyword">import</span> org.opencv.objdetect.CascadeClassifier;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FaceOpenCV</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="comment">// Java 在使用 OpenCV 前必须加载 Core.NATIVE_LIBRARY_NAME 类,否则会报错</span></span><br><span class="line">        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">face</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//1 读取OpenCV自带的人脸识别特征XML文件</span></span><br><span class="line">        CascadeClassifier faceCV = <span class="keyword">new</span> CascadeClassifier(<span class="string">&quot;G:\\SystemSoft\\opencv\\opencv\\sources\\data\\haarcascades\\haarcascade_frontalface_alt.xml&quot;</span>);</span><br><span class="line">        <span class="comment">//2 读取测试图片</span></span><br><span class="line">        Mat image = Imgcodecs.imread(<span class="string">&quot;F:\\workTest\\FaceOpenCVData\\1test.png&quot;</span>);</span><br><span class="line">        <span class="comment">//3 特征匹配</span></span><br><span class="line">        MatOfRect face = <span class="keyword">new</span> MatOfRect();</span><br><span class="line">        faceCV.detectMultiScale(image, face);</span><br><span class="line">        <span class="comment">//4 匹配 Rect 矩阵 数组</span></span><br><span class="line">        Rect[] rects = face.toArray();</span><br><span class="line">        System.out.println(<span class="string">&quot;匹配到&quot;</span> + rects.length + <span class="string">&quot;个人脸&quot;</span>);</span><br><span class="line">        <span class="comment">// 5 为每张识别到的人脸画一个圈</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; rects.length; i++) &#123;</span><br><span class="line">            Imgproc.rectangle(image, <span class="keyword">new</span> Point(rects[i].x, rects[i].y), <span class="keyword">new</span> Point(rects[i].x + rects[i].width, rects[i].y + rects[i].height), <span class="keyword">new</span> Scalar(<span class="number">0</span>, <span class="number">0</span>, <span class="number">255</span>));</span><br><span class="line">            Imgproc.putText(image, <span class="string">&quot;FACE&quot;</span>, <span class="keyword">new</span> Point(rects[i].x, rects[i].y), Imgproc.FONT_HERSHEY_SCRIPT_SIMPLEX, <span class="number">1.0</span>, <span class="keyword">new</span> Scalar(<span class="number">0</span>, <span class="number">255</span>, <span class="number">0</span>), <span class="number">1</span>, Imgproc.LINE_AA, <span class="keyword">false</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 6 展示图片</span></span><br><span class="line">        HighGui.imshow(<span class="string">&quot;人脸识别&quot;</span>, image);</span><br><span class="line">        HighGui.waitKey(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        face();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>用 javacv 修改一下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.bytedeco.opencv.global.opencv_imgcodecs;</span><br><span class="line"><span class="keyword">import</span> org.bytedeco.opencv.global.opencv_imgproc;</span><br><span class="line"><span class="keyword">import</span> org.bytedeco.opencv.opencv_core.Mat;</span><br><span class="line"><span class="keyword">import</span> org.bytedeco.opencv.opencv_core.Point;</span><br><span class="line"><span class="keyword">import</span> org.bytedeco.opencv.opencv_core.Rect;</span><br><span class="line"><span class="keyword">import</span> org.bytedeco.opencv.opencv_core.RectVector;</span><br><span class="line"><span class="keyword">import</span> org.bytedeco.opencv.opencv_core.Scalar;</span><br><span class="line"><span class="keyword">import</span> org.bytedeco.opencv.opencv_objdetect.CascadeClassifier;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		</span><br><span class="line">		<span class="comment">// 1 读取OpenCV自带的人脸识别特征XML文件</span></span><br><span class="line">		<span class="comment">// OpenCV 图像识别库一般位于 opencv\sources\data 下面</span></span><br><span class="line">		CascadeClassifier facebook = <span class="keyword">new</span> CascadeClassifier(<span class="string">&quot;\\data\\haarcascades\\haarcascade_frontalface_alt.xml&quot;</span>);</span><br><span class="line">		<span class="comment">// 2 读取测试图片</span></span><br><span class="line">		Mat image = opencv_imgcodecs.imread(<span class="string">&quot;\\1.jpg&quot;</span>);</span><br><span class="line">		<span class="comment">// 3 特征匹配</span></span><br><span class="line">		RectVector face = <span class="keyword">new</span> RectVector();</span><br><span class="line">		facebook.detectMultiScale(image, face);</span><br><span class="line">		<span class="comment">// 4 匹配 Rect 矩阵 数组</span></span><br><span class="line">		Rect[] rects = face.get();</span><br><span class="line">		System.out.println(<span class="string">&quot;匹配到 &quot;</span> + rects.length + <span class="string">&quot; 个人脸&quot;</span>);</span><br><span class="line">		<span class="comment">// 5 为每张识别到的人脸画一个圈</span></span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; rects.length; i++) &#123;</span><br><span class="line">			opencv_imgproc.rectangle(image, <span class="keyword">new</span> Point(rects[i].x(), rects[i].y()),</span><br><span class="line">					<span class="keyword">new</span> Point(rects[i].x() + rects[i].width(), rects[i].y() + rects[i].height()),</span><br><span class="line">					<span class="keyword">new</span> Scalar(<span class="number">0</span>, <span class="number">0</span>, <span class="number">255</span>, <span class="number">0</span>));</span><br><span class="line">			opencv_imgproc.putText(image, <span class="string">&quot;Human&quot;</span>, <span class="keyword">new</span> Point(rects[i].x(), rects[i].y()),</span><br><span class="line">					opencv_imgproc.FONT_HERSHEY_SCRIPT_SIMPLEX, <span class="number">1.0</span>, <span class="keyword">new</span> Scalar(<span class="number">0</span>, <span class="number">255</span>, <span class="number">0</span>, <span class="number">0</span>), <span class="number">1</span>,</span><br><span class="line">					opencv_imgproc.LINE_AA, <span class="keyword">false</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// 6 展示图片</span></span><br><span class="line">		<span class="comment">// HighGui.imshow(&quot;人脸识别&quot;, image);</span></span><br><span class="line">		opencv_imgcodecs.imwrite(<span class="string">&quot;\\2.jpg&quot;</span>, image);</span><br><span class="line">		<span class="comment">// HighGui.waitKey(0);</span></span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+	
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/OpenCV/" rel="tag"># OpenCV</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/04/14/2021-04-14%20TensorFlow%20Java/" rel="prev" title="TensorFlow Java">
+                  <i class="fa fa-chevron-left"></i> TensorFlow Java
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/04/16/2021-04-16%20%20%E5%88%86%E7%BB%84%E6%9C%80%E5%A4%A7N/" rel="next" title="分组最大N">
+                  分组最大N <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fas fa-dragon"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lqs1848</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
