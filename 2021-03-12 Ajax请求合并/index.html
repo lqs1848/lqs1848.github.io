@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.lqs1848.top","root":"/","images":"/images","scheme":"Gemini","version":"8.1.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ajax请求合并">
+<meta property="og:url" content="https://blog.lqs1848.top/2021-03-12%20Ajax%E8%AF%B7%E6%B1%82%E5%90%88%E5%B9%B6/index.html">
+<meta property="og:site_name" content="Chaos">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-03-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-04-15T04:12:44.009Z">
+<meta property="article:author" content="lqs1848">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="Web">
+<meta property="article:tag" content="Ajax">
+<meta property="article:tag" content="VUE">
+<meta property="article:tag" content="反射">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.lqs1848.top/2021-03-12%20Ajax%E8%AF%B7%E6%B1%82%E5%90%88%E5%B9%B6/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<title>Ajax请求合并 | Chaos</title>
+  
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Chaos</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-guestbook">
+
+    <a href="/guestbook/" rel="section"><i class="fa fa-book fa-fw"></i>留言板</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <section class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF"><span class="nav-number">1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.</span> <span class="nav-text">实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%AB%AF"><span class="nav-number">2.1.</span> <span class="nav-text">前端</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">2.1.1.</span> <span class="nav-text">小结:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF"><span class="nav-number">2.2.</span> <span class="nav-text">后端</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">小结:</span></a></li></ol></li></ol></li></ol></div>
+        </section>
+        <!--/noindex-->
+
+        <section class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lqs1848"
+      src="/images/favicon-32x32-next.png">
+  <p class="site-author-name" itemprop="name">lqs1848</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lqs1848" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lqs1848" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+        </section>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/lqs1848" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.lqs1848.top/2021-03-12%20Ajax%E8%AF%B7%E6%B1%82%E5%90%88%E5%B9%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/favicon-32x32-next.png">
+      <meta itemprop="name" content="lqs1848">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chaos">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Ajax请求合并
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-03-12 00:00:00" itemprop="dateCreated datePublished" datetime="2021-03-12T00:00:00+08:00">2021-03-12</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-04-15 12:12:44" itemprop="dateModified" datetime="2021-04-15T12:12:44+08:00">2021-04-15</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+        </span>
+    </span>
+
+  
+    <span id="/2021-03-12%20Ajax%E8%AF%B7%E6%B1%82%E5%90%88%E5%B9%B6/" class="post-meta-item leancloud_visitors" data-flag-title="Ajax请求合并" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021-03-12%20Ajax%E8%AF%B7%E6%B1%82%E5%90%88%E5%B9%B6/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021-03-12%20Ajax%E8%AF%B7%E6%B1%82%E5%90%88%E5%B9%B6/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>12k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>11 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <span id="more"></span>
+
+
+<p>线上项目 首页加载时 请求了9个接口 刷新首页 请求数刷刷的往上涨</p>
+<p>没几下就被我的后台限流策略屏蔽了 为了限流能正常工作  便需要把首页的请求进行合并</p>
+<p>首先考虑到要不影响线上功能并且改动较小</p>
+<p><strong>对原接口不做任何改动</strong></p>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>前端拦截所有Ajax请求 合并统一发送 存储各自的 promise 后端统一返回后再 各自回调</p>
+<p>后端提供一个通用接口 /index/wilful  返回多个返回值</p>
+<p><strong>请求参数为:</strong> <em>路径和原来的参数</em></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">&quot;path&quot;</span>: <span class="string">&quot;/mp/content/detail&quot;</span>,    <span class="comment">//原请求路径</span></span><br><span class="line">        <span class="attr">&quot;param&quot;</span>: &#123;						 <span class="comment">//原请求参数</span></span><br><span class="line">            <span class="attr">&quot;mallId&quot;</span>: <span class="number">48</span>, </span><br><span class="line">            <span class="attr">&quot;sectionKey&quot;</span>: <span class="string">&quot;home_banner&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;, </span><br><span class="line">    &#123;									 <span class="comment">//多个同理</span></span><br><span class="line">        <span class="attr">&quot;path&quot;</span>: <span class="string">&quot;/game/turntable/details&quot;</span>, </span><br><span class="line">        <span class="attr">&quot;param&quot;</span>: &#123;</span><br><span class="line">            <span class="attr">&quot;mallId&quot;</span>: <span class="string">&quot;55&quot;</span>, </span><br><span class="line">            <span class="attr">&quot;itemId&quot;</span>: <span class="string">&quot;111&quot;</span>, </span><br><span class="line">            <span class="attr">&quot;activityId&quot;</span>: <span class="string">&quot;222&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p><strong>返回值:</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;msg&quot;</span>: <span class="string">&quot;success&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;ver&quot;</span>: <span class="string">&quot;1.1.1&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;code&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;t&quot;</span>: <span class="number">1618451056360</span>,</span><br><span class="line">    <span class="attr">&quot;data&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;/game/turntable/details&quot;</span>: &#123;		<span class="comment">//对应多个请求的原始url 内部为原始请求的返回值</span></span><br><span class="line">            <span class="attr">&quot;msg&quot;</span>: <span class="string">&quot;success&quot;</span>,				<span class="comment">//只代表此接口的成功失败</span></span><br><span class="line">            <span class="attr">&quot;code&quot;</span>: <span class="number">0</span>,</span><br><span class="line">            <span class="attr">&quot;turntable&quot;</span>: &#123;</span><br><span class="line">                <span class="attr">&quot;id&quot;</span>: <span class="number">3</span>,</span><br><span class="line">                ...</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;prizes&quot;: [</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="attr">&quot;id&quot;</span>: <span class="number">12</span>,</span><br><span class="line">                    <span class="attr">&quot;turntableId&quot;</span>: <span class="number">3</span>,</span><br><span class="line">                    <span class="attr">&quot;type&quot;</span>: <span class="string">&quot;0&quot;</span>,</span><br><span class="line">                    ...</span><br><span class="line">                &#125;,</span><br><span class="line">                ...</span><br><span class="line">            ]</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;/mp/content/detail&quot;: &#123;</span><br><span class="line">            &quot;msg&quot;: &quot;success&quot;,</span><br><span class="line">            &quot;total&quot;: 3,</span><br><span class="line">            &quot;code&quot;: 0,</span><br><span class="line">            &quot;rows&quot;: [</span><br><span class="line">                &#123;</span><br><span class="line">                    ...</span><br><span class="line">                &#125;,</span><br><span class="line">                ...</span><br><span class="line">            ],</span><br><span class="line">            &quot;pageNum&quot;: 1</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;url&quot;: &quot;/index/wilful&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><h2 id="前端"><a href="#前端" class="headerlink" title="前端"></a>前端</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//把全局 request 全部转发给</span></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">request</span>(<span class="params">options</span>) </span>&#123;</span><br><span class="line">    <span class="comment">//可以判断一下 只有需要整合的接口才进 group</span></span><br><span class="line">	<span class="keyword">if</span> (options.url != <span class="string">&#x27;/index/wilful&#x27;</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> uni.$httpGroup.request(&#123;</span><br><span class="line">			path: options.url,</span><br><span class="line">			param: &#123;</span><br><span class="line">				...options.data</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;)</span><br><span class="line">	&#125;</span><br><span class="line">    <span class="comment">//原有逻辑</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="comment">//合并Ajax请求</span></span><br><span class="line"><span class="keyword">const</span> $httpGroup = &#123;</span><br><span class="line">	paramList: [],</span><br><span class="line">	resolveList: [],</span><br><span class="line">	fireRequest (data) &#123;	<span class="comment">//真正的请求</span></span><br><span class="line">		<span class="keyword">return</span> request(&#123;</span><br><span class="line">			url: <span class="string">&#x27;/index/wilful&#x27;</span>,</span><br><span class="line">			header: &#123;</span><br><span class="line">				<span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;application/json&#x27;</span></span><br><span class="line">			&#125;,</span><br><span class="line">			method: <span class="string">&#x27;POST&#x27;</span>,</span><br><span class="line">			data</span><br><span class="line">		&#125;)</span><br><span class="line">	&#125;,</span><br><span class="line">	request (data) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="comment">//获得到第一个请求之后进行定时</span></span><br><span class="line">			<span class="keyword">if</span> (<span class="built_in">this</span>.paramList.length &lt; <span class="number">1</span>) &#123;</span><br><span class="line">                <span class="comment">//收集范围 下面有说明</span></span><br><span class="line">				<span class="built_in">Promise</span>.resolve().then(<span class="function">()=&gt;</span> &#123;</span><br><span class="line">					<span class="keyword">let</span> copyParamList = [...this.paramList];</span><br><span class="line">					<span class="keyword">let</span> copyResolveList = [...this.resolveList];</span><br><span class="line">                    <span class="comment">//清空待请求</span></span><br><span class="line">					<span class="built_in">this</span>.paramList = [];</span><br><span class="line">					<span class="built_in">this</span>.resolveList = [];</span><br><span class="line">                    <span class="comment">//请求合并接口</span></span><br><span class="line">					<span class="built_in">this</span>.fireRequest([</span><br><span class="line">						...copyParamList</span><br><span class="line">					]).then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">						<span class="keyword">if</span> (res &amp;&amp; res.data) &#123;</span><br><span class="line">                            <span class="comment">//成功回调所有的接口</span></span><br><span class="line">							copyParamList.forEach(<span class="function">(<span class="params">item, index</span>) =&gt;</span> &#123;</span><br><span class="line">								copyResolveList[index].resolve(res.data[item.path]);</span><br><span class="line">							&#125;)</span><br><span class="line">						&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                            <span class="comment">//异常回调</span></span><br><span class="line">							copyParamList.forEach(<span class="function">(<span class="params">item, index</span>) =&gt;</span> &#123;</span><br><span class="line">								copyResolveList[index].resolve(&#123;</span><br><span class="line">									code: res.code || <span class="number">500</span>,</span><br><span class="line">									data: <span class="literal">undefined</span>,</span><br><span class="line">									msg: res.msg || <span class="string">&#x27;&#x27;</span></span><br><span class="line">								&#125;);</span><br><span class="line">							&#125;)</span><br><span class="line">						&#125;</span><br><span class="line">					&#125;)</span><br><span class="line">				&#125;)</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="built_in">this</span>.resolveList.push(&#123;</span><br><span class="line">				resolve,</span><br><span class="line">			&#125;);</span><br><span class="line">			<span class="built_in">this</span>.paramList.push(&#123;</span><br><span class="line">				...data</span><br><span class="line">			&#125;);</span><br><span class="line">		&#125;)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>收集范围:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在本轮“事件循环”结束时执行 	JS stack级别</span></span><br><span class="line"><span class="built_in">Promise</span>.resolve()	</span><br><span class="line"></span><br><span class="line"><span class="comment">//在有实现Microtasks的浏览器是Microtasks级别 没有就是 Task级别</span></span><br><span class="line">Vue.prototype.$nextTick(<span class="function">()=&gt;</span>&#123;&#125;)	</span><br><span class="line"></span><br><span class="line"><span class="comment">//在下一轮“事件循环”开始时执行  	Tasks级别</span></span><br><span class="line"><span class="built_in">setTimeout</span>(fn, <span class="number">0</span>)	</span><br></pre></td></tr></table></figure>
+
+<p>更详细可以看 <a target="_blank" rel="noopener" href="https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/">https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/</a></p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结:"></a>小结:</h3><p>大致上就是 把Ajax异步请求收集成一个数组 把整个数组全部提交到后端接口 再全部回调</p>
+<h2 id="后端"><a href="#后端" class="headerlink" title="后端"></a>后端</h2><p>后端用 SpringMVC</p>
+<p>先写一个工具类 把项目中所有的 Controller 和 Controller 中的 @RequestMapping 整理出来 (不管是 @GetMapping 还是 @GetMapping 都是实现了 @RequestMapping  <!--组合注解-->)</p>
+<p>再用反射注入请求参数 并执行 获得返回结果 合并接口后返回</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Annotation;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.InvocationTargetException;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.annotation.PostConstruct;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpSession;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Lazy;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.DefaultParameterNameDiscoverer;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.ParameterNameDiscoverer;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.annotation.AnnotatedElementUtils;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Component;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Controller;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.lqs1848.common.exception.CustomException;</span><br><span class="line"><span class="keyword">import</span> com.lqs1848.common.utils.AopTargetUtils;</span><br><span class="line"><span class="keyword">import</span> com.lqs1848.common.utils.ServletUtils;</span><br><span class="line"><span class="keyword">import</span> com.lqs1848.common.utils.bean.BeanUtils;</span><br><span class="line"><span class="keyword">import</span> com.lqs1848.common.utils.bean.StringToClass;</span><br><span class="line"><span class="keyword">import</span> com.lqs1848.common.utils.spring.SpringContextHolder;</span><br><span class="line"><span class="keyword">import</span> com.lqs1848.common.web.domain.R;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.AllArgsConstructor;</span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 1 不考虑 同路径有 get又有post 2 先不考虑路径 &#123;xxx&#125; p 3 只装配基础数据</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Lazy(true)</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebWilfulUtils</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	ParameterNameDiscoverer parameterNameDiscoverer;</span><br><span class="line">	Map&lt;String, Box&gt; map = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@PostConstruct</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		parameterNameDiscoverer = <span class="keyword">new</span> DefaultParameterNameDiscoverer();</span><br><span class="line">		map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">		Map&lt;String, Object&gt; dealers = SpringContextHolder.getApplicationContext()</span><br><span class="line">				.getBeansWithAnnotation(Controller.class);</span><br><span class="line">		<span class="keyword">for</span> (Object controller : dealers.values()) &#123;</span><br><span class="line">			List&lt;String&gt; basePaths = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">			Object original = AopTargetUtils.getTarget(controller);</span><br><span class="line">			Class&lt;?&gt; cla = original.getClass();</span><br><span class="line">			RequestMapping anno = AnnotatedElementUtils.getMergedAnnotation(cla, RequestMapping.class);</span><br><span class="line">			<span class="keyword">if</span> (anno != <span class="keyword">null</span>) &#123;</span><br><span class="line">				<span class="keyword">for</span> (String path : anno.value()) &#123;</span><br><span class="line">					basePaths.add(getPath(path));</span><br><span class="line">					<span class="comment">//System.out.println(&quot;controller path:&quot; + path);</span></span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">for</span> (Method m : cla.getMethods()) &#123;</span><br><span class="line"></span><br><span class="line">				<span class="keyword">if</span> (m.getReturnType() == <span class="keyword">null</span> || !m.getReturnType().getName().equals(R.class.getName()))</span><br><span class="line">					<span class="keyword">continue</span>;</span><br><span class="line"></span><br><span class="line">				<span class="comment">// 待添加</span></span><br><span class="line">				<span class="comment">// ++++权限校验 feign 专用的方法不能被调用</span></span><br><span class="line">				List&lt;StringBuffer&gt; msbs = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">				RequestMapping manno = (RequestMapping) getMethodAnno(m, RequestMapping.class);</span><br><span class="line">				<span class="keyword">if</span> (manno != <span class="keyword">null</span>) &#123;</span><br><span class="line">					<span class="keyword">if</span> (!basePaths.isEmpty()) &#123;</span><br><span class="line">						<span class="keyword">for</span> (String basePath : basePaths) &#123;</span><br><span class="line">							<span class="keyword">for</span> (String path : manno.value()) &#123;</span><br><span class="line">								msbs.add(<span class="keyword">new</span> StringBuffer(basePath).append(getPath(path)));</span><br><span class="line">							&#125; <span class="comment">//</span></span><br><span class="line">						&#125; <span class="comment">//</span></span><br><span class="line">					&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">						<span class="keyword">for</span> (String path : manno.value()) &#123;</span><br><span class="line">							msbs.add(<span class="keyword">new</span> StringBuffer(getPath(path)));</span><br><span class="line">						&#125; <span class="comment">//</span></span><br><span class="line">					&#125; <span class="comment">//</span></span><br><span class="line">				&#125; <span class="comment">//</span></span><br><span class="line"></span><br><span class="line">				<span class="keyword">for</span> (StringBuffer sb : msbs) &#123;</span><br><span class="line">					map.put(sb.toString(), <span class="keyword">new</span> Box(m, controller));</span><br><span class="line">				&#125; <span class="comment">//</span></span><br><span class="line"></span><br><span class="line">			&#125; <span class="comment">// for method</span></span><br><span class="line"></span><br><span class="line">		&#125; <span class="comment">// for class</span></span><br><span class="line">	&#125;<span class="comment">// init</span></span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> R <span class="title">getR</span><span class="params">(String path, Map&lt;String, String&gt; paramMap)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		Box b = matchingPath(path);</span><br><span class="line">		<span class="keyword">if</span> (b == <span class="keyword">null</span>)</span><br><span class="line">			<span class="keyword">return</span> R.error(<span class="string">&quot;404 Url is Not Find&quot;</span>);</span><br><span class="line"></span><br><span class="line">		Class&lt;?&gt;[] clas = b.getM().getParameterTypes();</span><br><span class="line">		String[] paramStr = parameterNameDiscoverer.getParameterNames(b.getM());</span><br><span class="line"></span><br><span class="line">		List&lt;Object&gt; args = <span class="keyword">new</span> ArrayList&lt;&gt;(clas.length);</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> x = <span class="number">0</span>; x &lt; clas.length; x++) &#123;</span><br><span class="line">			args.add(getParam(paramStr[x], clas[x], paramMap));</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> (R) b.getM().invoke(b.getO(), args.toArray());</span><br><span class="line">		&#125; <span class="keyword">catch</span> (CustomException e) &#123;</span><br><span class="line">			<span class="keyword">return</span> R.error(e.getMessage());</span><br><span class="line">		&#125; <span class="keyword">catch</span> (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> R.error(<span class="string">&quot;参数不正确&quot;</span>);</span><br><span class="line">	&#125;<span class="comment">// method</span></span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> Object <span class="title">getParam</span><span class="params">(String par, Class&lt;?&gt; cla, Map&lt;String, String&gt; paramMap)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// by Servlet</span></span><br><span class="line">		<span class="keyword">if</span> (cla.isInstance(HttpServletRequest.class))</span><br><span class="line">			<span class="keyword">return</span> ServletUtils.getRequest();</span><br><span class="line">		<span class="keyword">if</span> (cla.isInstance(HttpServletResponse.class))</span><br><span class="line">			<span class="keyword">return</span> ServletUtils.getResponse();</span><br><span class="line">		<span class="keyword">if</span> (cla.isInstance(HttpSession.class))</span><br><span class="line">			<span class="keyword">return</span> ServletUtils.getSession();</span><br><span class="line"></span><br><span class="line">		<span class="comment">// by Name</span></span><br><span class="line">		Object nameParam = StringToClass.call(paramMap.get(par), cla);</span><br><span class="line">		<span class="keyword">if</span> (nameParam != <span class="keyword">null</span>)</span><br><span class="line">			<span class="keyword">return</span> nameParam;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// by POJO by Name</span></span><br><span class="line">		<span class="keyword">if</span> (!cla.getPackageName().startsWith(<span class="string">&quot;java.lang&quot;</span>)) &#123;</span><br><span class="line">			<span class="comment">// 不是基础类型 可以顺便判断一下是不是自己自定义包名下面的类</span></span><br><span class="line">			<span class="comment">/*</span></span><br><span class="line"><span class="comment">			 * try &#123; Object obj = cla.getDeclaredConstructor().newInstance(); BeanMap</span></span><br><span class="line"><span class="comment">			 * beanMap = BeanMap.create(obj); beanMap.putAll(paramMap); return obj; &#125; catch</span></span><br><span class="line"><span class="comment">			 * (InstantiationException | IllegalAccessException | IllegalArgumentException |</span></span><br><span class="line"><span class="comment">			 * InvocationTargetException | NoSuchMethodException | SecurityException e) &#123;</span></span><br><span class="line"><span class="comment">			 * return null; &#125;</span></span><br><span class="line"><span class="comment">			 */</span></span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				Object pojo = mapToBean(paramMap, cla);</span><br><span class="line">				<span class="keyword">return</span> pojo;</span><br><span class="line">			&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">mapToBean</span><span class="params">(Map&lt;String, String&gt; map, Class&lt;?&gt; beanClass)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		Object object = beanClass.getDeclaredConstructor().newInstance();</span><br><span class="line">		List&lt;Field&gt; fields = BeanUtils.getThisToObjectFies(beanClass);</span><br><span class="line">		<span class="keyword">for</span> (Field f : fields) &#123;</span><br><span class="line">			Object value = StringToClass.call(map.get(f.getName()), f.getType());</span><br><span class="line">			<span class="keyword">if</span> (value != <span class="keyword">null</span>) &#123;</span><br><span class="line">				f.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">				f.set(object, value);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> object;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 路径匹配</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span> Box <span class="title">matchingPath</span><span class="params">(String path)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// 更复杂的 比如 /xxx/&#123;路径参数&#125; 这种的待添加</span></span><br><span class="line">		<span class="keyword">return</span> map.get(path);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> String <span class="title">getPath</span><span class="params">(String path)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (path == <span class="keyword">null</span> || path.isEmpty())</span><br><span class="line">			<span class="keyword">return</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">		<span class="keyword">if</span> (path.startsWith(<span class="string">&quot;/&quot;</span>) || path.startsWith(<span class="string">&quot;\\&quot;</span>))</span><br><span class="line">			<span class="keyword">return</span> path;</span><br><span class="line">		<span class="keyword">return</span> <span class="string">&quot;/&quot;</span> + path;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> Annotation <span class="title">getClassAnno</span><span class="params">(Class&lt;?&gt; cla, Class&lt;? extends Annotation&gt; annotationType)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> AnnotatedElementUtils.getMergedAnnotation(cla, annotationType);</span><br><span class="line">		<span class="comment">/*</span></span><br><span class="line"><span class="comment">		 * Annotation res = cla.getAnnotation(annotationType); if (res != null) return</span></span><br><span class="line"><span class="comment">		 * res; for (Annotation a : cla.getAnnotations()) &#123; res =</span></span><br><span class="line"><span class="comment">		 * getClassAnno(a.getClass(), annotationType); if (res != null) return res; &#125; //</span></span><br><span class="line"><span class="comment">		 * for return null;</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">	&#125;<span class="comment">// method</span></span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> Annotation <span class="title">getMethodAnno</span><span class="params">(Method method, Class&lt;? extends Annotation&gt; annotationType)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> AnnotatedElementUtils.getMergedAnnotation(method, annotationType);</span><br><span class="line">		<span class="comment">/*</span></span><br><span class="line"><span class="comment">		 * Annotation res = method.getAnnotation(annotationType); if (res != null)</span></span><br><span class="line"><span class="comment">		 * return res; for (Annotation a : method.getAnnotations()) &#123; res =</span></span><br><span class="line"><span class="comment">		 * getClassAnno(a.getClass(), annotationType); if (res != null) return res; &#125; //</span></span><br><span class="line"><span class="comment">		 * for return null;</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">	&#125;<span class="comment">// method</span></span><br><span class="line"></span><br><span class="line">	<span class="meta">@Data</span></span><br><span class="line">	<span class="meta">@AllArgsConstructor</span></span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">Box</span> </span>&#123;</span><br><span class="line">		Method m;</span><br><span class="line">		Object o;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;<span class="comment">// class</span></span><br></pre></td></tr></table></figure>
+
+<p>其他工具类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StringToClass</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">call</span><span class="params">(String param,Class&lt;?&gt; cla)</span> </span>&#123;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">if</span>(StringUtils.isEmpty(param)) <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">if</span> (cla.isAssignableFrom(String.class))</span><br><span class="line">			<span class="keyword">return</span> param;</span><br><span class="line">		<span class="keyword">if</span> (cla.isAssignableFrom(Integer.class) || cla.isAssignableFrom(<span class="keyword">int</span>.class))</span><br><span class="line">			<span class="keyword">return</span> Integer.valueOf(param);</span><br><span class="line">		<span class="keyword">if</span> (cla.isAssignableFrom(Short.class) || cla.isAssignableFrom(<span class="keyword">short</span>.class))</span><br><span class="line">			<span class="keyword">return</span> Short.valueOf(param);</span><br><span class="line">		<span class="keyword">if</span> (cla.isAssignableFrom(Long.class) || cla.isAssignableFrom(<span class="keyword">long</span>.class))</span><br><span class="line">			<span class="keyword">return</span> Long.valueOf(param);</span><br><span class="line">		<span class="keyword">if</span> (cla.isAssignableFrom(Float.class) || cla.isAssignableFrom(<span class="keyword">float</span>.class))</span><br><span class="line">			<span class="keyword">return</span> Float.valueOf(param);</span><br><span class="line">		<span class="keyword">if</span> (cla.isAssignableFrom(Double.class) || cla.isAssignableFrom(<span class="keyword">double</span>.class))</span><br><span class="line">			<span class="keyword">return</span> Double.valueOf(param);</span><br><span class="line">		<span class="keyword">if</span> (cla.isAssignableFrom(BigDecimal.class))</span><br><span class="line">			<span class="keyword">return</span> BigDecimal.valueOf(Double.valueOf(param));</span><br><span class="line">		<span class="keyword">if</span> (cla.isAssignableFrom(Boolean.class) || cla.isAssignableFrom(<span class="keyword">boolean</span>.class))</span><br><span class="line">			<span class="keyword">return</span> Boolean.valueOf(param);</span><br><span class="line">		<span class="keyword">if</span> (cla.isAssignableFrom(Byte.class) || cla.isAssignableFrom(<span class="keyword">byte</span>.class))</span><br><span class="line">			<span class="keyword">return</span> Byte.valueOf(param);</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;<span class="comment">// class</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">BeanUtils</span> <span class="keyword">extends</span> <span class="title">org</span>.<span class="title">springframework</span>.<span class="title">beans</span>.<span class="title">BeanUtils</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;Field&gt; <span class="title">getThisToObjectFies</span><span class="params">(Class&lt;?&gt; cls)</span> </span>&#123;</span><br><span class="line">		List&lt;Field&gt; res = <span class="keyword">new</span> ArrayList&lt;Field&gt;();</span><br><span class="line">		<span class="keyword">if</span> (cls == <span class="keyword">null</span>)</span><br><span class="line">			<span class="keyword">return</span> res;</span><br><span class="line">		<span class="keyword">do</span> &#123;</span><br><span class="line">			res.addAll(Arrays.asList(cls.getDeclaredFields()));</span><br><span class="line">		&#125; <span class="keyword">while</span> ((cls = cls.getSuperclass()) != <span class="keyword">null</span>);</span><br><span class="line">		<span class="keyword">return</span> res;</span><br><span class="line">	&#125;<span class="comment">// getThisToObjectFies</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Controller:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;index&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IndexController</span> <span class="keyword">extends</span> <span class="title">GlobalController</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Lazy(true)</span></span><br><span class="line">	<span class="meta">@Autowired</span></span><br><span class="line">	<span class="keyword">private</span> WebWilfulUtils wilfulUtils;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@PostMapping(&quot;wilful&quot;)</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> R <span class="title">test</span><span class="params">(<span class="meta">@RequestBody</span> List&lt;WilfulParam&gt; params)</span> </span>&#123;</span><br><span class="line">		Map&lt;String,R&gt; data = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">		params.forEach(p-&gt;&#123;</span><br><span class="line">			R mr = wilfulUtils.getR(p.getPath(), p.getParam());</span><br><span class="line">			data.put(p.getPath(), mr.pure());	</span><br><span class="line">		&#125;);</span><br><span class="line">		<span class="keyword">return</span> R.data(data);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;<span class="comment">// class IndexController</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WilfulParam</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> String path;</span><br><span class="line">	<span class="keyword">private</span> Map&lt;String,String&gt; param;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="小结-1"><a href="#小结-1" class="headerlink" title="小结:"></a>小结:</h3><p>麻烦的几个点是 </p>
+<p>​    组合注解的识别 最早是自己实现的 后修改为 使用Spring的AnnotatedElementUtils进行识别</p>
+<p>​    方法参数注入 这个真的是特别麻烦 现在的实现 支持注入的参数其实不够多</p>
+<p>​    方法参数名的识别也是个大坑  现在先用 Spring的ParameterNameDiscoverer 去识别</p>
+<p>还有些路径是不能识别的比如 /xxx/{id}/{xxxid} 这样的路径参数 的 @RequestMapper</p>
+<p>暂时没有这样的接口需要合并就先不实现了</p>
+<p>花点时间 基本上 所有的接口都可以被反射合并调用</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>lqs1848
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.lqs1848.top/2021-03-12%20Ajax%E8%AF%B7%E6%B1%82%E5%90%88%E5%B9%B6/" title="Ajax请求合并">https://blog.lqs1848.top/2021-03-12 Ajax请求合并/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"><i class="fa fa-tag"></i> Java</a>
+              <a href="/tags/JavaScript/" rel="tag"><i class="fa fa-tag"></i> JavaScript</a>
+              <a href="/tags/Web/" rel="tag"><i class="fa fa-tag"></i> Web</a>
+              <a href="/tags/Ajax/" rel="tag"><i class="fa fa-tag"></i> Ajax</a>
+              <a href="/tags/VUE/" rel="tag"><i class="fa fa-tag"></i> VUE</a>
+              <a href="/tags/%E5%8F%8D%E5%B0%84/" rel="tag"><i class="fa fa-tag"></i> 反射</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021-03-03%20WebFilter%E6%97%A0%E6%95%88%E9%97%AE%E9%A2%98/" rel="prev" title="WebFilter无效问题">
+                  <i class="fa fa-chevron-left"></i> WebFilter无效问题
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021-03-19%20Maven%20AssertionError/" rel="next" title="Maven AssertionError">
+                  Maven AssertionError <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lqs1848</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">74k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:07</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+<script>
+NexT.utils.loadComments('#valine-comments', () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', () => {
+    new Valine(Object.assign({"enable":true,"appId":"zQCISNuiboc1wS6vUseOmpYw-gzGzoHsz","appKey":"sx9tKFkPJOIzQBQVbAc5Hofq","placeholder":"输入你的评论\n昵称为必填项目，输入QQ号可以直接获取用户名和头像，并且省去了填写邮箱的麻烦！\n虽然email不是必选，但是填写了email可以收到推送通知哦！","avatar":"","meta":["nick","mail"],"pageSize":10,"lang":null,"visitor":true,"comment_count":true,"recordIP":true,"serverURLs":null,"enableQQ":true,"requiredFields":["nick"],"emojiCDN":"//cdn.jsdelivr.net/gh/haomingvince/ghcdn/","emojiMaps":{"bilibili_doge.png":"CommentEmote/bilibili_doge.png","bilibili_baiyan.png":"CommentEmote/bilibili_baiyan.png","bilibili_bishi.png":"CommentEmote/bilibili_bishi.png","bilibili_bizui.png":"CommentEmote/bilibili_bizui.png","bilibili_chan.png":"CommentEmote/bilibili_chan.png","bilibili_dai.png":"CommentEmote/bilibili_dai.png","bilibili_daku.png":"CommentEmote/bilibili_daku.png","bilibili_dalao.png":"CommentEmote/bilibili_dalao.png","bilibili_dalian.png":"CommentEmote/bilibili_dalian.png","bilibili_dianzan.png":"CommentEmote/bilibili_dianzan.png","bilibili_facai.png":"CommentEmote/bilibili_facai.png","bilibili_fanu.png":"CommentEmote/bilibili_fanu.png","bilibili_ganga.png":"CommentEmote/bilibili_ganga.png","bilibili_guilian.png":"CommentEmote/bilibili_guilian.png","bilibili_guzhang.png":"CommentEmote/bilibili_guzhang.png","bilibili_haixiu.png":"CommentEmote/bilibili_haixiu.png","bilibili_heirenwenhao.png":"CommentEmote/bilibili_heirenwenhao.png","bilibili_huaixiao.png":"CommentEmote/bilibili_huaixiao.png","bilibili_jingxia.png":"CommentEmote/bilibili_jingxia.png","bilibili_keai.png":"CommentEmote/bilibili_keai.png","bilibili_koubi.png":"CommentEmote/bilibili_koubi.png","bilibili_kun.png":"CommentEmote/bilibili_kun.png","bilibili_lengmo.png":"CommentEmote/bilibili_lengmo.png","bilibili_liubixue.png":"CommentEmote/bilibili_liubixue.png","bilibili_liuhan.png":"CommentEmote/bilibili_liuhan.png","bilibili_liulei.png":"CommentEmote/bilibili_liulei.png","bilibili_miantian.png":"CommentEmote/bilibili_miantian.png","bilibili_mudengkoudai.png":"CommentEmote/bilibili_mudengkoudai.png","bilibili_nanguo.png":"CommentEmote/bilibili_nanguo.png","bilibili_outu.png":"CommentEmote/bilibili_outu.png","bilibili_qinqin.png":"CommentEmote/bilibili_qinqin.png","bilibili_se.png":"CommentEmote/bilibili_se.png","bilibili_shengbing.png":"CommentEmote/bilibili_shengbing.png","bilibili_shengqi.png":"CommentEmote/bilibili_shengqi.png","bilibili_shuizhao.png":"CommentEmote/bilibili_shuizhao.png","bilibili_sikao.png":"CommentEmote/bilibili_sikao.png","bilibili_tiaokan.png":"CommentEmote/bilibili_tiaokan.png","bilibili_tiaopi.png":"CommentEmote/bilibili_tiaopi.png","bilibili_touxiao.png":"CommentEmote/bilibili_touxiao.png","bilibili_tuxie.png":"CommentEmote/bilibili_tuxie.png","bilibili_weiqu.png":"CommentEmote/bilibili_weiqu.png","bilibili_weixiao.png":"CommentEmote/bilibili_weixiao.png","bilibili_wunai.png":"CommentEmote/bilibili_wunai.png","bilibili_xiaoku.png":"CommentEmote/bilibili_xiaoku.png","bilibili_xieyanxiao.png":"CommentEmote/bilibili_xieyanxiao.png","bilibili_yiwen.png":"CommentEmote/bilibili_yiwen.png","bilibili_yun.png":"CommentEmote/bilibili_yun.png","bilibili_zaijian.png":"CommentEmote/bilibili_zaijian.png","bilibili_zhoumei.png":"CommentEmote/bilibili_zhoumei.png","bilibili_zhuakuang.png":"CommentEmote/bilibili_zhuakuang.png","tieba_1.png":"CommentEmote/tieba_1.png","tieba_2.png":"CommentEmote/tieba_2.png","tieba_3.png":"CommentEmote/tieba_3.png","tieba_4.png":"CommentEmote/tieba_4.png","tieba_5.png":"CommentEmote/tieba_5.png","tieba_6.png":"CommentEmote/tieba_6.png","tieba_7.png":"CommentEmote/tieba_7.png","tieba_8.png":"CommentEmote/tieba_8.png","tieba_9.png":"CommentEmote/tieba_9.png","tieba_10.png":"CommentEmote/tieba_10.png","tieba_11.png":"CommentEmote/tieba_11.png","tieba_12.png":"CommentEmote/tieba_12.png","tieba_13.png":"CommentEmote/tieba_13.png","tieba_14.png":"CommentEmote/tieba_14.png","tieba_15.png":"CommentEmote/tieba_15.png","tieba_16.png":"CommentEmote/tieba_16.png","tieba_17.png":"CommentEmote/tieba_17.png","tieba_18.png":"CommentEmote/tieba_18.png","tieba_19.png":"CommentEmote/tieba_19.png","tieba_20.png":"CommentEmote/tieba_20.png","tieba_21.png":"CommentEmote/tieba_21.png","tieba_22.png":"CommentEmote/tieba_22.png","tieba_23.png":"CommentEmote/tieba_23.png","tieba_24.png":"CommentEmote/tieba_24.png","tieba_25.png":"CommentEmote/tieba_25.png","tieba_26.png":"CommentEmote/tieba_26.png","tieba_27.png":"CommentEmote/tieba_27.png","tieba_28.png":"CommentEmote/tieba_28.png","tieba_29.png":"CommentEmote/tieba_29.png","tieba_30.png":"CommentEmote/tieba_30.png","tieba_31.png":"CommentEmote/tieba_31.png","tieba_32.png":"CommentEmote/tieba_32.png","tieba_33.png":"CommentEmote/tieba_33.png","tieba_46.png":"CommentEmote/tieba_46.png","tieba_47.png":"CommentEmote/tieba_47.png","tieba_48.png":"CommentEmote/tieba_48.png","tieba_49.png":"CommentEmote/tieba_49.png","tieba_50.png":"CommentEmote/tieba_50.png","tieba_66.png":"CommentEmote/tieba_66.png","tieba_67.png":"CommentEmote/tieba_67.png","tieba_68.png":"CommentEmote/tieba_68.png","tieba_69.png":"CommentEmote/tieba_69.png","tieba_70.png":"CommentEmote/tieba_70.png","tieba_71.png":"CommentEmote/tieba_71.png","tieba_72.png":"CommentEmote/tieba_72.png","tieba_73.png":"CommentEmote/tieba_73.png","tieba_74.png":"CommentEmote/tieba_74.png","tieba_75.png":"CommentEmote/tieba_75.png","tieba_76.png":"CommentEmote/tieba_76.png","tieba_86.png":"CommentEmote/tieba_86.png","tieba_87.png":"CommentEmote/tieba_87.png","tieba_88.png":"CommentEmote/tieba_88.png","tieba_89.png":"CommentEmote/tieba_89.png","tieba_90.png":"CommentEmote/tieba_90.png","tieba_91.png":"CommentEmote/tieba_91.png","tieba_92.png":"CommentEmote/tieba_92.png","tieba_93.png":"CommentEmote/tieba_93.png","tieba_95.png":"CommentEmote/tieba_95.png","tieba_96.png":"CommentEmote/tieba_96.png","tieba_97.png":"CommentEmote/tieba_97.png","tieba_98.png":"CommentEmote/tieba_98.png"}}, {
+      el: '#valine-comments',
+      path: "/2021-03-12%20Ajax%E8%AF%B7%E6%B1%82%E5%90%88%E5%B9%B6/",
+      serverURLs: "https://zqcisnui.api.lncldglobal.com"
+    }));
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
