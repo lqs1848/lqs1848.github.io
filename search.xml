@@ -559,6 +559,29 @@
       </tags>
   </entry>
   <entry>
+    <title>WebFilter无效问题</title>
+    <url>/2021-03-03%20WebFilter%E6%97%A0%E6%95%88%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<span id="more"></span>
+
+<blockquote>
+<p>在springboot应用中自定义Filter时，在Filter上添加<code>@compent</code>注解会使<code>urlPatterns</code>匹配路径变为<code>/*</code>而不是自定义路径</p>
+</blockquote>
+<p>应该是因为 @<em>WebFilter</em>注解 是由 Servlet3.0 提供的 而不是 spring提供的</p>
+<p>所以 spring 添加这个过滤器时没有把<code>urlPatterns</code>信息添加到过滤器中</p>
+<h1 id="解决方式："><a href="#解决方式：" class="headerlink" title="解决方式："></a>解决方式：</h1><ol>
+<li>移除类上的<code>@compent</code>注解，在启动类上添加<code>@ServletComponentScan</code>注解</li>
+<li>不使用<code>@WebFilter</code>方式声明过滤器，使用<code>FilterRegistrationBean</code>在配置类中注入Filter</li>
+</ol>
+]]></content>
+      <categories>
+        <category>Java</category>
+        <category>Spring</category>
+      </categories>
+      <tags>
+        <tag>WebFilter</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java上传文件临时文件目录丢失</title>
     <url>/2021-02-25%20Java%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E4%B8%B4%E6%97%B6%E6%96%87%E4%BB%B6%E7%9B%AE%E5%BD%95%E4%B8%A2%E5%A4%B1/</url>
     <content><![CDATA[<span id="more"></span>
@@ -589,29 +612,6 @@
         <category>Java</category>
         <category>Spring</category>
       </categories>
-  </entry>
-  <entry>
-    <title>WebFilter无效问题</title>
-    <url>/2021-03-03%20WebFilter%E6%97%A0%E6%95%88%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<span id="more"></span>
-
-<blockquote>
-<p>在springboot应用中自定义Filter时，在Filter上添加<code>@compent</code>注解会使<code>urlPatterns</code>匹配路径变为<code>/*</code>而不是自定义路径</p>
-</blockquote>
-<p>应该是因为 @<em>WebFilter</em>注解 是由 Servlet3.0 提供的 而不是 spring提供的</p>
-<p>所以 spring 添加这个过滤器时没有把<code>urlPatterns</code>信息添加到过滤器中</p>
-<h1 id="解决方式："><a href="#解决方式：" class="headerlink" title="解决方式："></a>解决方式：</h1><ol>
-<li>移除类上的<code>@compent</code>注解，在启动类上添加<code>@ServletComponentScan</code>注解</li>
-<li>不使用<code>@WebFilter</code>方式声明过滤器，使用<code>FilterRegistrationBean</code>在配置类中注入Filter</li>
-</ol>
-]]></content>
-      <categories>
-        <category>Java</category>
-        <category>Spring</category>
-      </categories>
-      <tags>
-        <tag>WebFilter</tag>
-      </tags>
   </entry>
   <entry>
     <title>Ajax请求合并</title>
@@ -709,8 +709,10 @@
 <blockquote>
 <p>MDC内部使用的是ThreadLocal所以只有本线程才有效</p>
 </blockquote>
-<p>slf4j MDC源码中 没有用 ThreadLocal 就是普通的Map 此处待研究 </p>
-<p>slf4j 中的MDC实现的是 静态单个Map 怎么做到不同线程不同实例</p>
+<p>slf4j MDC源码中 没有用 ThreadLocal 就是普通的Map </p>
+<p>使用 ThreadLocal 的是其他的日志框架覆盖 MDC实现</p>
+<p>比如 logback 就是在自身的包中覆盖了 org.slf4j 包中的部分类</p>
+<p>logback 中的MDC 就是使用 ThreadLocal</p>
 <h1 id="在-微服务当前切换-服务传递追踪码"><a href="#在-微服务当前切换-服务传递追踪码" class="headerlink" title="在 微服务当前切换 服务传递追踪码"></a>在 微服务当前切换 服务传递追踪码</h1><h2 id="gateway-网关传递"><a href="#gateway-网关传递" class="headerlink" title="gateway 网关传递"></a>gateway 网关传递</h2><p>直接在转发的请求头中携带即可</p>
 <h2 id="Feign-Hystrix传递"><a href="#Feign-Hystrix传递" class="headerlink" title="Feign Hystrix传递"></a>Feign Hystrix传递</h2><p>网上的写法都是介绍 HystrixRequestVariableDefault </p>
 <blockquote>
