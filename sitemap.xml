@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.lqs1848.top/about/index.html</loc>
+    
+    <lastmod>2021-04-23</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.lqs1848.top/2021/04/23/2021-04-23%20%20SpringCloud%20%E6%95%B4%E5%90%88%20Dubbo/</loc>
     
     <lastmod>2021-04-23</lastmod>
@@ -24,13 +31,6 @@
   
   <url>
     <loc>https://blog.lqs1848.top/tags/index.html</loc>
-    
-    <lastmod>2021-04-20</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.lqs1848.top/about/index.html</loc>
     
     <lastmod>2021-04-20</lastmod>
     
