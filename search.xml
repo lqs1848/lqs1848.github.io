@@ -381,6 +381,7 @@
       </categories>
       <tags>
         <tag>Maven</tag>
+        <tag>Exception</tag>
       </tags>
   </entry>
   <entry>
@@ -1011,6 +1012,46 @@
         <tag>SPI</tag>
         <tag>异常传递</tag>
         <tag>封装</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>DataBufferLimitException:Exceeded limit on max bytes to buffer</title>
+    <url>/2021/04/23/2021-05-08%20Exceeded%20limit%20on%20max%20bytes%20to%20buffer/</url>
+    <content><![CDATA[<span id="more"></span>
+
+<h1 id="WebFlux-上传文件异常"><a href="#WebFlux-上传文件异常" class="headerlink" title="WebFlux 上传文件异常"></a>WebFlux 上传文件异常</h1><p>错误信息提示</p>
+<blockquote>
+<p>DataBufferLimitException: Exceeded limit on max bytes to buffer : 262144</p>
+</blockquote>
+<p>网上随便一搜</p>
+<figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">codec:</span></span><br><span class="line">    <span class="attr">max-in-memory-size:</span> <span class="string">20MB</span></span><br></pre></td></tr></table></figure>
+
+<p>重启项目</p>
+<p>报错依旧…</p>
+<p>换个解决方式</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebfluxConfig</span> <span class="keyword">implements</span> <span class="title">WebFluxConfigurer</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> WebClient <span class="title">getWebClientBuilder</span><span class="params">()</span></span>&#123;</span><br><span class="line">	    <span class="keyword">return</span>   WebClient.builder().exchangeStrategies(ExchangeStrategies.builder()</span><br><span class="line">	            .codecs(configurer -&gt; configurer</span><br><span class="line">	                      .defaultCodecs()</span><br><span class="line">	                      .maxInMemorySize(<span class="number">20</span> * <span class="number">1024</span> * <span class="number">1024</span>))</span><br><span class="line">	                    .build())</span><br><span class="line">	                  .build();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">configureHttpMessageCodecs</span><span class="params">(ServerCodecConfigurer configurer)</span> </span>&#123;</span><br><span class="line">        configurer.defaultCodecs().maxInMemorySize(<span class="number">20</span> * <span class="number">1024</span> * <span class="number">1024</span>);</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>重启</p>
+<p>又报错…</p>
+<p>懵逼</p>
+<p>仔细研究了一下</p>
+<p>发现不是默认的Filter出错而是自己的自定义 Filter出错了</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//出错的位置</span></span><br><span class="line">ServerRequest serverRequest = <span class="keyword">new</span> DefaultServerRequest(exchange);</span><br><span class="line"></span><br><span class="line"><span class="comment">//修改为</span></span><br><span class="line">ServerRequest serverRequest = ServerRequest.create(exchange, codecConfigurer.getReaders());</span><br><span class="line"><span class="comment">//codecConfigurer 用spring注入的</span></span><br><span class="line"><span class="meta">@Autowired</span></span><br><span class="line">ServerCodecConfigurer codecConfigurer;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>简单讲就是 我自己写的 RequestBodyFilter 用的 Codecs 不是 Spring 注入的</p>
+<p>所以之前设置的都没有生效</p>
+<p>以前没问题是因为 这个filter 我写了 上传文件的白名单 这次接口刚添加 忘记加白名单了</p>
+]]></content>
+      <categories>
+        <category>Java</category>
+        <category>SpringCloud</category>
+      </categories>
+      <tags>
+        <tag>Spring</tag>
+        <tag>Exception</tag>
+        <tag>WebFlux</tag>
       </tags>
   </entry>
 </search>
