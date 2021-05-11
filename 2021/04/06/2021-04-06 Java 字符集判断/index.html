@@ -24,20 +24,19 @@
     var CONFIG = {"hostname":"blog.lqs1848.top","root":"/","images":"/images","scheme":"Gemini","version":"8.3.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
 <meta property="og:type" content="article">
-<meta property="og:title" content="DataBufferLimitException:Exceeded limit on max bytes to buffer">
-<meta property="og:url" content="https://blog.lqs1848.top/2021/05/08/2021-05-08%20Exceeded%20limit%20on%20max%20bytes%20to%20buffer/index.html">
+<meta property="og:title" content="Java 字符集判断">
+<meta property="og:url" content="https://blog.lqs1848.top/2021/04/06/2021-04-06%20Java%20%E5%AD%97%E7%AC%A6%E9%9B%86%E5%88%A4%E6%96%AD/index.html">
 <meta property="og:site_name" content="Chaos">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-05-07T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-05-08T07:53:11.179Z">
+<meta property="article:published_time" content="2021-04-05T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-05-11T03:53:21.343Z">
 <meta property="article:author" content="lqs1848">
-<meta property="article:tag" content="Spring">
-<meta property="article:tag" content="Exception">
-<meta property="article:tag" content="WebFlux">
+<meta property="article:tag" content="gb2312">
+<meta property="article:tag" content="字符集">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://blog.lqs1848.top/2021/05/08/2021-05-08%20Exceeded%20limit%20on%20max%20bytes%20to%20buffer/">
+<link rel="canonical" href="https://blog.lqs1848.top/2021/04/06/2021-04-06%20Java%20%E5%AD%97%E7%AC%A6%E9%9B%86%E5%88%A4%E6%96%AD/">
 
 
 <script class="page-configurations">
@@ -49,7 +48,7 @@
     lang   : 'zh-CN'
   };
 </script>
-<title>DataBufferLimitException:Exceeded limit on max bytes to buffer | Chaos</title>
+<title>Java 字符集判断 | Chaos</title>
   
 
 
@@ -188,7 +187,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#WebFlux-%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E5%BC%82%E5%B8%B8"><span class="nav-number">1.</span> <span class="nav-text">WebFlux 上传文件异常</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Java-%E5%AD%97%E7%AC%A6%E9%9B%86%E5%88%A4%E6%96%AD"><span class="nav-number">1.</span> <span class="nav-text">Java 字符集判断</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Charset-canEncode"><span class="nav-number">1.1.</span> <span class="nav-text">Charset.canEncode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%8C%96"><span class="nav-number">1.2.</span> <span class="nav-text">优化</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -202,7 +201,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-count">24</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -215,7 +214,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-count">38</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -259,7 +258,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.lqs1848.top/2021/05/08/2021-05-08%20Exceeded%20limit%20on%20max%20bytes%20to%20buffer/">
+    <link itemprop="mainEntityOfPage" href="https://blog.lqs1848.top/2021/04/06/2021-04-06%20Java%20%E5%AD%97%E7%AC%A6%E9%9B%86%E5%88%A4%E6%96%AD/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -272,7 +271,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          DataBufferLimitException:Exceeded limit on max bytes to buffer
+          Java 字符集判断
         </h1>
 
         <div class="post-meta-container">
@@ -283,7 +282,7 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2021-05-08 00:00:00" itemprop="dateCreated datePublished" datetime="2021-05-08T00:00:00+08:00">2021-05-08</time>
+      <time title="创建时间：2021-04-06 00:00:00" itemprop="dateCreated datePublished" datetime="2021-04-06T00:00:00+08:00">2021-04-06</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -292,10 +291,6 @@
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
           <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Java/SpringCloud/" itemprop="url" rel="index"><span itemprop="name">SpringCloud</span></a>
         </span>
     </span>
 
@@ -311,30 +306,40 @@
     <div class="post-body" itemprop="articleBody">
         <span id="more"></span>
 
-<h1 id="WebFlux-上传文件异常"><a href="#WebFlux-上传文件异常" class="headerlink" title="WebFlux 上传文件异常"></a>WebFlux 上传文件异常</h1><p>错误信息提示</p>
+<h1 id="Java-字符集判断"><a href="#Java-字符集判断" class="headerlink" title="Java 字符集判断"></a>Java 字符集判断</h1><p>线上项目中有小票打印设备</p>
+<p>小票打印的设备 没有做编码判断  小票机 只能打印GB2312的字符</p>
+<p>java后台给出的字符又是UTF-8的 部分字符超过GB2312的范围了</p>
+<p>百度了半天 关于Java的字符串 编码判断转换 都不能实现我所需要的效果</p>
+<p>其实就是 判断 一下 字符是否超过 GB2312 超过就替换为 “□” 这样的方块</p>
+<p>防止小票机出错就行了</p>
+<p>但是 百度到的都是 编码转换 </p>
+<p>比如</p>
 <blockquote>
-<p>DataBufferLimitException: Exceeded limit on max bytes to buffer : 262144</p>
+<p>String iso8859 = new String(sb.toString().getBytes(“iso8859-1”));<br>String gbk = new String(sb.toString().getBytes(“gbk”));<br>String utf8 = new String(sb.toString().getBytes(“utf-8”));<br>if(iso8859.equals(sb.toString())){<br>    System.out.println(“iso8859”);<br>}else  if(gbk.equals(sb.toString())){<br>    System.out.println(“gbk”);<br>}else  if(utf8.equals(sb.toString())){<br>    System.out.println(“utf8”);<br>}</p>
 </blockquote>
-<p>网上随便一搜</p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">codec:</span></span><br><span class="line">    <span class="attr">max-in-memory-size:</span> <span class="string">20MB</span></span><br></pre></td></tr></table></figure>
+<p>或者</p>
+<blockquote>
+<p>return new String(str.getBytes(“ISO-8859-1”), “UTF-8”);</p>
+</blockquote>
+<p>都无法准确的判断 或者转换字符串的编码</p>
+<p>实际上得使用</p>
+<h2 id="Charset-canEncode"><a href="#Charset-canEncode" class="headerlink" title="Charset.canEncode"></a>Charset.canEncode</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> String <span class="title">toGB2312</span><span class="params">(<span class="keyword">final</span> String s)</span> </span>&#123;</span><br><span class="line">    StringBuffer sb = <span class="keyword">new</span> StringBuffer();</span><br><span class="line">    Charset cs = Charset.forName(<span class="string">&quot;GB2312&quot;</span>);</span><br><span class="line">    CharsetEncoder encode = cs.newEncoder();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s.length(); i++) &#123;</span><br><span class="line">        <span class="keyword">char</span> x = s.charAt(i);</span><br><span class="line">        <span class="keyword">if</span> (encode.canEncode(x)) &#123;</span><br><span class="line">            sb.append(x);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            sb.append(<span class="string">&quot;□&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sb.toString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>重启项目</p>
-<p>报错依旧…</p>
-<p>换个解决方式</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebfluxConfig</span> <span class="keyword">implements</span> <span class="title">WebFluxConfigurer</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> WebClient <span class="title">getWebClientBuilder</span><span class="params">()</span></span>&#123;</span><br><span class="line">	    <span class="keyword">return</span>   WebClient.builder().exchangeStrategies(ExchangeStrategies.builder()</span><br><span class="line">	            .codecs(configurer -&gt; configurer</span><br><span class="line">	                      .defaultCodecs()</span><br><span class="line">	                      .maxInMemorySize(<span class="number">20</span> * <span class="number">1024</span> * <span class="number">1024</span>))</span><br><span class="line">	                    .build())</span><br><span class="line">	                  .build();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">configureHttpMessageCodecs</span><span class="params">(ServerCodecConfigurer configurer)</span> </span>&#123;</span><br><span class="line">        configurer.defaultCodecs().maxInMemorySize(<span class="number">20</span> * <span class="number">1024</span> * <span class="number">1024</span>);</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>重启</p>
-<p>又报错…</p>
-<p>懵逼</p>
-<p>仔细研究了一下</p>
-<p>发现不是默认的Filter出错而是自己的自定义 Filter出错了</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//出错的位置</span></span><br><span class="line">ServerRequest serverRequest = <span class="keyword">new</span> DefaultServerRequest(exchange);</span><br><span class="line"></span><br><span class="line"><span class="comment">//修改为</span></span><br><span class="line">ServerRequest serverRequest = ServerRequest.create(exchange, codecConfigurer.getReaders());</span><br><span class="line"><span class="comment">//codecConfigurer 用spring注入的</span></span><br><span class="line"><span class="meta">@Autowired</span></span><br><span class="line">ServerCodecConfigurer codecConfigurer;</span><br></pre></td></tr></table></figure>
+<p>问题解决~</p>
+<h2 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h2><p>GB2312 的字符太小了 </p>
+<p>很多商品其实是繁体字 是有对应的简体字的 虽然不多 但也聊胜于无吧</p>
+<p>引入 <a target="_blank" rel="noopener" href="https://github.com/program-in-chinese/zhconverter">https://github.com/program-in-chinese/zhconverter</a></p>
+<p>其中的 “繁到简单字.properties” 改名为 “toSimple.properties”</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> ResourceBundle keyMap = ResourceBundle.getBundle(<span class="string">&quot;toSimple&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> String <span class="title">toChineseSimplified</span><span class="params">(<span class="keyword">final</span> String str)</span> </span>&#123;</span><br><span class="line">    StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (str.length() &gt; <span class="number">1</span> &amp;&amp; keyMap.containsKey(str)) &#123;</span><br><span class="line">        <span class="keyword">return</span> keyMap.getString(str);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">char</span> c : str.toCharArray()) &#123;</span><br><span class="line">        String ch = String.valueOf(c);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如有多个对应字符, 暂时用第一个; 如果没有对应字符, 保留原字符</span></span><br><span class="line">        sb.append(keyMap.containsKey(ch) ? keyMap.getString(ch).charAt(<span class="number">0</span>) : ch);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sb.toString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
-<p>简单讲就是 我自己写的 RequestBodyFilter 用的 Codecs 不是 Spring 注入的</p>
-<p>所以之前设置的都没有生效</p>
-<p>以前没问题是因为 这个filter 我写了 上传文件的白名单 这次接口刚添加 忘记加白名单了</p>
+<p>在返回给小票机的接口上添加</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">//尝试让更多的字符能被扫码机识别</span></span><br><span class="line">    str = EnCodingUtils.toChineseSimplified(str);</span><br><span class="line">    <span class="comment">//扫码机只能识别 gb2312 不能识别 gb2312 以外的字符 超过范围的用 □ 代替</span></span><br><span class="line">    str = EnCodingUtils.toGB2312(str);</span><br><span class="line">&#125;<span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    log.error(<span class="string">&quot;字符转换异常&quot;</span>, e);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>搞定收工~</p>
 
     </div>
 	
@@ -352,7 +357,7 @@
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://blog.lqs1848.top/2021/05/08/2021-05-08%20Exceeded%20limit%20on%20max%20bytes%20to%20buffer/" title="DataBufferLimitException:Exceeded limit on max bytes to buffer">https://blog.lqs1848.top/2021/05/08/2021-05-08 Exceeded limit on max bytes to buffer/</a>
+      <a href="https://blog.lqs1848.top/2021/04/06/2021-04-06%20Java%20%E5%AD%97%E7%AC%A6%E9%9B%86%E5%88%A4%E6%96%AD/" title="Java 字符集判断">https://blog.lqs1848.top/2021/04/06/2021-04-06 Java 字符集判断/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -361,20 +366,22 @@
 </div>
 
           <div class="post-tags">
-              <a href="/tags/Spring/" rel="tag"># Spring</a>
-              <a href="/tags/Exception/" rel="tag"># Exception</a>
-              <a href="/tags/WebFlux/" rel="tag"># WebFlux</a>
+              <a href="/tags/gb2312/" rel="tag"># gb2312</a>
+              <a href="/tags/%E5%AD%97%E7%AC%A6%E9%9B%86/" rel="tag"># 字符集</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2021/04/23/2021-04-23%20%20SpringCloud%20%E6%95%B4%E5%90%88%20Dubbo/" rel="prev" title="SpringCloud 整合 Dubbo">
-                  <i class="fa fa-chevron-left"></i> SpringCloud 整合 Dubbo
+                <a href="/2021/03/31/2021-03-31%E5%88%86%E5%B8%83%E5%BC%8F%20%E6%97%A5%E5%BF%97%E8%BF%BD%E8%B8%AA%20%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/" rel="prev" title="分布式 日志追踪 链路追踪">
+                  <i class="fa fa-chevron-left"></i> 分布式 日志追踪 链路追踪
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/2021/04/14/2021-04-14%20TensorFlow%20Java/" rel="next" title="TensorFlow Java">
+                  TensorFlow Java <i class="fa fa-chevron-right"></i>
+                </a>
             </div>
           </div>
     </footer>

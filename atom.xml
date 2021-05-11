@@ -18,8 +18,8 @@
   
   <entry>
     <title>DataBufferLimitException:Exceeded limit on max bytes to buffer</title>
-    <link href="https://blog.lqs1848.top/2021/05/08/2021-05-08%20Exceeded%20limit%20on%20max%20bytes%20to%20buffer/"/>
-    <id>https://blog.lqs1848.top/2021/05/08/2021-05-08%20Exceeded%20limit%20on%20max%20bytes%20to%20buffer/</id>
+    <link href="https://blog.lqs1848.top/2021/05/08/2021-05-08%20Exceeded%20limit%20on%20max%20bytes%20to%20buffer%20-%20%E5%89%AF%E6%9C%AC/"/>
+    <id>https://blog.lqs1848.top/2021/05/08/2021-05-08%20Exceeded%20limit%20on%20max%20bytes%20to%20buffer%20-%20%E5%89%AF%E6%9C%AC/</id>
     <published>2021-05-07T16:00:00.000Z</published>
     <updated>2021-05-08T07:53:11.179Z</updated>
     
@@ -209,6 +209,34 @@
     <category term="Java" scheme="https://blog.lqs1848.top/tags/Java/"/>
     
     <category term="TensorFlow" scheme="https://blog.lqs1848.top/tags/TensorFlow/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java 字符集判断</title>
+    <link href="https://blog.lqs1848.top/2021/04/06/2021-04-06%20Java%20%E5%AD%97%E7%AC%A6%E9%9B%86%E5%88%A4%E6%96%AD/"/>
+    <id>https://blog.lqs1848.top/2021/04/06/2021-04-06%20Java%20%E5%AD%97%E7%AC%A6%E9%9B%86%E5%88%A4%E6%96%AD/</id>
+    <published>2021-04-05T16:00:00.000Z</published>
+    <updated>2021-05-11T03:53:21.343Z</updated>
+    
+    <content type="html"><![CDATA[<span id="more"></span><h1 id="Java-字符集判断"><a href="#Java-字符集判断" class="headerlink" title="Java 字符集判断"></a>Java 字符集判断</h1><p>线上项目中有小票打印设备</p><p>小票打印的设备 没有做编码判断  小票机 只能打印GB2312的字符</p><p>java后台给出的字符又是UTF-8的 部分字符超过GB2312的范围了</p><p>百度了半天 关于Java的字符串 编码判断转换 都不能实现我所需要的效果</p><p>其实就是 判断 一下 字符是否超过 GB2312 超过就替换为 “□” 这样的方块</p><p>防止小票机出错就行了</p><p>但是 百度到的都是 编码转换 </p><p>比如</p><blockquote><p>String iso8859 = new String(sb.toString().getBytes(“iso8859-1”));<br>String gbk = new String(sb.toString().getBytes(“gbk”));<br>String utf8 = new String(sb.toString().getBytes(“utf-8”));<br>if(iso8859.equals(sb.toString())){<br>    System.out.println(“iso8859”);<br>}else  if(gbk.equals(sb.toString())){<br>    System.out.println(“gbk”);<br>}else  if(utf8.equals(sb.toString())){<br>    System.out.println(“utf8”);<br>}</p></blockquote><p>或者</p><blockquote><p>return new String(str.getBytes(“ISO-8859-1”), “UTF-8”);</p></blockquote><p>都无法准确的判断 或者转换字符串的编码</p><p>实际上得使用</p><h2 id="Charset-canEncode"><a href="#Charset-canEncode" class="headerlink" title="Charset.canEncode"></a>Charset.canEncode</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> String <span class="title">toGB2312</span><span class="params">(<span class="keyword">final</span> String s)</span> </span>&#123;</span><br><span class="line">    StringBuffer sb = <span class="keyword">new</span> StringBuffer();</span><br><span class="line">    Charset cs = Charset.forName(<span class="string">&quot;GB2312&quot;</span>);</span><br><span class="line">    CharsetEncoder encode = cs.newEncoder();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s.length(); i++) &#123;</span><br><span class="line">        <span class="keyword">char</span> x = s.charAt(i);</span><br><span class="line">        <span class="keyword">if</span> (encode.canEncode(x)) &#123;</span><br><span class="line">            sb.append(x);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            sb.append(<span class="string">&quot;□&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sb.toString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>问题解决~</p><h2 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h2><p>GB2312 的字符太小了 </p><p>很多商品其实是繁体字 是有对应的简体字的 虽然不多 但也聊胜于无吧</p><p>引入 <a href="https://github.com/program-in-chinese/zhconverter">https://github.com/program-in-chinese/zhconverter</a></p><p>其中的 “繁到简单字.properties” 改名为 “toSimple.properties”</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> ResourceBundle keyMap = ResourceBundle.getBundle(<span class="string">&quot;toSimple&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> String <span class="title">toChineseSimplified</span><span class="params">(<span class="keyword">final</span> String str)</span> </span>&#123;</span><br><span class="line">    StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (str.length() &gt; <span class="number">1</span> &amp;&amp; keyMap.containsKey(str)) &#123;</span><br><span class="line">        <span class="keyword">return</span> keyMap.getString(str);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">char</span> c : str.toCharArray()) &#123;</span><br><span class="line">        String ch = String.valueOf(c);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如有多个对应字符, 暂时用第一个; 如果没有对应字符, 保留原字符</span></span><br><span class="line">        sb.append(keyMap.containsKey(ch) ? keyMap.getString(ch).charAt(<span class="number">0</span>) : ch);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sb.toString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>在返回给小票机的接口上添加</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">//尝试让更多的字符能被扫码机识别</span></span><br><span class="line">    str = EnCodingUtils.toChineseSimplified(str);</span><br><span class="line">    <span class="comment">//扫码机只能识别 gb2312 不能识别 gb2312 以外的字符 超过范围的用 □ 代替</span></span><br><span class="line">    str = EnCodingUtils.toGB2312(str);</span><br><span class="line">&#125;<span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    log.error(<span class="string">&quot;字符转换异常&quot;</span>, e);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>搞定收工~</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;span id=&quot;more&quot;&gt;&lt;/span&gt;
+
+&lt;h1 id=&quot;Java-字符集判断&quot;&gt;&lt;a href=&quot;#Java-字符集判断&quot; class=&quot;headerlink&quot; title=&quot;Java 字符集判断&quot;&gt;&lt;/a&gt;Java 字符集判断&lt;/h1&gt;&lt;p&gt;线上项目中有小票打印设备&lt;</summary>
+      
+    
+    
+    
+    <category term="Java" scheme="https://blog.lqs1848.top/categories/Java/"/>
+    
+    
+    <category term="gb2312" scheme="https://blog.lqs1848.top/tags/gb2312/"/>
+    
+    <category term="字符集" scheme="https://blog.lqs1848.top/tags/%E5%AD%97%E7%AC%A6%E9%9B%86/"/>
     
   </entry>
   
@@ -626,37 +654,6 @@
     <category term="MySQL" scheme="https://blog.lqs1848.top/tags/MySQL/"/>
     
     <category term="SQL" scheme="https://blog.lqs1848.top/tags/SQL/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>angularjs ui-router 刷新不缓存</title>
-    <link href="https://blog.lqs1848.top/2016/12/01/2016-12-01-angularjs-ui-router-%E5%88%B7%E6%96%B0%E4%B8%8D%E7%BC%93%E5%AD%98/"/>
-    <id>https://blog.lqs1848.top/2016/12/01/2016-12-01-angularjs-ui-router-%E5%88%B7%E6%96%B0%E4%B8%8D%E7%BC%93%E5%AD%98/</id>
-    <published>2016-11-30T16:00:00.000Z</published>
-    <updated>2021-04-15T03:55:08.787Z</updated>
-    
-    <content type="html"><![CDATA[<span id="more"></span><h1 id="angularjs-ui-router-刷新不缓存"><a href="#angularjs-ui-router-刷新不缓存" class="headerlink" title="angularjs ui-router 刷新不缓存"></a>angularjs ui-router 刷新不缓存</h1><h3 id=""><a href="#" class="headerlink" title=""></a></h3><p>加了cache:false不行，在页面ui-sref  后面加ui-sref-opts=”{reload:true}”  不行<br>网上的解决方法:$injector.get(‘$templateCache’).removeAll(); or  $templateCache.removeAll();<br>都是一次移除所有缓存 不实际</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;手动移除缓存</span><br><span class="line">$rootScope.$on(&#39;$stateChangeSuccess&#39;,function(event, toState, toParams, fromState, fromParams)&#123;</span><br><span class="line">          </span><br><span class="line">   &#x2F;&#x2F;移除模版缓存</span><br><span class="line">  var removeCache &#x3D; function(v)&#123;</span><br><span class="line">    if(typeof(v) &#x3D;&#x3D; &#39;String&#39;)</span><br><span class="line">    $templateCache.remove(v);</span><br><span class="line">  else if(typeof(v) &#x3D;&#x3D;&#39;function&#39;)</span><br><span class="line">    $templateCache.remove(v(toParams));</span><br><span class="line">  &#125;</span><br><span class="line">  if(toState.cache &#x3D;&#x3D;&#x3D; false)&#123;</span><br><span class="line">    if(typeof(toState.templateUrl) !&#x3D; &#39;undefined&#39;)</span><br><span class="line">      removeCache(toState.templateUrl);</span><br><span class="line">    else if(typeof(toState.views) !&#x3D; &#39;undefined&#39;)</span><br><span class="line">      for(var v in toState.views)</span><br><span class="line">        removeCache(toState.views[v].templateUrl);</span><br><span class="line">  &#125;&#x2F;&#x2F;cache</span><br><span class="line"></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;配置文件信息</span><br><span class="line">.state(&#39;app.settings.siteManage.details&#39;,&#123;&#x2F;&#x2F;站点管理  未翻译</span><br><span class="line">              url:&#39;&#x2F;details&#x2F;:id&#x2F;:type&#39;,</span><br><span class="line">              cache:false,</span><br><span class="line">              views: &#123;</span><br><span class="line">              &quot;header@app&quot; : &#123;</span><br><span class="line">              templateUrl : $ctx +&quot;&#x2F;main&#x2F;settings&#x2F;header&quot;</span><br><span class="line">              &#125;,</span><br><span class="line">              &quot;container@app&quot; : &#123;</span><br><span class="line">              templateUrl: function($routeParams)&#123;return &#39;&#x2F;siteManage&#x2F;details&#x2F;&#39;+$routeParams.id+&#39;&#x2F;&#39;+$routeParams.type;&#125;,</span><br><span class="line">                          controller:&#39;SiteManageIndexController&#39;</span><br><span class="line">                      &#125;</span><br><span class="line">              &#125;,</span><br><span class="line">              resolve:&#123;</span><br><span class="line">              deps:[</span><br><span class="line">                    &#39;$ocLazyLoad&#39;,</span><br><span class="line">                    function($ocLazyLoad)&#123;</span><br><span class="line">                    return $ocLazyLoad.load([&#39;&#x2F;static&#x2F;js&#x2F;controllers&#x2F;SiteManage.js&#39; ]);</span><br><span class="line">                    &#125;</span><br><span class="line">              ]</span><br><span class="line">              &#125;</span><br><span class="line">              &#125;)</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;span id=&quot;more&quot;&gt;&lt;/span&gt;
-
-
-&lt;h1 id=&quot;angularjs-ui-router-刷新不缓存&quot;&gt;&lt;a href=&quot;#angularjs-ui-router-刷新不缓存&quot; class=&quot;headerlink&quot; title=&quot;angularjs ui-rou</summary>
-      
-    
-    
-    
-    <category term="JavaScript" scheme="https://blog.lqs1848.top/categories/JavaScript/"/>
-    
-    <category term="AngularJs" scheme="https://blog.lqs1848.top/categories/JavaScript/AngularJs/"/>
-    
-    
-    <category term="Java" scheme="https://blog.lqs1848.top/tags/Java/"/>
-    
-    <category term="angularjs" scheme="https://blog.lqs1848.top/tags/angularjs/"/>
     
   </entry>
   
