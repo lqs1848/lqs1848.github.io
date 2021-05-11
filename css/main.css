@@ -1708,6 +1708,9 @@ pre code {
   width: 100%;
   z-index: 1500;
 }
+.comments .vpower {
+  display: none;
+}
 .rtl.post-body p,
 .rtl.post-body a,
 .rtl.post-body h1,
