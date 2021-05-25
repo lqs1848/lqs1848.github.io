@@ -1,0 +1,1061 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.17.0.final using JasperReports Library version 6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SalesApproval" pageWidth="603" pageHeight="394" columnWidth="583" leftMargin="10" rightMargin="10" topMargin="0" bottomMargin="20" uuid="c6d5a074-dcc3-4a8d-9bb5-b9d61cb5b272">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="202"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Transparent" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Dataset1" uuid="d2b8c8f8-978a-4b0a-b037-90717cbcc629">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="202"/>
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<parameter name="pid" class="java.lang.Long"/>
+		<parameter name="gid" class="java.lang.Long"/>
+		<parameter name="orderid" class="java.lang.Long"/>
+		<parameter name="sum_quantity" class="java.math.BigDecimal"/>
+		<parameter name="sum_money" class="java.math.BigDecimal"/>
+		<parameter name="china_sum_money" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[SELECT 
+  pmd.barcode as material_code,
+  pm.material_name,
+  pmd.scaling_factor as material_specification,
+	CASE (rom.material_quantity MOD pmd.scaling_factor) WHEN 0 THEN (rom.material_quantity DIV pmd.scaling_factor) ELSE 
+		rom.material_quantity
+	END as material_quantity,
+  CASE (rom.material_quantity MOD pmd.scaling_factor) WHEN 0 THEN pmd.auxiliary_unit ELSE 
+	a.auxiliary_unit
+	END as auxiliary_unit,
+  rom.discount_price,
+  rom.discount_price * rom.material_quantity AS total_amount,
+CASE (rom.material_quantity MOD pmd.scaling_factor) WHEN 0 THEN concat((rom.material_quantity DIV pmd.scaling_factor),' ',pmd.auxiliary_unit) ELSE 
+	concat((rom.material_quantity DIV pmd.scaling_factor),' ',pmd.auxiliary_unit," + ",(rom.material_quantity MOD pmd.scaling_factor),' ',a.auxiliary_unit)
+END as remark
+FROM
+ rep_order_material_$P!{gid} rom 
+  LEFT JOIN pub_material_$P!{gid} pm 
+    ON pm.material_id = rom.material_id 
+  LEFT JOIN pub_material_detail_$P!{gid} pmd 
+    ON rom.md_id = pmd.md_id 
+  JOIN pub_material_detail_$P!{gid} a  ON rom.material_id = a.material_id
+    WHERE rom.order_num = $P{orderid} AND rom.order_type = 101 AND a.scaling_factor = 1
+    ORDER BY rom.order_material_id asc]]>
+		</queryString>
+		<field name="material_code" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="material_code"/>
+			<property name="com.jaspersoft.studio.field.label" value="material_code"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="pub_material_34"/>
+			<fieldDescription><![CDATA[物料编码]]></fieldDescription>
+		</field>
+		<field name="material_name" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="material_name"/>
+			<property name="com.jaspersoft.studio.field.label" value="material_name"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="pub_material_34"/>
+			<fieldDescription><![CDATA[物料名称]]></fieldDescription>
+		</field>
+		<field name="material_specification" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="material_specification"/>
+			<property name="com.jaspersoft.studio.field.label" value="material_specification"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="pub_material_34"/>
+			<fieldDescription><![CDATA[规格型号]]></fieldDescription>
+		</field>
+		<field name="material_quantity" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.name" value="material_quantity"/>
+			<property name="com.jaspersoft.studio.field.label" value="material_quantity"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="rep_order_material_34"/>
+			<fieldDescription><![CDATA[数量]]></fieldDescription>
+		</field>
+		<field name="auxiliary_unit" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="auxiliary_unit"/>
+			<property name="com.jaspersoft.studio.field.label" value="auxiliary_unit"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="pub_material_detail_34"/>
+			<fieldDescription><![CDATA[单位]]></fieldDescription>
+		</field>
+		<field name="discount_price" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="discount_price"/>
+			<property name="com.jaspersoft.studio.field.label" value="discount_price"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="rep_order_material_34"/>
+			<fieldDescription><![CDATA[折后价]]></fieldDescription>
+		</field>
+		<field name="total_amount" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="total_amount"/>
+			<property name="com.jaspersoft.studio.field.label" value="total_amount"/>
+		</field>
+		<field name="remark" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="remark"/>
+			<property name="com.jaspersoft.studio.field.label" value="remark"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="rep_order_material_34"/>
+			<fieldDescription><![CDATA[备注]]></fieldDescription>
+		</field>
+		<variable name="cpage_quantity" class="java.lang.Integer" resetType="Column" calculation="Sum">
+			<variableExpression><![CDATA[$F{material_quantity}]]></variableExpression>
+		</variable>
+		<variable name="cpage_money" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
+			<variableExpression><![CDATA[$F{total_amount}]]></variableExpression>
+		</variable>
+	</subDataset>
+	<parameter name="pid" class="java.lang.Long"/>
+	<parameter name="gid" class="java.lang.Long"/>
+	<parameter name="orderid" class="java.lang.Long"/>
+	<queryString>
+		<![CDATA[SELECT
+a.sale_order_id,
+a.sale_order_num,
+a.delivery_period,
+a.expect_receiving_time,
+a.cli_phone,
+a.cli_address,
+a.expect_receiving_amount,
+a.discount_amount,
+a.actual_receiving_amount,
+a.out_time,
+a.done_time,
+a.platform_id,
+a.group_id,
+DATE_FORMAT(a.create_time,'%Y-%m-%d') as create_time,
+a.create_by,
+a.remark,
+a.dept_name,
+a.employee_name,
+a.cli_name,
+a.name,
+a.pm_name,
+a.account_name,
+a.invoice_flag,
+c.warehouse_addr,
+c.warehouse_tel,
+d.account_num,
+d.account_bank,
+e.platform_name,
+f.sum_quantity,
+f.sum_total_amount,
+to_china_num(f.sum_total_amount) as china_money
+FROM sal_order_$P!{gid} a
+LEFT JOIN pub_warehouse_$P!{gid} c ON a.warehouse_id = c.warehouse_id
+LEFT JOIN pub_account_$P!{gid} d ON a.collection_account = d.account_id
+LEFT JOIN sys_platform e ON a.platform_id = e.platform_id
+left join (
+SELECT 
+	rom.order_num,
+  sum(rom.material_quantity) AS sum_quantity,
+  sum(rom.discount_price * rom.material_quantity) AS sum_total_amount
+FROM
+	rep_order_material_$P!{gid} rom 
+  WHERE rom.order_num = $P{orderid} AND rom.order_type = 101
+group by rom.order_num
+) f on a.sale_order_id = f.order_num
+WHERE a.sale_order_id = $P{orderid} AND a.platform_id = $P{pid} AND a.group_id = $P{gid}]]>
+	</queryString>
+	<field name="sale_order_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="sale_order_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="sale_order_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sal_order_34"/>
+		<fieldDescription><![CDATA[主键id]]></fieldDescription>
+	</field>
+	<field name="sale_order_num" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="sale_order_num"/>
+		<property name="com.jaspersoft.studio.field.label" value="sale_order_num"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sal_order_34"/>
+		<fieldDescription><![CDATA[销售订单号]]></fieldDescription>
+	</field>
+	<field name="delivery_period" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="delivery_period"/>
+		<property name="com.jaspersoft.studio.field.label" value="delivery_period"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sal_order_34"/>
+		<fieldDescription><![CDATA[交货期限]]></fieldDescription>
+	</field>
+	<field name="expect_receiving_time" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="expect_receiving_time"/>
+		<property name="com.jaspersoft.studio.field.label" value="expect_receiving_time"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sal_order_34"/>
+		<fieldDescription><![CDATA[应收日期]]></fieldDescription>
+	</field>
+	<field name="cli_phone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cli_phone"/>
+		<property name="com.jaspersoft.studio.field.label" value="cli_phone"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sal_order_34"/>
+		<fieldDescription><![CDATA[客户联系电话]]></fieldDescription>
+	</field>
+	<field name="cli_address" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cli_address"/>
+		<property name="com.jaspersoft.studio.field.label" value="cli_address"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sal_order_34"/>
+		<fieldDescription><![CDATA[客户地址]]></fieldDescription>
+	</field>
+	<field name="expect_receiving_amount" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="expect_receiving_amount"/>
+		<property name="com.jaspersoft.studio.field.label" value="expect_receiving_amount"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sal_order_34"/>
+		<fieldDescription><![CDATA[应收金额]]></fieldDescription>
+	</field>
+	<field name="discount_amount" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="discount_amount"/>
+		<property name="com.jaspersoft.studio.field.label" value="discount_amount"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sal_order_34"/>
+		<fieldDescription><![CDATA[优惠金额]]></fieldDescription>
+	</field>
+	<field name="actual_receiving_amount" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="actual_receiving_amount"/>
+		<property name="com.jaspersoft.studio.field.label" value="actual_receiving_amount"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sal_order_34"/>
+		<fieldDescription><![CDATA[实收金额]]></fieldDescription>
+	</field>
+	<field name="out_time" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="out_time"/>
+		<property name="com.jaspersoft.studio.field.label" value="out_time"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sal_order_34"/>
+		<fieldDescription><![CDATA[出库时间]]></fieldDescription>
+	</field>
+	<field name="done_time" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="done_time"/>
+		<property name="com.jaspersoft.studio.field.label" value="done_time"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sal_order_34"/>
+		<fieldDescription><![CDATA[订单完成时间]]></fieldDescription>
+	</field>
+	<field name="platform_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="platform_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="platform_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sal_order_34"/>
+		<fieldDescription><![CDATA[平台id]]></fieldDescription>
+	</field>
+	<field name="group_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="group_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="group_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sal_order_34"/>
+		<fieldDescription><![CDATA[集团id]]></fieldDescription>
+	</field>
+	<field name="create_time" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="create_time"/>
+		<property name="com.jaspersoft.studio.field.label" value="create_time"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sal_order_47"/>
+		<fieldDescription><![CDATA[创建时间]]></fieldDescription>
+	</field>
+	<field name="create_by" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="create_by"/>
+		<property name="com.jaspersoft.studio.field.label" value="create_by"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sal_order_34"/>
+		<fieldDescription><![CDATA[创建人]]></fieldDescription>
+	</field>
+	<field name="remark" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="remark"/>
+		<property name="com.jaspersoft.studio.field.label" value="remark"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sal_order_34"/>
+		<fieldDescription><![CDATA[单据备注]]></fieldDescription>
+	</field>
+	<field name="dept_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="dept_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="dept_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sal_order_34"/>
+		<fieldDescription><![CDATA[销售部门名称]]></fieldDescription>
+	</field>
+	<field name="employee_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="employee_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="employee_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sal_order_34"/>
+		<fieldDescription><![CDATA[销售员名称]]></fieldDescription>
+	</field>
+	<field name="cli_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cli_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="cli_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sal_order_34"/>
+		<fieldDescription><![CDATA[客户名称]]></fieldDescription>
+	</field>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="name"/>
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sal_order_34"/>
+		<fieldDescription><![CDATA[仓库名称]]></fieldDescription>
+	</field>
+	<field name="pm_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pm_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="pm_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sal_order_34"/>
+		<fieldDescription><![CDATA[计价方式名称]]></fieldDescription>
+	</field>
+	<field name="account_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="account_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="account_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sal_order_34"/>
+		<fieldDescription><![CDATA[付款账户名称]]></fieldDescription>
+	</field>
+	<field name="invoice_flag" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="invoice_flag"/>
+		<property name="com.jaspersoft.studio.field.label" value="invoice_flag"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sal_order_34"/>
+		<fieldDescription><![CDATA[是否含票 0无 1有]]></fieldDescription>
+	</field>
+	<field name="warehouse_addr" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="warehouse_addr"/>
+		<property name="com.jaspersoft.studio.field.label" value="warehouse_addr"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pub_warehouse_34"/>
+		<fieldDescription><![CDATA[仓库地址]]></fieldDescription>
+	</field>
+	<field name="warehouse_tel" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="warehouse_tel"/>
+		<property name="com.jaspersoft.studio.field.label" value="warehouse_tel"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pub_warehouse_34"/>
+		<fieldDescription><![CDATA[仓库电话]]></fieldDescription>
+	</field>
+	<field name="account_num" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="account_num"/>
+		<property name="com.jaspersoft.studio.field.label" value="account_num"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pub_account_34"/>
+		<fieldDescription><![CDATA[账号]]></fieldDescription>
+	</field>
+	<field name="account_bank" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="account_bank"/>
+		<property name="com.jaspersoft.studio.field.label" value="account_bank"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pub_account_34"/>
+		<fieldDescription><![CDATA[开户行]]></fieldDescription>
+	</field>
+	<field name="platform_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="platform_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="platform_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sys_platform"/>
+		<fieldDescription><![CDATA[平台名称]]></fieldDescription>
+	</field>
+	<field name="sum_quantity" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="sum_quantity"/>
+		<property name="com.jaspersoft.studio.field.label" value="sum_quantity"/>
+	</field>
+	<field name="sum_total_amount" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="sum_total_amount"/>
+		<property name="com.jaspersoft.studio.field.label" value="sum_total_amount"/>
+	</field>
+	<field name="china_money" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="china_money"/>
+		<property name="com.jaspersoft.studio.field.label" value="china_money"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="119" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="146" y="2" width="270" height="30" uuid="94e2c4a9-df20-442f-810b-ffc41c2e521c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="19" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{platform_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="460" y="23" width="110" height="20" uuid="57766e0d-bd7a-49cf-8539-1369a1ad81bd"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sale_order_num}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="431" y="20" width="42" height="26" uuid="de8de7d6-4379-4a06-8f6c-60442103724a"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="宋体" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[单号：]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="176" y="34" width="100" height="16" uuid="2403f3a3-23b0-47e2-8d7a-408cfe4c3c6b"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="288" y="34" width="100" height="16" uuid="8cdb5c44-f07f-4315-a213-f5869d8ca498"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="261" y="32" width="42" height="20" uuid="277f470d-edff-446f-9f67-f65464d5552b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[/]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="432" y="35" width="68" height="26" uuid="2be48eb5-329d-44e1-b710-1d760c64b2d8"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="宋体" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[制单日期：]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="480" y="38" width="100" height="19" uuid="6f7eee06-2cc0-4629-b089-c7c728ff6577"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{create_time}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="58" y="63" width="100" height="17" uuid="437df324-50f4-4955-a957-f426e4a6ec39"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="宋体" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cli_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="58" width="60" height="26" uuid="9510946c-c20a-4af4-a3ec-297210c92d7f"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="宋体" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[客户名称：]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="80" width="60" height="26" uuid="04bb9549-39be-4d4f-aaa6-8e60c9361360"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="宋体" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[单据备注：]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="326" y="58" width="60" height="26" uuid="f7a64956-08fc-4cf6-9410-14494c401ebb"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="宋体" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[送货地址：]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="380" y="65" width="191" height="40" uuid="754784b0-be6d-44f5-9d44-b90e94075989"/>
+				<textElement>
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cli_address}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="57" y="88" width="271" height="30" uuid="cd695663-70b1-450c-9f94-f94d93dc473f"/>
+				<textElement>
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{remark}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="170" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<componentElement>
+				<reportElement x="0" y="0" width="585" height="170" uuid="de7f1ce7-c32b-4c9d-882c-d7451593fa90">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Dataset1" uuid="4920e926-8aad-46a4-8ee1-7c83ae77f9ea">
+						<datasetParameter name="gid">
+							<datasetParameterExpression><![CDATA[$P{gid}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="pid">
+							<datasetParameterExpression><![CDATA[$P{pid}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="orderid">
+							<datasetParameterExpression><![CDATA[$P{orderid}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="sum_money">
+							<datasetParameterExpression><![CDATA[$F{sum_total_amount}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="sum_quantity">
+							<datasetParameterExpression><![CDATA[$F{sum_quantity}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="china_sum_money">
+							<datasetParameterExpression><![CDATA[$F{china_money}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:columnGroup width="314" uuid="3a188614-1507-47f1-9030-4639ee6b5e2f">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [4]"/>
+						<jr:columnFooter style="Table_CH" height="20" rowSpan="1">
+							<box>
+								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+						</jr:columnFooter>
+						<jr:columnGroup width="314" uuid="53231d42-7718-46ab-a40f-149e36f21036">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [4]"/>
+							<jr:columnFooter style="Table_CH" height="20" rowSpan="1">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="314" height="20" uuid="6fdf59b4-81d0-4efb-97de-d9c7cc2f6332"/>
+									<textElement verticalAlignment="Middle">
+										<font fontName="宋体"/>
+									</textElement>
+									<textFieldExpression><![CDATA["  金额总计(大写): "+$P{china_sum_money}]]></textFieldExpression>
+								</textField>
+							</jr:columnFooter>
+							<jr:column width="30" uuid="1ee33450-9aa7-4833-90f3-6b5484aa834c">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+								<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+									<box>
+										<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									</box>
+								</jr:columnHeader>
+								<jr:detailCell style="Table_TD" height="20">
+									<textField isBlankWhenNull="true">
+										<reportElement x="0" y="0" width="30" height="20" uuid="f91821c1-7cd1-4d6e-a451-d063d2361eef"/>
+										<box>
+											<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										</box>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+							<jr:column width="70" uuid="014ff898-1fc8-49d7-aab4-79307fe631cb">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+								<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+									<box>
+										<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									</box>
+									<staticText>
+										<reportElement x="0" y="0" width="70" height="20" uuid="c7d7736f-dd68-4daa-9d18-11b1a9b384e7"/>
+										<box>
+											<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+											<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+											<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+											<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										</box>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<text><![CDATA[条码]]></text>
+									</staticText>
+								</jr:columnHeader>
+								<jr:detailCell style="Table_TD" height="20">
+									<textField isBlankWhenNull="true">
+										<reportElement x="0" y="0" width="70" height="20" uuid="06f76fd8-9be2-4dc9-bdd1-6bc708265f24"/>
+										<box>
+											<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										</box>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{material_code}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+							<jr:column width="164" uuid="e6258dfd-8fd7-4355-af22-3673a07bc34b">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+								<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+									<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									<box>
+										<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									</box>
+									<staticText>
+										<reportElement x="0" y="0" width="164" height="20" uuid="087bdb57-2ef1-45e5-ab33-90e2e1ca5348"/>
+										<box>
+											<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+											<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										</box>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<text><![CDATA[物料名称]]></text>
+									</staticText>
+								</jr:columnHeader>
+								<jr:detailCell style="Table_TD" height="20">
+									<textField isBlankWhenNull="true">
+										<reportElement x="0" y="0" width="164" height="20" uuid="6ff4f4b9-334d-4e5d-8365-ca4960c71222"/>
+										<box>
+											<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										</box>
+										<textElement textAlignment="Left" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[" "+$F{material_name}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+							<jr:column width="50" uuid="6e365ab6-fc3a-46ac-ac64-a996112eb44d">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+								<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+									<box>
+										<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									</box>
+									<staticText>
+										<reportElement x="0" y="0" width="50" height="20" uuid="32468152-ff0a-4476-917a-a23c7e583812"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<text><![CDATA[规格]]></text>
+									</staticText>
+								</jr:columnHeader>
+								<jr:detailCell style="Table_TD" height="20">
+									<textField isBlankWhenNull="true">
+										<reportElement x="0" y="0" width="50" height="20" uuid="b7e7c964-04ad-44ee-b40b-dc5d9cbbee45"/>
+										<box>
+											<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										</box>
+										<textElement textAlignment="Left" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[" "+$F{material_specification}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+					</jr:columnGroup>
+					<jr:columnGroup width="120" uuid="5e360459-122d-462e-a771-5d0379e77721">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [3]"/>
+						<jr:columnFooter style="Table_CH" height="20" rowSpan="1">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<box>
+								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement x="0" y="0" width="120" height="20" uuid="72f1b850-31e7-4fa0-9650-6172004df226"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="宋体"/>
+								</textElement>
+								<textFieldExpression><![CDATA["本单合计: "+$P{sum_quantity}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:columnGroup width="120" uuid="9361f312-5e4a-426e-8e26-9e2fa813f1f1">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [3]"/>
+							<jr:columnFooter style="Table_CH" height="20" rowSpan="1">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textField>
+									<reportElement x="0" y="0" width="120" height="20" uuid="21bc1166-7454-43cc-b873-1b68e2ed2510"/>
+									<textElement textAlignment="Left" verticalAlignment="Middle">
+										<font fontName="宋体"/>
+									</textElement>
+									<textFieldExpression><![CDATA["本页合计: "+$V{cpage_quantity}.intValue()]]></textFieldExpression>
+								</textField>
+							</jr:columnFooter>
+							<jr:column width="40" uuid="90f464d9-31f4-44e2-830c-63219930d1e0">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+								<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+									<box>
+										<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									</box>
+									<staticText>
+										<reportElement x="0" y="0" width="40" height="20" uuid="bfdb9f91-a272-46ae-aea2-7e488f24fab4"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<text><![CDATA[数量]]></text>
+									</staticText>
+								</jr:columnHeader>
+								<jr:detailCell style="Table_TD" height="20">
+									<textField isBlankWhenNull="true">
+										<reportElement x="0" y="0" width="40" height="20" uuid="e0674893-1585-4988-b84b-3af9b2bd9daa"/>
+										<box>
+											<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										</box>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{material_quantity}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+							<jr:column width="40" uuid="c6679409-7292-43a5-8af4-e3700c114c95">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+								<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+									<box>
+										<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									</box>
+									<staticText>
+										<reportElement x="0" y="0" width="40" height="20" uuid="96bba957-e762-48ee-8022-d15f55eb291a"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<text><![CDATA[单位]]></text>
+									</staticText>
+								</jr:columnHeader>
+								<jr:detailCell style="Table_TD" height="20">
+									<textField isBlankWhenNull="true">
+										<reportElement x="0" y="0" width="40" height="20" uuid="2ef6a700-6d07-45ff-a185-4530ed3aedb7"/>
+										<box>
+											<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										</box>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{auxiliary_unit}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+							<jr:column width="40" uuid="39181d0d-9676-4c5d-9765-0b867335dc8f">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
+								<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+									<box>
+										<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									</box>
+									<staticText>
+										<reportElement x="0" y="0" width="40" height="20" uuid="c880d28e-1d5f-4d2b-8b12-5dd4c20ecc45"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<text><![CDATA[单价]]></text>
+									</staticText>
+								</jr:columnHeader>
+								<jr:detailCell style="Table_TD" height="20">
+									<textField isBlankWhenNull="true">
+										<reportElement x="0" y="0" width="40" height="20" uuid="67df0a5b-9133-4efc-9d9d-576d22b6df8b"/>
+										<box>
+											<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										</box>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{discount_price}.setScale( 2 )]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+					</jr:columnGroup>
+					<jr:columnGroup width="150" uuid="5da01f3e-b0f7-4b13-882b-8097d5641a92">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [2]"/>
+						<jr:columnFooter style="Table_CH" height="20" rowSpan="1">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<box>
+								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement x="0" y="0" width="150" height="20" uuid="d1ebbfe2-7509-46d4-a554-08ac57b45602"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="宋体"/>
+								</textElement>
+								<textFieldExpression><![CDATA["本单金额总计: "+$P{sum_money}.setScale( 2 )]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:columnGroup width="150" uuid="2b3463ef-a4df-4afc-87fd-f3c07d3ad1fc">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [2]"/>
+							<jr:columnFooter style="Table_CH" height="20" rowSpan="1">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textField>
+									<reportElement x="0" y="0" width="150" height="20" uuid="e0365762-b7c0-4942-8011-29c9d828df48"/>
+									<textElement textAlignment="Left" verticalAlignment="Middle">
+										<font fontName="宋体"/>
+									</textElement>
+									<textFieldExpression><![CDATA["本页金额小计: "+$V{cpage_money}.setScale( 2 )]]></textFieldExpression>
+								</textField>
+							</jr:columnFooter>
+							<jr:column width="50" uuid="8bc9362b-9643-4d97-892d-fdc9a5b92cce">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
+								<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+									<box>
+										<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									</box>
+									<staticText>
+										<reportElement x="0" y="0" width="50" height="20" uuid="28c85c9e-b942-4e78-851f-95dd2e1ef68c"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<text><![CDATA[金额]]></text>
+									</staticText>
+								</jr:columnHeader>
+								<jr:detailCell style="Table_TD" height="20">
+									<textField isBlankWhenNull="true">
+										<reportElement x="0" y="0" width="50" height="20" uuid="0e7e6759-0a44-4740-ba1c-ba6ad553abe4"/>
+										<box>
+											<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										</box>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{total_amount}.setScale( 2 )]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+							<jr:column width="100" uuid="7e5a7504-e014-446b-ac8a-bb44b91e2d1b">
+								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column9"/>
+								<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+									<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									<box>
+										<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									</box>
+									<staticText>
+										<reportElement x="0" y="0" width="100" height="20" uuid="3d7dd500-d154-4ad0-a113-a555612b95af">
+											<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+										</reportElement>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<text><![CDATA[备注]]></text>
+									</staticText>
+								</jr:columnHeader>
+								<jr:detailCell style="Table_TD" height="20">
+									<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									<textField isBlankWhenNull="true">
+										<reportElement x="0" y="0" width="100" height="20" uuid="4dde59c6-5fff-46b4-b74e-d5d04647a709"/>
+										<box>
+											<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+											<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										</box>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="宋体"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{remark}]]></textFieldExpression>
+									</textField>
+								</jr:detailCell>
+							</jr:column>
+						</jr:columnGroup>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="85" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="36" y="1" width="177" height="22" uuid="07816104-4843-4440-97ea-4221247182c5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{employee_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="46" y="19" width="177" height="22" uuid="c348861c-2d52-4930-a7f4-5514256f6b15">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cli_phone}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="26" y="37" width="140" height="22" uuid="1b8e2f7c-f2f6-4ceb-af42-f3afe7a3f6cf">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{account_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="213" y="18" width="172" height="22" uuid="8da53c73-4dbd-4269-bda6-6c2a491647ec">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{warehouse_tel}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="355" y="19" width="160" height="22" uuid="5087a9ad-ad6a-4710-b7fc-2090c208a9d5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{warehouse_addr}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="168" y="37" width="115" height="22" uuid="78672a06-20e4-41d4-b5ec-61934fc2be7b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{account_num}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="312" y="38" width="214" height="22" uuid="6be6f1fa-6650-4cec-b20f-9c1755642f82">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{account_bank}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="1" width="100" height="22" uuid="ab6fcf03-8f70-4197-85cf-944868060070">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<text><![CDATA[业务员:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="19" width="100" height="22" uuid="c96846dc-752d-42c9-9257-a45471e018e7">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<text><![CDATA[联系电话:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="167" y="18" width="100" height="22" uuid="644e63d6-9150-4ac8-a237-4631f318f33a">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<text><![CDATA[仓库电话:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="329" y="19" width="100" height="22" uuid="dcd39253-44ed-4a6f-9134-e7d18f5415fa">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<text><![CDATA[地址:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="37" width="100" height="22" uuid="8cd63697-e01c-4cce-a403-9d4108547d6c">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<text><![CDATA[户名:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="140" y="37" width="100" height="22" uuid="85be084d-f3dd-47b5-bc70-5a08c0eb98e9">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<text><![CDATA[账号:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="286" y="38" width="100" height="22" uuid="88bacbed-0d1e-4cab-a00f-502074bb79d9">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<text><![CDATA[户行:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="62" width="440" height="16" uuid="972c12cd-9d1b-4875-aeec-76e8b6456496"/>
+				<textElement>
+					<font fontName="宋体"/>
+				</textElement>
+				<text><![CDATA[备注:收货后如有差异,请于当日告知,逾期视同认可,谢谢合作!]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>
