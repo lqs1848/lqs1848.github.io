@@ -189,12 +189,12 @@
     <url>/2021/01/18/2021-01-18%20Allatori%E7%A0%B4%E8%A7%A3/</url>
     <content><![CDATA[<span id="more"></span>
 
-<p><strong>实现代码:<a href="https://github.com/lqs1848/AllatoriCrack">https://github.com/lqs1848/AllatoriCrack</a></strong></p>
+<p><strong>源代码:<a href="https://github.com/lqs1848/AllatoriCrack">https://github.com/lqs1848/AllatoriCrack</a></strong></p>
 <p>根据 <a href="https://www.52pojie.cn/thread-622023-1-1.html">https://www.52pojie.cn/thread-622023-1-1.html</a> 做了一些改进</p>
 <p>帖子里面没有具体代码 没有具体实现 QAQ</p>
 <p>还要求在ubuntu下反编译</p>
 <p>实际操作了一下,要求在ubuntu环境下主要是因为 windows 目录不区分大小写 <strong>Allatori</strong> 都是 iIIii 大小写的i混合的文件名</p>
-<p>那用 zip操作即可</p>
+<p>那用 zip 操作即可</p>
 <p>具体流程为:</p>
 <p>zip 读取<strong>Allatori</strong>.jar 找到所有的class</p>
 <p>使用 javassist 读取class的字节码</p>
@@ -1260,14 +1260,15 @@
   </entry>
   <entry>
     <title>数字转换任意进制 纯数字加密</title>
-    <url>/2021/05/25/2021-06-04%20%20%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2%20%E6%95%B0%E5%AD%97%E5%8A%A0%E5%AF%86/</url>
+    <url>/2021/06/04/2021-06-04%20%20%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2%20%E6%95%B0%E5%AD%97%E5%8A%A0%E5%AF%86/</url>
     <content><![CDATA[<span id="more"></span>
 
-<h1 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h1><p><strong>项目中需要 加密纯数字 (加密id 防止用户随便改比如 URL?id=1 修改成功 URL?id=2</strong></p>
-<p>就想用 进制转换 10进制转换为 自定义的进制 16 32太常见了</p>
-<p>晚上给的代码都是用 Integer.valueOf(String s, int radix); 实现</p>
+<h1 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h1><p><strong>项目中需要 加密纯数字 (加密id 防止用户随便改比如 URL?id=1 修改成 URL?id=2</strong></p>
+<p>就想用 进制转换 10进制转换为 自定义的进制 16进制 32进制 太常见了</p>
+<p>网上给的代码都是用 Integer.valueOf(String s, int radix); 实现</p>
 <p>满足不了自定义进制密文的要求</p>
-<p>只好自己实现一个咯~ 网上应该一堆 但我愣是没有搜到… 感叹中文互联网的内容越来越差很多东西都搜不到了</p>
+<p>只好自己实现一个咯~ </p>
+<p>网上一搜应该一堆 但我愣是没有搜到…  感叹中文互联网的内容越来越差很多东西都搜不到了</p>
 <h1 id="基本实现"><a href="#基本实现" class="headerlink" title="基本实现"></a>基本实现</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> String enstr = <span class="string">&quot;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;</span>;<span class="comment">//62进制</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">char</span>[] array = enstr.toCharArray();</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> len = array.length;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">9999999</span>;i&lt; <span class="number">999999999</span>;i++) &#123;</span><br><span class="line">		String enc = encode(i);</span><br><span class="line">		<span class="keyword">if</span>(decode(enc)!=i) &#123;</span><br><span class="line">			System.out.println(<span class="string">&quot;error&quot;</span>);</span><br><span class="line">		&#125;<span class="keyword">else</span> &#123;</span><br><span class="line">			System.out.println(i + <span class="string">&quot; &quot;</span>+ enc);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">encode</span><span class="params">(<span class="keyword">int</span> id)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">int</span> x = id / len;</span><br><span class="line">	<span class="keyword">int</span> y = id % len;</span><br><span class="line">	<span class="keyword">return</span> encode(x, y, <span class="string">&quot;&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">encode</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y, String sb)</span> </span>&#123;</span><br><span class="line">	sb = array[y] + sb;</span><br><span class="line">	<span class="keyword">if</span> (x == <span class="number">0</span>)</span><br><span class="line">		<span class="keyword">return</span> sb;</span><br><span class="line">	<span class="keyword">return</span> encode(x / len, x % len, sb);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">decode</span><span class="params">(String code)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">int</span> r = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; code.length(); i++) &#123;</span><br><span class="line">		<span class="keyword">int</span> fd = code.length() - i - <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">int</span> x = enstr.indexOf(code.charAt(i));</span><br><span class="line">		<span class="keyword">if</span> (fd != <span class="number">0</span>) &#123;</span><br><span class="line">			<span class="keyword">int</span> cur = x * len;</span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt; fd; j++)</span><br><span class="line">				cur *= len;</span><br><span class="line">			r += cur;</span><br><span class="line">		&#125; <span class="keyword">else</span> </span><br><span class="line">			r += x;</span><br><span class="line">	&#125; <span class="comment">// for</span></span><br><span class="line">	<span class="keyword">return</span> r;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h1 id="实际使用"><a href="#实际使用" class="headerlink" title="实际使用"></a>实际使用</h1><p>上面的代码会有个问题 比如每次生成 id = 61 固定 会生成 id = z</p>
