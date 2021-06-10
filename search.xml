@@ -1295,4 +1295,131 @@
         <tag>数字加密</tag>
       </tags>
   </entry>
+  <entry>
+    <title>BBR为什么可以加速SS</title>
+    <url>/2021/06/07/2021-06-07%20%20BBR/</url>
+    <content><![CDATA[<span id="more"></span>
+
+<p>之前自己部署SS的时候，搭建教程大部分都有 修改服务器TCP算法为 BBR 的步骤,，为什么要使用BBR? BBR为什么能加速SS? 一直没去研究</p>
+<p>最近有点时间，查阅了一下资料</p>
+<h1 id="TCP判断线路的理想速率"><a href="#TCP判断线路的理想速率" class="headerlink" title="TCP判断线路的理想速率"></a>TCP判断线路的理想速率</h1><p>服务器发送数据包，当然越快越好，最好一次性全发出去。但是，发得太快，就有可能丢包。带宽小、路由器过热、缓存溢出等许多因素都会导致丢包。线路不好的话，发得越快，丢得越多。</p>
+<p>最理想的状态是，在线路允许的情况下，达到最高速率。但是我们怎么知道，对方线路的理想速率是多少呢？答案就是慢慢试。</p>
+<p>TCP 协议为了做到效率与可靠性的统一，设计了一个慢启动（slow start）机制。开始的时候，发送得较慢，然后根据丢包的情况，调整速率：如果不丢包，就加快发送速度；如果丢包，就降低发送速度。</p>
+<p>即使对于带宽很大、线路很好的连接，TCP 也总是从10个数据包开始慢慢试，过了一段时间以后，才达到最高的传输速率。这就是 TCP 的慢启动。</p>
+<h1 id="Delay-Based"><a href="#Delay-Based" class="headerlink" title="Delay-Based"></a>Delay-Based</h1><p>BBR是 delay-based，而不是 loss-based，不受丢包影响</p>
+<p>国内的运营商，为了减少跨国流量，故意在出口随机丢包…</p>
+<p>如果是 loss based 速度自然就无法达到带宽上限</p>
+<p>同样是 delay-based 的 TCP Vegas, Fast, Ledbat, Google CC 也可以提高 SS 的速度</p>
+<h1 id="Loss-Based的几个问题"><a href="#Loss-Based的几个问题" class="headerlink" title="Loss-Based的几个问题"></a>Loss-Based的几个问题</h1><ul>
+<li><p><strong>丢包即拥塞</strong> 现实中网络环境很复杂会存在错误丢包，很多算法无法很好区分拥塞丢包和错误丢包，因此在存在一定错误丢包的前提下在某些网络场景中并不能充分利用带宽。</p>
+</li>
+<li><p><strong>缓冲区膨胀问题BufferBloat</strong> 网络连接中路由器、交换机、核心网设备等等为了平滑网络波动而存在缓冲区，这些缓存区就像输液管的膨胀部分让数据更加平稳，但是Loss-Based策略在最初就像网络中发生数据类似于灌水，此时是将Buffer全部算在内的，一旦buffer满了，就可能出现RTT增加丢包等问题，就相当于有的容量本不该算在其中，但是策略是基于包含Buffer进行预测的，特别地在深缓冲区网络就会出现一些问题。</p>
+</li>
+<li><p><strong>网络负载高但无丢包事件</strong> 假设网络中的负载已经很高了，只要没有丢包事件出现，算法就不会主动减窗降低发送速率，这种情况下虽然充分利用了网络带宽，同时由于一直没有丢包事件出现发送方仍然在加窗，表现出了较强的网络带宽侵略性，加重了网络负载压力。</p>
+</li>
+<li><p><strong>高负载丢包</strong> 高负载无丢包情况下算法一直加窗，这样可以预测丢包事件可能很快就出现了，一旦丢包出现窗口将呈现乘性减少，由高位发送速率迅速降低会造成整个网络的瞬时抖动性，总体呈现较大的锯齿状波动。</p>
+</li>
+<li><p><strong>低负载高延时丢包</strong> 在某些弱网环境下RTT会增加甚至出现非拥塞引起丢包，此时基于丢包反馈的拥塞算法的窗口会比较小，对带宽的利用率很低，吞吐量下降很明显，但是实际上网络负载并不高，所以在弱网环境下效果并不是非常理想。</p>
+</li>
+</ul>
+<h1 id="TCP-BBR算法基本原理"><a href="#TCP-BBR算法基本原理" class="headerlink" title="TCP BBR算法基本原理"></a>TCP BBR算法基本原理</h1><p>TCP BBR算法是一种主动式机制，简单来说BBR算法不再基于丢包判断并且也不再使用AIMD线性增乘性减策略来维护拥塞窗口，而是分别采样估计极大带宽和极小延时，并用二者乘积作为发送窗口，并且BBR引入了Pacing Rate限制数据发送速率，配合cwnd使用来降低冲击。</p>
+<p>BBR算法的一些思想在之前的基于延时的拥塞控制算法中也有出现，其中必有有名的是TCP WestWood算法。</p>
+<blockquote>
+<p>TCP Westwood改良自New Reno，不同于以往其他拥塞控制算法使用丢失来测量，其通过对确认包测量来确定一个合适的发送速度，并以此调整拥塞窗口和慢启动阈值。其改良了慢启动阶段算法为敏捷探测和设计了一种持续探测拥塞窗口的方法来控制进入敏捷探测，使链接尽可能地使用更多的带宽。</p>
+</blockquote>
+<p>TCP WestWood算法也是基于带宽和延时乘积进行设计的，但是带宽和延时两个指标无法同时测量，因为这两个值是有些矛盾的极值，要测量最大带宽就要发送最大的数据量但是此时的RTT可能会很大，如果要测量最小的RTT那么久意味着数据量非常少最大带宽就无法获得。</p>
+<p>TCP BBR算法采用交替采样测量两个指标，取一段时间内的带宽极大值和延时极小值作为估计值。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>简单讲就是 默认的TCP 拥堵算法 是基于丢包判断带宽的理想速率</p>
+<p>而国际带宽容易丢包 导致默认算法判断出的带宽上限并非真实带宽</p>
+<!--在Linux4.19内核中已经将拥塞控制算法从CUBIC（该算法从2.6.19内核就引入Linux了）改为BBR，而HTTP3也使用此算法。-->
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>TCP</category>
+      </categories>
+      <tags>
+        <tag>BBR</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Transaction rolled back because it has been marked as rollback-only</title>
+    <url>/2021/06/10/2021-06-10%20Transaction%20rolled%20back%20because%20it%20has%20been%20marked%20as%20rollback-only/</url>
+    <content><![CDATA[<span id="more"></span>
+
+<h1 id="Spring事务管理报错-Transaction-rolled-back-because-it-has-been-marked-as-rollback-only"><a href="#Spring事务管理报错-Transaction-rolled-back-because-it-has-been-marked-as-rollback-only" class="headerlink" title="Spring事务管理报错:Transaction rolled back because it has been marked as rollback-only"></a>Spring事务管理报错:Transaction rolled back because it has been marked as rollback-only</h1><h1 id="出错代码"><a href="#出错代码" class="headerlink" title="出错代码"></a>出错代码</h1><p>算是比较常见的错误了</p>
+<p>很多解释说明都云里雾里的</p>
+<p>其实比较简单</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ServiceA</span></span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    ServiceB serviceB;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Transactional(rollbackFor = Exception.class)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testA</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">			serviceB.testB();</span><br><span class="line">        &#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">			</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;<span class="comment">//method</span></span><br><span class="line">&#125;<span class="comment">//class</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ServiceB</span></span>&#123;</span><br><span class="line">    <span class="meta">@Transactional(rollbackFor = Exception.class)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testB</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">&quot;测试&quot;</span>);</span><br><span class="line">    &#125;<span class="comment">//method</span></span><br><span class="line">&#125;<span class="comment">//class</span></span><br></pre></td></tr></table></figure>
+
+<p>上面这段代码就会报错 Transaction rolled back because it has been marked as rollback-only</p>
+<p>原因是 Spring 事务管理是通过AOP切入的</p>
+<p>ServiceA 的 testA 已经切入   </p>
+<p>testB 又切入了一次 </p>
+<p>@Transactional 的默认传播机制是 Propagation propagation() default Propagation.REQUIRED;</p>
+<p>等于 testA 和 testB 使用的是同一个事务</p>
+<p>testB 抛出异常时  Spring Aop 已经把事务标记为需要回滚</p>
+<p>testA 使用同一个事务 try-catch 了 testB 的异常 所以 testA 没有异常 方法结束</p>
+<p>testA 提交事务时 由于 testB已经被回滚 所以抛异常</p>
+<h1 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h1><p>AOP.serviceA.testA    -&gt;    进入方法前    开启事务</p>
+<p>↓</p>
+<p>serviceA.testA    -&gt;    方法执行</p>
+<p>↓</p>
+<p>AOP.serivceB.testB    -&gt;    进入方法前    开启事务 读取到已有事务 REQUIRED 继承A的事务</p>
+<p>↓</p>
+<p>serviceB.testB    -&gt;    方法执行    出现异常</p>
+<p>↓</p>
+<p>AOP.serviceB.testB    -&gt;    方法执行后    检测到异常 回滚事务</p>
+<p>↓</p>
+<p>serviceA.testA    -&gt;    方法执行    testB的异常被 try-catch 方法正常结束</p>
+<p>↓</p>
+<p>AOP.serviceA.testA    -&gt;    方法执行后    没有异常 提交事务</p>
+<p>其实就是 AOP 切入了两次 A 和 B 使用的是同一个事务</p>
+<p>并且 抓取 B 的错误时 B 已经回滚了事务</p>
+<h1 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h1><ol>
+<li>指定 testB 的事务传播性为 REQUIRES_NEW (testB单独一个事务 回滚不影响 testA</li>
+<li>把 testA 中的 try-catch 放到 testB 中 testB返回true false 给 testA 判断</li>
+<li>从 controller 中分别调用 testA 和 testB</li>
+</ol>
+]]></content>
+      <categories>
+        <category>java</category>
+        <category>Spring</category>
+      </categories>
+      <tags>
+        <tag>事务</tag>
+        <tag>Transaction</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>聚合支付原理</title>
+    <url>/2021/06/10/2021-06-10%20%E8%81%9A%E5%90%88%E6%94%AF%E4%BB%98%E5%8E%9F%E7%90%86/</url>
+    <content><![CDATA[<span id="more"></span>
+
+<p><strong>公司要接入聚合支付(第四方支付) 封装成自用支付(第五方支付)</strong></p>
+<p><strong>但聚合支付提供方没有给被扫接口</strong></p>
+<p><strong>稍微了解下聚合支付封装 第三方支付 的逻辑</strong></p>
+<h1 id="主扫-一个二维码-微信也能扫支付宝也能扫"><a href="#主扫-一个二维码-微信也能扫支付宝也能扫" class="headerlink" title="主扫(一个二维码 微信也能扫支付宝也能扫)"></a>主扫(一个二维码 微信也能扫支付宝也能扫)</h1><p>这个是最基础的 只是给每个商户单独 生成一个URL而已</p>
+<p>基本就是给一个二维码 里面是URL地址 微信/支付宝 扫码 会直接跳转访问</p>
+<p>被访问时通过 JavaScript 判断用户浏览器的 UserAgent </p>
+<p>判断是通过微信还是支付宝或者其他支付软件</p>
+<p>再调起对应支付软件的网页SDK支付</p>
+<h1 id="被扫-用户打开-微信-支付宝-扫码机自动识别"><a href="#被扫-用户打开-微信-支付宝-扫码机自动识别" class="headerlink" title="被扫(用户打开 微信/支付宝 扫码机自动识别)"></a>被扫(用户打开 微信/支付宝 扫码机自动识别)</h1><p>硬件设备识别二维码获得二维码内容</p>
+<p>根据二维码内容调用第三方支付</p>
+<p><strong>微信：</strong></p>
+<p><strong>用户付款码条形码规则：18位纯数字，以10、11、12、13、14、15开头</strong></p>
+<p>对应调起接口 <a href="https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/product/chapter1_12.shtml">付款码支付</a></p>
+<p><strong>支付宝：</strong></p>
+<p><strong>25<del>30开头的长度为16</del>24位的数字，实际字符串长度以开发者获取的付款码长度为准</strong></p>
+<p>调起对应接口 <a href="https://opendocs.alipay.com/open/01csp3">当面付</a></p>
+]]></content>
+      <tags>
+        <tag>pay</tag>
+      </tags>
+  </entry>
 </search>
