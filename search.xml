@@ -715,20 +715,33 @@
 <p>比如 logback 就是在自身的包中覆盖了 org.slf4j 包中的部分类</p>
 <p>logback 中的MDC 就是使用 ThreadLocal</p>
 <h1 id="在-微服务当前切换-服务传递追踪码"><a href="#在-微服务当前切换-服务传递追踪码" class="headerlink" title="在 微服务当前切换 服务传递追踪码"></a>在 微服务当前切换 服务传递追踪码</h1><h2 id="gateway-网关传递"><a href="#gateway-网关传递" class="headerlink" title="gateway 网关传递"></a>gateway 网关传递</h2><p>直接在转发的请求头中携带即可</p>
-<h2 id="Feign-Hystrix传递"><a href="#Feign-Hystrix传递" class="headerlink" title="Feign Hystrix传递"></a>Feign Hystrix传递</h2><p>网上的写法都是介绍 HystrixRequestVariableDefault </p>
+<h2 id="Feign-Hystrix"><a href="#Feign-Hystrix" class="headerlink" title="Feign Hystrix"></a>Feign Hystrix</h2><h3 id="网上资料"><a href="#网上资料" class="headerlink" title="网上资料"></a>网上资料</h3><p>网上的写法都是介绍 HystrixRequestVariableDefault </p>
 <blockquote>
 <p>feign 如果有用 hystrix 传递时有涉及到跨线程 需要使用 HystrixRequestVariableDefault 传递</p>
 </blockquote>
-<p>不过太麻烦了 我用的 重写 HystrixConcurrencyStrategy 去实现</p>
-<p>重写 wrapCallable 方法</p>
+<p>或者重写 wrapCallable 方法</p>
+<blockquote>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">Callable&lt;T&gt; <span class="title">wrapCallable</span><span class="params">(Callable&lt;T&gt; callable)</span> </span>&#123;</span><br><span class="line">    	<span class="comment">//TransmittableThreadLocal修饰原有Callable</span></span><br><span class="line">       <span class="keyword">return</span> TtlCallable.get(callable);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>还需要按最后 去替换线程池 </p>
 <p>和 在Configuration配置自定义 HystrixConcurrencyStrategy 替换默认的 HystrixConcurrencyStrategyDefault</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HystrixConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> HystrixConcurrencyStrategy <span class="title">requestContextHystrixConcurrencyStrategy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> MyHystrixConcurrencyStrategy();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HystrixConfig</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> HystrixConcurrencyStrategy <span class="title">requestContextHystrixConcurrencyStrategy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> MyHystrixConcurrencyStrategy();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>此处参考了 <a href="https://shanhy.blog.csdn.net/article/details/108668952">https://shanhy.blog.csdn.net/article/details/108668952</a></p>
-<h2 id="dubbo-传递"><a href="#dubbo-传递" class="headerlink" title="dubbo 传递"></a>dubbo 传递</h2><p>带隐藏参数即可 在RpcContext 中携带</p>
+</blockquote>
+<h3 id="实测都不太方便"><a href="#实测都不太方便" class="headerlink" title="实测都不太方便"></a>实测都不太方便</h3><ol>
+<li>HystrixRequestVariableDefault 要用 HystrixContextRunnable 或 HystrixContextCallable创建线程才能在线程间传递数据</li>
+<li>wrapCallable 测试无效 </li>
+</ol>
+<h3 id="HystrixInvocationHandler"><a href="#HystrixInvocationHandler" class="headerlink" title="HystrixInvocationHandler"></a>HystrixInvocationHandler</h3><p>阅读源码后发现 wrapCallable 装饰是在 HystrixInvocationHandler.invoke 之前就调用了 </p>
+<p>invoke 中 还有一个 HystrixCommand 进行回调</p>
+<p>等于是 Hystrix 有两层 调用 第一层时参数还有传递 第二层回调时切换线程导致传递的参数丢失</p>
+<p>覆盖 HystrixInvocationHandler 类 调用自定义的 HystrixCommand 进行传参</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Lqs1848HystrixCommand</span>&lt;<span class="title">R</span>&gt; <span class="keyword">extends</span> <span class="title">HystrixCommand</span>&lt;<span class="title">R</span>&gt;</span>&#123;</span><br><span class="line">	<span class="keyword">private</span> String trace;<span class="comment">//你要传递的参数</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="title">Lqs1848HystrixCommand</span><span class="params">(Setter setter)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>(setter);</span><br><span class="line">		<span class="keyword">this</span>.trace = TraceUtils.getTrace();<span class="comment">//获取到当前线程的值</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> R <span class="title">run</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		TraceUtils.setTrace(trace);<span class="comment">//线程池执行时 把值传递给线程池</span></span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> runMain();</span><br><span class="line">		&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">			TraceUtils.clear();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> R <span class="title">runMain</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="dubbo-传递"><a href="#dubbo-传递" class="headerlink" title="dubbo 传递"></a>dubbo 传递</h2><p>带隐藏参数即可 在RpcContext 中携带 </p>
 <h2 id="父子线程传递"><a href="#父子线程传递" class="headerlink" title="父子线程传递"></a>父子线程传递</h2><p>网上的方法都是 </p>
 <blockquote>
 <p><a href="https://yanglinwei.blog.csdn.net/article/details/113503577">https://yanglinwei.blog.csdn.net/article/details/113503577</a></p>
@@ -851,11 +864,10 @@
 
 
 
-
-
-
-
-<p>待编写…</p>
+<p>使用MAVEN时需要添加 </p>
+<p> <code>-Djavacpp.platform=linux-x86_64</code></p>
+<p>指定目标平台 </p>
+<p>不然 windows linux macos  x86 x64 一堆jar都会被导入</p>
 <p><em><strong><center><a href="https://github.com/lqs1848/java_workspace/tree/main/TensorFlow">源码</a></center></strong></em></p>
 ]]></content>
       <categories>
@@ -898,12 +910,10 @@
 <p>用 javacv 修改一下</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> org.bytedeco.opencv.global.opencv_imgcodecs;</span><br><span class="line"><span class="keyword">import</span> org.bytedeco.opencv.global.opencv_imgproc;</span><br><span class="line"><span class="keyword">import</span> org.bytedeco.opencv.opencv_core.Mat;</span><br><span class="line"><span class="keyword">import</span> org.bytedeco.opencv.opencv_core.Point;</span><br><span class="line"><span class="keyword">import</span> org.bytedeco.opencv.opencv_core.Rect;</span><br><span class="line"><span class="keyword">import</span> org.bytedeco.opencv.opencv_core.RectVector;</span><br><span class="line"><span class="keyword">import</span> org.bytedeco.opencv.opencv_core.Scalar;</span><br><span class="line"><span class="keyword">import</span> org.bytedeco.opencv.opencv_objdetect.CascadeClassifier;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		</span><br><span class="line">		<span class="comment">// 1 读取OpenCV自带的人脸识别特征XML文件</span></span><br><span class="line">		<span class="comment">// OpenCV 图像识别库一般位于 opencv\sources\data 下面</span></span><br><span class="line">		CascadeClassifier facebook = <span class="keyword">new</span> CascadeClassifier(<span class="string">&quot;\\data\\haarcascades\\haarcascade_frontalface_alt.xml&quot;</span>);</span><br><span class="line">		<span class="comment">// 2 读取测试图片</span></span><br><span class="line">		Mat image = opencv_imgcodecs.imread(<span class="string">&quot;\\1.jpg&quot;</span>);</span><br><span class="line">		<span class="comment">// 3 特征匹配</span></span><br><span class="line">		RectVector face = <span class="keyword">new</span> RectVector();</span><br><span class="line">		facebook.detectMultiScale(image, face);</span><br><span class="line">		<span class="comment">// 4 匹配 Rect 矩阵 数组</span></span><br><span class="line">		Rect[] rects = face.get();</span><br><span class="line">		System.out.println(<span class="string">&quot;匹配到 &quot;</span> + rects.length + <span class="string">&quot; 个人脸&quot;</span>);</span><br><span class="line">		<span class="comment">// 5 为每张识别到的人脸画一个圈</span></span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; rects.length; i++) &#123;</span><br><span class="line">			opencv_imgproc.rectangle(image, <span class="keyword">new</span> Point(rects[i].x(), rects[i].y()),</span><br><span class="line">					<span class="keyword">new</span> Point(rects[i].x() + rects[i].width(), rects[i].y() + rects[i].height()),</span><br><span class="line">					<span class="keyword">new</span> Scalar(<span class="number">0</span>, <span class="number">0</span>, <span class="number">255</span>, <span class="number">0</span>));</span><br><span class="line">			opencv_imgproc.putText(image, <span class="string">&quot;Human&quot;</span>, <span class="keyword">new</span> Point(rects[i].x(), rects[i].y()),</span><br><span class="line">					opencv_imgproc.FONT_HERSHEY_SCRIPT_SIMPLEX, <span class="number">1.0</span>, <span class="keyword">new</span> Scalar(<span class="number">0</span>, <span class="number">255</span>, <span class="number">0</span>, <span class="number">0</span>), <span class="number">1</span>,</span><br><span class="line">					opencv_imgproc.LINE_AA, <span class="keyword">false</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// 6 展示图片</span></span><br><span class="line">		<span class="comment">// HighGui.imshow(&quot;人脸识别&quot;, image);</span></span><br><span class="line">		opencv_imgcodecs.imwrite(<span class="string">&quot;\\2.jpg&quot;</span>, image);</span><br><span class="line">		<span class="comment">// HighGui.waitKey(0);</span></span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-
-
-
-
-
-
+<p>使用 MAVEN 时需要添加 </p>
+<p> <code>-Djavacpp.platform=linux-x86_64</code></p>
+<p>指定目标平台 </p>
+<p>不然 windows linux macos  x86 x64 一堆jar都会被导入</p>
 <p><em><strong><center><a href="https://github.com/lqs1848/java_workspace/tree/main/opencv">源码</a></center></strong></em></p>
 ]]></content>
       <categories>
@@ -1054,6 +1064,12 @@
 <p>在 table 控件的 Properties -&gt; Dataset -&gt; Parameters </p>
 <p><img src="/img/report_1.jpg"></p>
 <h3 id="Table-合并单元格"><a href="#Table-合并单元格" class="headerlink" title="Table 合并单元格"></a>Table 合并单元格</h3><p>合并单元格必须用 Group Column</p>
+<h3 id="Text-自动换行"><a href="#Text-自动换行" class="headerlink" title="Text 自动换行"></a>Text 自动换行</h3><p>最新版本的 JasperSoft Studio </p>
+<p>没有 StretchWith Overflow 这么个属性</p>
+<p><a href="https://community.jaspersoft.com/questions/911866/stretch-text-field-data-overflow">https://community.jaspersoft.com/questions/911866/stretch-text-field-data-overflow</a></p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">textField</span> <span class="attr">isStretchWithOverflow</span>=<span class="string">&quot;true&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">reportElement</span> <span class="attr">uuid</span>=<span class="string">&quot;5935ad61-77ec-4b05-84bf-6f72d3dcd0bd&quot;</span> <span class="attr">style</span>=<span class="string">&quot;table&quot;</span> <span class="attr">positionType</span>=<span class="string">&quot;Float&quot;</span> <span class="attr">stretchType</span>=<span class="string">&quot;RelativeToTallestObject&quot;</span> <span class="attr">x</span>=<span class="string">&quot;233&quot;</span> <span class="attr">y</span>=<span class="string">&quot;233&quot;</span> <span class="attr">width</span>=<span class="string">&quot;150&quot;</span> <span class="attr">height</span>=<span class="string">&quot;20&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">textElement</span> <span class="attr">textAlignment</span>=<span class="string">&quot;Center&quot;</span> <span class="attr">verticalAlignment</span>=<span class="string">&quot;Middle&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">textFieldExpression</span>&gt;</span>&lt;![CDATA[&quot;DP-GI&quot;]]&gt;<span class="tag">&lt;/<span class="name">textFieldExpression</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">textField</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>需要在 textField 手动加上 isStretchWithOverflow=”true”</p>
 <h1 id="DEMO"><a href="#DEMO" class="headerlink" title="DEMO"></a>DEMO</h1><p><img src="/img/report_2.jpg"></p>
 <p><em><strong><center><a href="/other/demo.jrxml">点击下载 DEMO</a></center></strong></em></p>
 ]]></content>
@@ -1468,6 +1484,207 @@
         <tag>Java</tag>
         <tag>OpenCV</tag>
         <tag>OCR</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SpringMVC 路由约束</title>
+    <url>/2021/08/26/2021-08-26%20SpringMVC%20%E8%B7%AF%E7%94%B1%E7%BA%A6%E6%9D%9F/</url>
+    <content><![CDATA[<span id="more"></span>
+
+<h1 id="NET-Core-中的概念"><a href="#NET-Core-中的概念" class="headerlink" title=".NET Core 中的概念"></a>.NET Core 中的概念</h1><p>无聊逛论坛 突然看到了个 路由约束</p>
+<p>好像没听过 搜索了一下 原来是 .NET Core 中的概念 <a href="https://docs.microsoft.com/zh-cn/aspnet/core/fundamentals/routing?view=aspnetcore-5.0#route-constraint-reference">文档</a></p>
+<p>[GET] /api/posts/{id}<br>[GET] /api/posts/{name}</p>
+<p>这样两个地址 可以通过 路由约束 分别映射到不同的地址</p>
+<blockquote>
+<p>.NET Core内置的路由约束</p>
+<p>检查数据类型的约束<br>检查数据的值/长度/范围的约束<br>正则表达式约束</p>
+<h3 id="检查数据类型的约束"><a href="#检查数据类型的约束" class="headerlink" title="检查数据类型的约束"></a>检查数据类型的约束</h3><table>
+<thead>
+<tr>
+<th>约束</th>
+<th>行内</th>
+<th>Constraint类</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>int</td>
+<td><code>&#123;id:int&#125;</code></td>
+<td><code>IntRouteConstraint</code></td>
+<td>只允许int32整数</td>
+</tr>
+<tr>
+<td>alpha</td>
+<td><code>&#123;id:alpha&#125;</code></td>
+<td><code>AlphaRouteConstraint</code></td>
+<td>只能包含大小写字母</td>
+</tr>
+<tr>
+<td>bool</td>
+<td><code>&#123;id:bool&#125;</code></td>
+<td><code>BoolRouteConstraint</code></td>
+<td>只允许布尔类型</td>
+</tr>
+<tr>
+<td>datetime</td>
+<td><code>&#123;id:datetime&#125;</code></td>
+<td><code>DateTimeRouteConstraint</code></td>
+<td>只允许日期格式</td>
+</tr>
+<tr>
+<td>decimal</td>
+<td><code>&#123;id:decimal&#125;</code></td>
+<td><code>DecimalRouteConstraint</code></td>
+<td>只允许decimal类型</td>
+</tr>
+<tr>
+<td>double</td>
+<td><code>&#123;id:double&#125;</code></td>
+<td><code>DoubleRouteConstraint</code></td>
+<td>只允许double类型</td>
+</tr>
+<tr>
+<td>float</td>
+<td><code>&#123;id:float&#125;</code></td>
+<td><code>FloatRouteConstraint</code></td>
+<td>只允许float类型</td>
+</tr>
+<tr>
+<td>guid</td>
+<td><code>&#123;id:guid&#125;</code></td>
+<td><code>GuidRouteConstraint</code></td>
+<td>只允许guid类型</td>
+</tr>
+</tbody></table>
+<h3 id="检查数据的值-长度-范围的约束"><a href="#检查数据的值-长度-范围的约束" class="headerlink" title="检查数据的值/长度/范围的约束"></a>检查数据的值/长度/范围的约束</h3><table>
+<thead>
+<tr>
+<th>约束</th>
+<th>行内</th>
+<th>Constraint类</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>length(length)</td>
+<td><code>&#123;id:length(12)&#125;</code></td>
+<td><code>LengthRouteConstraint</code></td>
+<td>字符串长度限制</td>
+</tr>
+<tr>
+<td>maxlength(value)</td>
+<td><code>&#123;id:maxlength(8)&#125;</code></td>
+<td><code>MaxLengthRouteConstraint</code></td>
+<td>字符串最大长度限制</td>
+</tr>
+<tr>
+<td>minlength(value)</td>
+<td><code>&#123;id:minlength(4)&#125;</code></td>
+<td><code>MinLengthRouteConstraint</code></td>
+<td>字符串最小长度限制</td>
+</tr>
+<tr>
+<td>range(min,max)</td>
+<td><code>&#123;id:range(18,120)&#125;</code></td>
+<td><code>RangeRouteConstraint</code></td>
+<td>数值范围限制</td>
+</tr>
+<tr>
+<td>min(value)</td>
+<td><code>&#123;id:min(18)&#125;</code></td>
+<td><code>MinRouteConstraint</code></td>
+<td>最小数值限制</td>
+</tr>
+<tr>
+<td>max(value)</td>
+<td><code>&#123;id:max(120)&#125;</code></td>
+<td><code>MaxRouteConstraint</code></td>
+<td>最大数值限制</td>
+</tr>
+</tbody></table>
+<h3 id="正则表达式约束"><a href="#正则表达式约束" class="headerlink" title="正则表达式约束"></a>正则表达式约束</h3><table>
+<thead>
+<tr>
+<th>约束</th>
+<th>行内</th>
+<th>Constraint类</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>regex(expression)</td>
+<td><code>&#123;ssn:regex(^\d&#123;&#123;3&#125;&#125;-\d&#123;&#123;2&#125;&#125;-\d&#123;&#123;4&#125;&#125;$)&#125;/</code></td>
+<td><code>RegexRouteConstraint</code></td>
+<td>正则表达式约束</td>
+</tr>
+</tbody></table>
+</blockquote>
+<h1 id="Java-SpringMVC-对应实现"><a href="#Java-SpringMVC-对应实现" class="headerlink" title="Java SpringMVC 对应实现"></a>Java SpringMVC 对应实现</h1><p><a href="https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-requestmapping-uri-templates">文档</a> </p>
+<h2 id="URI-Patterns"><a href="#URI-Patterns" class="headerlink" title="URI Patterns"></a>URI Patterns</h2><blockquote>
+<p>一些示例：</p>
+<ul>
+<li><code>&quot;/resources/ima?e.png&quot;</code> - match one character in a path 匹配路径段中的一个字符segment</li>
+<li><code>&quot;/resources/*.png&quot;</code> - match zero or more characters in a path segment 匹配路径段中的零个或多个字符</li>
+<li><code>&quot;/resources/**&quot;</code> - match multiple path segments 匹配多个路径段</li>
+<li><code>&quot;/projects/&#123;project&#125;/versions&quot;</code> - match a path segment and capture it as a variable 匹配路径段并将其捕获为变量</li>
+<li><code>&quot;/projects/&#123;project:[a-z]+&#125;/versions&quot;</code> - match and capture a variable with a regex 使用正则表达式匹配并捕获变量</li>
+</ul>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/&#123;name:[a-z-]+&#125;-&#123;version:\\d\\.\\d\\.\\d&#125;&#123;ext:\\.[a-z]+&#125;&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handle</span><span class="params">(<span class="meta">@PathVariable</span> String name, <span class="meta">@PathVariable</span> String version, <span class="meta">@PathVariable</span> String ext)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Java</category>
+        <category>SpringMVC</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>SpringMVC</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hystrix上下文传递</title>
+    <url>/2021/10/12/2021-10-12%20Hystrix%E4%B8%8A%E4%B8%8B%E6%96%87%E4%BC%A0%E9%80%92/</url>
+    <content><![CDATA[<span id="more"></span>
+
+<h1 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h1><p>开发中使用 ThreadLocal 来存放日志追踪码和分表等信息，但由于 Hystrix 使用了线程池 导致了 ThreadLocal 数据丢失。</p>
+<h1 id="二、尝试解决"><a href="#二、尝试解决" class="headerlink" title="二、尝试解决"></a>二、尝试解决</h1><h2 id="1-TTL"><a href="#1-TTL" class="headerlink" title="1.TTL"></a>1.TTL</h2><p>TransmittableThreadLocal </p>
+<h2 id="2-HystrixRequestContext"><a href="#2-HystrixRequestContext" class="headerlink" title="2.HystrixRequestContext"></a>2.HystrixRequestContext</h2><p>忘了啥问题了 好像是存储时会出错 如果要使用得替换很多东西</p>
+<h2 id="3-扩展HystrixConcurrencyStrategy或HystrixCommandExecutionHook"><a href="#3-扩展HystrixConcurrencyStrategy或HystrixCommandExecutionHook" class="headerlink" title="3.扩展HystrixConcurrencyStrategy或HystrixCommandExecutionHook"></a>3.扩展HystrixConcurrencyStrategy或HystrixCommandExecutionHook</h2><p>报错:Caused by: java.lang.IllegalStateException: Another strategy was already registered.</p>
+<h2 id="4-同包名类名覆盖"><a href="#4-同包名类名覆盖" class="headerlink" title="4.同包名类名覆盖"></a>4.同包名类名覆盖</h2><p>实现一个 HystrixCommand</p>
+<p>覆盖 feign.hystrix.HystrixInvocationHandler 使用自己实现的 HystrixCommand 进行回调</p>
+<p>本地测试通过线上失败</p>
+<p>原因是 Hystrix 上下文传递的逻辑 我提取到一个单独的Maven项目中</p>
+<p>发布到线上变成 jar包时 所有引用 第三方jar和自己的公用 jar 处于 项目中的 lib 目录</p>
+<p>lib 目录中的加载时 由于依赖 Hystrix 官方包 先加载了 官方包 重复加载的class会被忽略，只有第一个生效</p>
+<p>导致线上始终无法生效</p>
+<p>本地 自己的公用包 应该是加载到 class 目录下 </p>
+<p>class目录优先级更高 所以覆盖成功 </p>
+<p>Java的包名覆盖机制受太多外部条件影响 最终还是放弃了</p>
+<blockquote>
+<ul>
+<li>同一个ClassLoader实例加载的类不能重复（不同的class文件，同样的类名也是重复），如果强行用同一个ClassLoader实例加载同一个类，则会报错<code>attempted duplicate class definition for &#123;your class&#125;</code></li>
+<li><code>java -classpath(-cp)</code>加载配置jar包（classes）时，会按照书写定义顺序加载class，之后重复加载的class会被忽略，只有第一个生效</li>
+<li>Idea中可以通过在Project Settings -&gt; Modules -&gt; Dependencies中通过上下箭头调整jar加载顺序，其实也就是调整<code>-classpath(-cp)</code>后的jar包书写顺序</li>
+<li>Tomcat下的jar包貌似不同版本加载策略不同</li>
+<li>spring-boot是自定义的jar包加载策略，顺序未确认，猜测默认是按字母排序</li>
+</ul>
+</blockquote>
+<h2 id="5-SPI"><a href="#5-SPI" class="headerlink" title="5.SPI"></a>5.SPI</h2><p>扩展HystrixConcurrencyStrategy 后不用 </p>
+<p><code>HystrixPlugins.getInstance().registerConcurrencyStrategy(new RequestContextHystrixConcurrencyStrategy());</code></p>
+<p>挂载</p>
+<p>而使用 hystrix-plugins.properties</p>
+<p>hystrix.plugin.HystrixConcurrencyStrategy.implementation=com.xx.xx.xx.xxxStrategy</p>
+<h1 id="三、总结"><a href="#三、总结" class="headerlink" title="三、总结"></a>三、总结</h1><p>前后用了N种方式 最终还是用 SPI 的方式实现了想要的效果…</p>
+]]></content>
+      <categories>
+        <category>Java</category>
+        <category>SpringCloud</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>SpringCloud</tag>
+        <tag>Hystrix</tag>
       </tags>
   </entry>
 </search>
