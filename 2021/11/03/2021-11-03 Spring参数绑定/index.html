@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+<a target="_blank" rel="noopener" href="https://github.com/lqs1848" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.lqs1848.top","root":"/","images":"/images","scheme":"Gemini","version":"8.3.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring参数绑定 适应多种提交方式">
+<meta property="og:url" content="https://blog.lqs1848.top/2021/11/03/2021-11-03%20Spring%E5%8F%82%E6%95%B0%E7%BB%91%E5%AE%9A/index.html">
+<meta property="og:site_name" content="Chaos">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-11-02T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-11-03T11:05:04.511Z">
+<meta property="article:author" content="lqs1848">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Spring">
+<meta property="article:tag" content="RequestBody">
+<meta property="article:tag" content="RequestParam">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.lqs1848.top/2021/11/03/2021-11-03%20Spring%E5%8F%82%E6%95%B0%E7%BB%91%E5%AE%9A/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<title>Spring参数绑定 适应多种提交方式 | Chaos</title>
+  
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chaos" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Chaos</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-book fa-fw"></i>留言板</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">一、背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E4%BF%AE%E6%94%B9%E5%8F%82%E6%95%B0%E7%BB%91%E5%AE%9A"><span class="nav-number">2.</span> <span class="nav-text">二、修改参数绑定</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">三、总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">lqs1848</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lqs1848" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lqs1848" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.lqs1848.top/2021/11/03/2021-11-03%20Spring%E5%8F%82%E6%95%B0%E7%BB%91%E5%AE%9A/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="lqs1848">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chaos">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Spring参数绑定 适应多种提交方式
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-11-03 00:00:00" itemprop="dateCreated datePublished" datetime="2021-11-03T00:00:00+08:00">2021-11-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <span id="more"></span>
+
+<h1 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h1><p>开发接口时经常会出现</p>
+<p>有的接口一堆参数 得定义 Bean 用 @RequestBody 接收</p>
+<p>有的又只有一两个 参数 用 @RequestParam 接收</p>
+<p>快速迭代时修改接口导致 前端请求 ContentType 也要跟着改变</p>
+<p>前端每次都要纠结参数放 param 还是放 body </p>
+<p>就产生了 修改下参数绑定逻辑的想法</p>
+<h1 id="二、修改参数绑定"><a href="#二、修改参数绑定" class="headerlink" title="二、修改参数绑定"></a>二、修改参数绑定</h1><p>Spring 会从 request 中获取</p>
+<p>parameterMap 和 body</p>
+<p>formData 是放 parameterMap 中 表现为 key-values</p>
+<p>x-www 是放在 body中 表现为 key=value&amp;key=value</p>
+<p>json 是放在 body 中 表现为 {key:value}</p>
+<p>凭印象写的 具体得用 postMan 实测下</p>
+<p>因为 post 和 get 会有区别</p>
+<p>默认 get 没有 content-type 但 postMan 也能传递 x-www</p>
+<p>首先 通过过滤器替换 request</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.net.URL;</span><br><span class="line"><span class="keyword">import</span> java.net.URLDecoder;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.servlet.FilterChain;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletException;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.core.Ordered;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.annotation.Order;</span><br><span class="line"><span class="keyword">import</span> org.springframework.http.HttpHeaders;</span><br><span class="line"><span class="keyword">import</span> org.springframework.http.MediaType;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Component;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSON;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSONObject;</span><br><span class="line"><span class="keyword">import</span> org.lqs1848.framework.enums.HttpMethod;</span><br><span class="line"><span class="keyword">import</span> org.lqs1848.framework.utils.StringUtils;</span><br><span class="line"><span class="keyword">import</span> org.lqs1848.framework.web.wrapper.ContentCachingRequestWrapper;</span><br><span class="line"><span class="keyword">import</span> org.lqs1848.framework.web.wrapper.CryptoHttpServletResponse;</span><br><span class="line"><span class="keyword">import</span> org.lqs1848.framework.web.wrapper.ResponseWrapper;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> cn.hutool.core.date.DateUtil;</span><br><span class="line"><span class="keyword">import</span> eu.bitwalker.useragentutils.Browser;</span><br><span class="line"><span class="keyword">import</span> eu.bitwalker.useragentutils.OperatingSystem;</span><br><span class="line"><span class="keyword">import</span> eu.bitwalker.useragentutils.UserAgent;</span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Order(Ordered.HIGHEST_PRECEDENCE)</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TraceFilter</span> <span class="keyword">extends</span> <span class="title">ActionFilter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">filter</span><span class="params">(HttpServletRequest request, HttpServletResponse response, FilterChain chain)</span></span></span><br><span class="line"><span class="function">			<span class="keyword">throws</span> IOException, ServletException </span>&#123;</span><br><span class="line">		Long startTime = System.nanoTime();</span><br><span class="line">		</span><br><span class="line">		String contentType = request.getContentType();</span><br><span class="line">		log.info(<span class="string">&quot;QueryStart_Url(&quot;</span> + request.getRequestURI() + <span class="string">&quot;)_Method(&quot;</span>+request.getMethod()+<span class="string">&quot;)_Type(&quot;</span>+getContentType(contentType)+<span class="string">&quot;)_Ip(&quot;</span>+getIpAddress(request)+<span class="string">&quot;)&quot;</span>+getDevInfo(request.getHeader(HttpHeaders.USER_AGENT)));</span><br><span class="line">		ContentCachingRequestWrapper requestWrapper = <span class="keyword">new</span> ContentCachingRequestWrapper(request);</span><br><span class="line">		log.info(<span class="string">&quot;QueryString:&quot;</span> + requestWrapper.getQueryString());</span><br><span class="line">		log.info(<span class="string">&quot;QueryParameter:&quot;</span> + (requestWrapper.getParameterMap().size() !=<span class="number">0</span> ? JSON.toJSONString(requestWrapper.getParameterMap()):<span class="string">&quot;&quot;</span>));</span><br><span class="line">		<span class="keyword">if</span> (requestWrapper.hasFile() &amp;&amp; requestWrapper.getBodySize() != <span class="number">0</span>) &#123;</span><br><span class="line">			log.info(<span class="string">&quot;QueryBody: 内容是个文件&quot;</span>);</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			String queryBody = requestWrapper.getQueryBody();</span><br><span class="line">			log.info(<span class="string">&quot;QueryBody:&quot;</span> + queryBody.replaceAll(<span class="string">&quot;\\s+&quot;</span>, <span class="string">&quot; &quot;</span>));</span><br><span class="line">			</span><br><span class="line">			<span class="comment">//支持 前端用 get 但是数据传递在body中</span></span><br><span class="line">			<span class="keyword">if</span>(HttpMethod.GET.matches(request.getMethod()) &amp;&amp; requestWrapper.getBodySize() != <span class="number">0</span>) &#123;</span><br><span class="line">				queryBody = URLDecoder.decode(queryBody, <span class="string">&quot;UTF-8&quot;</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line">			<span class="keyword">if</span>(queryBody != <span class="keyword">null</span> &amp;&amp; queryBody.length() &gt; <span class="number">3</span> &amp;&amp; queryBody.length() &lt; <span class="number">999</span>) &#123;</span><br><span class="line">				<span class="comment">//支持 前端用 JSON 时 后端用 @RequestParam 接收参数</span></span><br><span class="line">				<span class="keyword">if</span>(contentType == <span class="keyword">null</span> || contentType.startsWith(MediaType.APPLICATION_JSON_VALUE)) &#123;</span><br><span class="line">					<span class="comment">//对简单的 RquestBody JSON 数据  放入 RequestParam 封装</span></span><br><span class="line">					JSONObject json = JSONObject.parseObject(queryBody);</span><br><span class="line">					<span class="keyword">for</span>(String key : json.keySet()) &#123;</span><br><span class="line">						String value = json.getString(key);</span><br><span class="line">						<span class="keyword">if</span>(StringUtils.isNotEmpty(value) &amp;&amp; !value.startsWith(<span class="string">&quot;&#123;&quot;</span>) &amp;&amp; !value.startsWith(<span class="string">&quot;[&quot;</span>))</span><br><span class="line">							requestWrapper.put(key, value);</span><br><span class="line">					&#125;<span class="comment">//for</span></span><br><span class="line">				&#125;</span><br><span class="line">				</span><br><span class="line">				<span class="comment">//支持 前端用 x-www 后端用 参数 或者 JavaBean 接收</span></span><br><span class="line">				<span class="keyword">if</span>(contentType == <span class="keyword">null</span> || contentType.startsWith(MediaType.APPLICATION_FORM_URLENCODED_VALUE)) &#123;</span><br><span class="line">					String[] params = queryBody.split(<span class="string">&quot;&amp;&quot;</span>);</span><br><span class="line">					<span class="keyword">for</span>(String param : params) &#123;</span><br><span class="line">						String[] par = param.split(<span class="string">&quot;=&quot;</span>);</span><br><span class="line">						<span class="keyword">if</span>(par.length != <span class="number">2</span>) <span class="keyword">break</span>;</span><br><span class="line">						requestWrapper.put(par[<span class="number">0</span>], par[<span class="number">1</span>]);</span><br><span class="line">					&#125;<span class="comment">//for</span></span><br><span class="line">				&#125;</span><br><span class="line">			&#125;<span class="comment">//if</span></span><br><span class="line">			</span><br><span class="line">			<span class="comment">//支持 前端用 x-www 或 form-data 时 后端用 JavaBean 接收</span></span><br><span class="line">			<span class="keyword">if</span>((requestWrapper.getBodySize() == <span class="number">0</span> || HttpMethod.GET.matches(request.getMethod())) &amp;&amp; </span><br><span class="line">					(contentType == <span class="keyword">null</span> || contentType.startsWith(MediaType.APPLICATION_FORM_URLENCODED_VALUE) </span><br><span class="line">							|| contentType.startsWith(MediaType.MULTIPART_FORM_DATA_VALUE))) &#123;</span><br><span class="line">				Map&lt;String,String&gt; map = requestWrapper.getParameterMapEx();</span><br><span class="line">				<span class="keyword">if</span>(!map.isEmpty()) &#123;</span><br><span class="line">                    <span class="comment">//这里主要是支持 单个参数里面有嵌套 json 意义不大</span></span><br><span class="line">					String mapJson = JSON.toJSONString(map)</span><br><span class="line">							.replaceAll(<span class="string">&quot;\&quot;\\&#123;&quot;</span>,<span class="string">&quot;&#123;&quot;</span>)</span><br><span class="line">							.replaceAll(<span class="string">&quot;\\&#125;\&quot;&quot;</span>, <span class="string">&quot;&#125;&quot;</span>)</span><br><span class="line">							.replaceAll(<span class="string">&quot;\&quot;\\[&quot;</span>,<span class="string">&quot;[&quot;</span>)</span><br><span class="line">							.replaceAll(<span class="string">&quot;\\]\&quot;&quot;</span>, <span class="string">&quot;]&quot;</span>)</span><br><span class="line">							.replaceAll(<span class="string">&quot;\\\\\&quot;&quot;</span>, <span class="string">&quot;\&quot;&quot;</span>);</span><br><span class="line">					requestWrapper.rewriteBody(mapJson);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;<span class="comment">//else</span></span><br><span class="line">		</span><br><span class="line">		<span class="comment">//劫持返回信息</span></span><br><span class="line">		<span class="keyword">boolean</span> isMeHook = <span class="keyword">false</span>;</span><br><span class="line">		ResponseWrapper proxyResponse;</span><br><span class="line">		<span class="keyword">if</span> (response <span class="keyword">instanceof</span> ResponseWrapper)</span><br><span class="line">			proxyResponse = (ResponseWrapper) response;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			proxyResponse = <span class="keyword">new</span> ResponseWrapper(response);</span><br><span class="line">			isMeHook = <span class="keyword">true</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		chain.doFilter(requestWrapper, proxyResponse);</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">if</span>(response != <span class="keyword">null</span> &amp;&amp; (response.getContentType() == <span class="keyword">null</span> || response.getContentType().startsWith(MediaType.APPLICATION_JSON_VALUE)))</span><br><span class="line">			log.info(<span class="string">&quot;ResponseBody Secret(&#123;&#125;) Detail(&#123;&#125;)&quot;</span>, response <span class="keyword">instanceof</span> CryptoHttpServletResponse, <span class="keyword">new</span> String(proxyResponse.getContent()));</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">			log.info(<span class="string">&quot;ResponseBody Detail(&#123;&#125;)&quot;</span>, <span class="string">&quot;内容未知 type:&quot;</span> + response.getContentType());</span><br><span class="line">		</span><br><span class="line">		Long elapsedTime = DateUtil.nanosToMillis(DateUtil.spendNt(startTime));</span><br><span class="line">		log.info(<span class="string">&quot;QueryEnd-Url:&quot;</span> + request.getRequestURI() + <span class="string">&quot; elapsedTime(&quot;</span> + elapsedTime + <span class="string">&quot;)&quot;</span>);</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">if</span>(isMeHook)</span><br><span class="line">			proxyResponse.finish();</span><br><span class="line">	&#125;<span class="comment">// method</span></span><br><span class="line"></span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getContentType</span><span class="params">(String contentType)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(StringUtils.isEmpty(contentType))</span><br><span class="line">			<span class="keyword">return</span> <span class="string">&quot;NONE&quot;</span>;</span><br><span class="line">		<span class="keyword">if</span>(contentType.indexOf(<span class="string">&quot;;&quot;</span>) != -<span class="number">1</span>) </span><br><span class="line">			contentType = contentType.split(<span class="string">&quot;;&quot;</span>)[<span class="number">0</span>];</span><br><span class="line">		<span class="keyword">if</span>(contentType.indexOf(<span class="string">&quot;/&quot;</span>) != -<span class="number">1</span>)</span><br><span class="line">			contentType = contentType.split(<span class="string">&quot;/&quot;</span>)[<span class="number">1</span>];</span><br><span class="line">		<span class="keyword">return</span> contentType;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getDevInfo</span><span class="params">(String agent)</span> </span>&#123;</span><br><span class="line">		StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">		<span class="comment">//解析agent字符串</span></span><br><span class="line">		UserAgent userAgent = UserAgent.parseUserAgentString(agent);</span><br><span class="line">		<span class="comment">//获取浏览器对象</span></span><br><span class="line">		Browser browser = userAgent.getBrowser();</span><br><span class="line">		<span class="comment">//获取操作系统对象</span></span><br><span class="line">		OperatingSystem operatingSystem = userAgent.getOperatingSystem();</span><br><span class="line">		sb.append(<span class="string">&quot;_DevType(&quot;</span>).append(operatingSystem.getDeviceType()).append(<span class="string">&quot;)&quot;</span>)</span><br><span class="line">		.append(<span class="string">&quot;_Browser(&quot;</span>).append(browser.getName()).append(<span class="string">&quot;)&quot;</span>)</span><br><span class="line">		.append(<span class="string">&quot;_Os(&quot;</span>).append(operatingSystem.getName()).append(<span class="string">&quot;)&quot;</span>);</span><br><span class="line">		<span class="keyword">return</span> sb.toString();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getIpAddress</span><span class="params">(HttpServletRequest request)</span> </span>&#123;</span><br><span class="line">		String ip = request.getHeader(<span class="string">&quot;x-forwarded-for&quot;</span>);</span><br><span class="line">		<span class="keyword">if</span> (ip != <span class="keyword">null</span> &amp;&amp; ip.length() != <span class="number">0</span> &amp;&amp; !<span class="string">&quot;unknown&quot;</span>.equalsIgnoreCase(ip)) &#123;</span><br><span class="line">			<span class="comment">// 多次反向代理后会有多个ip值，第一个ip才是真实ip</span></span><br><span class="line">			<span class="keyword">if</span> (ip.indexOf(<span class="string">&quot;,&quot;</span>) != -<span class="number">1</span>) &#123;</span><br><span class="line">				ip = ip.split(<span class="string">&quot;,&quot;</span>)[<span class="number">0</span>];</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (ip == <span class="keyword">null</span> || ip.length() == <span class="number">0</span> || <span class="string">&quot;unknown&quot;</span>.equalsIgnoreCase(ip)) &#123;</span><br><span class="line">			ip = request.getHeader(<span class="string">&quot;Proxy-Client-IP&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (ip == <span class="keyword">null</span> || ip.length() == <span class="number">0</span> || <span class="string">&quot;unknown&quot;</span>.equalsIgnoreCase(ip)) &#123;</span><br><span class="line">			ip = request.getHeader(<span class="string">&quot;WL-Proxy-Client-IP&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (ip == <span class="keyword">null</span> || ip.length() == <span class="number">0</span> || <span class="string">&quot;unknown&quot;</span>.equalsIgnoreCase(ip)) &#123;</span><br><span class="line">			ip = request.getHeader(<span class="string">&quot;HTTP_CLIENT_IP&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (ip == <span class="keyword">null</span> || ip.length() == <span class="number">0</span> || <span class="string">&quot;unknown&quot;</span>.equalsIgnoreCase(ip)) &#123;</span><br><span class="line">			ip = request.getHeader(<span class="string">&quot;HTTP_X_FORWARDED_FOR&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (ip == <span class="keyword">null</span> || ip.length() == <span class="number">0</span> || <span class="string">&quot;unknown&quot;</span>.equalsIgnoreCase(ip)) &#123;</span><br><span class="line">			ip = request.getHeader(<span class="string">&quot;X-Real-IP&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (ip == <span class="keyword">null</span> || ip.length() == <span class="number">0</span> || <span class="string">&quot;unknown&quot;</span>.equalsIgnoreCase(ip)) &#123;</span><br><span class="line">			ip = request.getRemoteAddr();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> ip;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;<span class="comment">// class</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"><span class="keyword">import</span> java.nio.charset.Charset;</span><br><span class="line"><span class="keyword">import</span> java.util.Collections;</span><br><span class="line"><span class="keyword">import</span> java.util.Enumeration;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletInputStream;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequestWrapper;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.commons.fileupload.servlet.ServletFileUpload;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.io.IOUtils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ContentCachingRequestWrapper</span> <span class="keyword">extends</span> <span class="title">HttpServletRequestWrapper</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">byte</span>[] body;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> Map&lt;String, String[]&gt; parameterMap;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> BufferedReader reader;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> ServletInputStream inputStream;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> StringBuffer queryStringSb;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">boolean</span> hasFile;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">boolean</span> isRewriteBody = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">ContentCachingRequestWrapper</span><span class="params">(HttpServletRequest request)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>(request);</span><br><span class="line">		parameterMap = <span class="keyword">new</span> HashMap&lt;String, String[]&gt;(request.getParameterMap());</span><br><span class="line">		queryStringSb = <span class="keyword">new</span> StringBuffer();</span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">super</span>.getQueryString() != <span class="keyword">null</span>) queryStringSb.append(<span class="keyword">super</span>.getQueryString());</span><br><span class="line">		loadBody(request);</span><br><span class="line">		hasFile = ServletFileUpload.isMultipartContent(<span class="keyword">this</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">put</span><span class="params">(String key, String value)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (!parameterMap.containsKey(key)) &#123;</span><br><span class="line">			parameterMap.put(key, <span class="keyword">new</span> String[] &#123; value &#125;);</span><br><span class="line">			<span class="keyword">if</span> (queryStringSb.length() &gt; <span class="number">0</span>)</span><br><span class="line">				queryStringSb.append(<span class="string">&quot;&amp;&quot;</span>);</span><br><span class="line">			queryStringSb.append(key).append(<span class="string">&quot;=&quot;</span>).append(value);</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> Map&lt;String, String&gt; <span class="title">getParameterMapEx</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		Map&lt;String, String&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">		<span class="keyword">for</span> (String key : parameterMap.keySet()) &#123;</span><br><span class="line">			map.put(key, <span class="keyword">this</span>.getParameter(key));</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> map;</span><br><span class="line">	&#125;<span class="comment">//method getParameterMapEx</span></span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">rewriteBody</span><span class="params">(String input)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.body = input.getBytes(Charset.defaultCharset());</span><br><span class="line">		<span class="keyword">this</span>.inputStream = <span class="keyword">new</span> RequestCachingInputStream(<span class="keyword">this</span>.body);</span><br><span class="line">		<span class="keyword">this</span>.isRewriteBody = <span class="keyword">true</span>;</span><br><span class="line">	&#125;<span class="comment">//method rewriteBody</span></span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isRewiteBody</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.isRewriteBody;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">loadBody</span><span class="params">(HttpServletRequest request)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.body = IOUtils.toByteArray(request.getInputStream());</span><br><span class="line">		<span class="keyword">this</span>.inputStream = <span class="keyword">new</span> RequestCachingInputStream(body);</span><br><span class="line">	&#125;<span class="comment">//method loadBody</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">byte</span>[] getBody() &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.body;</span><br><span class="line">	&#125;<span class="comment">//method getBody</span></span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getBodySize</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.body.length;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getContentType</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">super</span>.getContentType();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasFile</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.hasFile;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getQueryString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.queryStringSb.toString();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> Map&lt;String, String[]&gt; getParameterMap() &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.parameterMap;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getParameter</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">		String[] values = <span class="keyword">this</span>.parameterMap.get(name);</span><br><span class="line">		<span class="keyword">return</span> values != <span class="keyword">null</span> ? values[<span class="number">0</span>] : <span class="keyword">null</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> String[] getParameterValues(String name) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.parameterMap.get(name);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> Enumeration&lt;String&gt; <span class="title">getParameterNames</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> Collections.enumeration(parameterMap.keySet());</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//必须重写 不然原生request getInputStream 只能调用一次</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> ServletInputStream <span class="title">getInputStream</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">this</span>.inputStream != <span class="keyword">null</span>) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">this</span>.inputStream;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">super</span>.getInputStream();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> BufferedReader <span class="title">getReader</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (reader == <span class="keyword">null</span>) &#123;</span><br><span class="line">			reader = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(inputStream, getCharacterEncoding()));</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> reader;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getQueryBody</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> IOUtils.toString(getBody(), getCharacterEncoding());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;<span class="comment">//class </span></span><br></pre></td></tr></table></figure>
+
+<p>一开始只覆盖了 getParameterMap() 以为就能让 Spring 读取到 Paramter</p>
+<p>结果 Spring 是通过 getParameterNames() 获得 key 再去匹配 Controller 的参数名</p>
+<p>反正 ServletRequest 中的方法最好全部都覆盖掉</p>
+<p>到这里只是支持 body 中的数据放到  param  中</p>
+<p>如果Controller 用 bean 去接收参数 还是有可能获取不到</p>
+<p>用自定义 参数解析器去接收</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.core.MethodParameter;</span><br><span class="line"><span class="keyword">import</span> org.springframework.http.HttpHeaders;</span><br><span class="line"><span class="keyword">import</span> org.springframework.http.MediaType;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Component;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.support.WebDataBinderFactory;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.context.request.NativeWebRequest;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.method.support.HandlerMethodArgumentResolver;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.method.support.ModelAndViewContainer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSONObject;</span><br><span class="line"><span class="keyword">import</span> org.lqs1848.framework.web.wrapper.ContentCachingRequestWrapper;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DiyHandlerResolver</span> <span class="keyword">implements</span> <span class="title">HandlerMethodArgumentResolver</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">supportsParameter</span><span class="params">(MethodParameter parameter)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//是项目中的 JavaBean 才进行注入</span></span><br><span class="line">		<span class="keyword">return</span> parameter.getParameterType().getPackageName().startsWith(<span class="string">&quot;org.lqs1848&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> Object <span class="title">resolveArgument</span><span class="params">(MethodParameter parameter, ModelAndViewContainer container,</span></span></span><br><span class="line"><span class="function"><span class="params">			NativeWebRequest nativeWebRequest, WebDataBinderFactory factory)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		ContentCachingRequestWrapper request = nativeWebRequest.getNativeRequest(ContentCachingRequestWrapper.class);</span><br><span class="line">		</span><br><span class="line">		String contentType = request.getHeader(HttpHeaders.CONTENT_TYPE);</span><br><span class="line">		<span class="keyword">if</span>(request.getBodySize() &gt; <span class="number">0</span> &amp;&amp; (request.isRewiteBody() || contentType == <span class="keyword">null</span> || contentType.startsWith(MediaType.APPLICATION_JSON_VALUE))) &#123;</span><br><span class="line">			String queryBody = request.getQueryBody();</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				<span class="comment">//支持多个对象嵌套</span></span><br><span class="line">                <span class="comment">/*</span></span><br><span class="line"><span class="comment">	                controller(JavaBeanA a,JavaBeanB b)</span></span><br><span class="line"><span class="comment">	                json&#123;</span></span><br><span class="line"><span class="comment">	                	a:&#123;</span></span><br><span class="line"><span class="comment">	                		xxx:xxx</span></span><br><span class="line"><span class="comment">	                	&#125;,</span></span><br><span class="line"><span class="comment">	                	b:&#123;...&#125;</span></span><br><span class="line"><span class="comment">	                &#125;</span></span><br><span class="line"><span class="comment">                */</span></span><br><span class="line">				<span class="keyword">if</span>(queryBody.indexOf(<span class="string">&quot;\&quot;&quot;</span> + parameter.getParameterName() + <span class="string">&quot;\&quot;&quot;</span>) != -<span class="number">1</span>) &#123;</span><br><span class="line">					<span class="keyword">return</span> JSONObject.parseObject(queryBody).getObject(parameter.getParameterName(), parameter.getParameterType());</span><br><span class="line">				&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">					<span class="comment">//单个对象</span></span><br><span class="line">					<span class="keyword">return</span> JSONObject.parseObject(queryBody,parameter.getParameterType());</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;<span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">				log.error(<span class="string">&quot;参数注入增强-JSON转换失败&quot;</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;<span class="comment">//if</span></span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">	&#125;<span class="comment">//method</span></span><br><span class="line">&#125;<span class="comment">//class</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="三、总结"><a href="#三、总结" class="headerlink" title="三、总结"></a>三、总结</h1><p>懒得重复写了 搬一下自己写在项目的中的说明</p>
+<blockquote>
+<p>Controller 中可以以任何方式接收前端传递的 QueryBody 参数<br>封装了 ContentType JSON 自动转换为 x-www 和 fromData 的逻辑</p>
+<p>比如<br>public R Test(Entity e)//不需要写 @RequestBody 注解<br>public R Test(String param1,String param2)//放在 body 的可以自动拆成参数名 不需要额外定义一个 vo<br>public R Test(Entity1 e1,Entity2 e2)//可以同时接收多个数据<br>前端需要传递<br>{<br>    e1:{<br>        …<br>    },<br>    e2:{<br>        …<br>    }<br>}</p>
+<p>甚至前端用 get请求 但是发送了x-www 的content-type 并把数据放在 requestBody 中 并以 xxx1=xxx1&amp;xxx2=xx2 的形式传输<br>后台使用<br>JavaBean 也可以接收</p>
+</blockquote>
+<p>写完代码</p>
+<p>突然有点迷惑 为什么 Spring 没有去实现类似的逻辑呢</p>
+
+    </div>
+	
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>lqs1848
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.lqs1848.top/2021/11/03/2021-11-03%20Spring%E5%8F%82%E6%95%B0%E7%BB%91%E5%AE%9A/" title="Spring参数绑定 适应多种提交方式">https://blog.lqs1848.top/2021/11/03/2021-11-03 Spring参数绑定/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/Spring/" rel="tag"># Spring</a>
+              <a href="/tags/RequestBody/" rel="tag"># RequestBody</a>
+              <a href="/tags/RequestParam/" rel="tag"># RequestParam</a>
+          </div>
+
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/10/12/2021-10-12%20Hystrix%E4%B8%8A%E4%B8%8B%E6%96%87%E4%BC%A0%E9%80%92/" rel="prev" title="Hystrix上下文传递">
+                  <i class="fa fa-chevron-left"></i> Hystrix上下文传递
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+
+    </footer>
+    
+
+  </article>
+
+</div>
+
+
+
+
+
+
+
+   <script src="//cdn.jsdelivr.net/npm/@waline/client/dist/Waline.min.js"></script>
+    <div class="comments" id="waline"></div>
+    <script>
+      new Waline({
+        el: '#waline',
+        path: location.pathname,
+        serverURL: 'https://imnerd-api-one.vercel.app/',
+      });
+    </script>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+<div class="footer-image" style="
+    background: url(/images/footer.png) no-repeat 50%;
+    height: 368px;
+    width: 100%;
+    margin: -65px 0px;
+    z-index: -1;
+">
+</div>
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fas fa-dragon"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lqs1848</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
