@@ -1750,4 +1750,96 @@
         <tag>RequestParam</tag>
       </tags>
   </entry>
+  <entry>
+    <title>PageHelper 丢失参数</title>
+    <url>/2021/11/22/2021-11-22%20PageHelper%20%E4%B8%A2%E5%A4%B1%E5%8F%82%E6%95%B0/</url>
+    <content><![CDATA[<span id="more"></span>
+
+<p>PageHelper 5.2.0版本</p>
+<h1 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h1><p>一个很早以前的接口前段突然要使用</p>
+<p>调用后发现无法查询到数据</p>
+<p>查看日志发现</p>
+<p>PageHelper 分页 Count SQL</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="built_in">count</span>(<span class="number">0</span>) <span class="keyword">FROM</span> (<span class="keyword">SELECT</span> (round(<span class="number">6367000</span> <span class="operator">*</span> <span class="number">2</span> <span class="operator">*</span> <span class="built_in">asin</span>(<span class="built_in">sqrt</span>(pow(<span class="built_in">sin</span>(((m.latitude <span class="operator">*</span> pi()) <span class="operator">/</span> <span class="number">180</span> <span class="operator">-</span> (<span class="comment">/*latitude*/</span><span class="number">39</span> <span class="operator">*</span> pi()) <span class="operator">/</span> <span class="number">180</span>) <span class="operator">/</span> <span class="number">2</span>), <span class="number">2</span>) <span class="operator">+</span> <span class="built_in">cos</span>((<span class="comment">/*latitude*/</span><span class="number">39</span> <span class="operator">*</span> pi()) <span class="operator">/</span> <span class="number">180</span>) <span class="operator">*</span> <span class="built_in">cos</span>((m.latitude <span class="operator">*</span> pi()) <span class="operator">/</span> <span class="number">180</span>) <span class="operator">*</span> pow(<span class="built_in">sin</span>(((m.longitude <span class="operator">*</span> pi()) <span class="operator">/</span> <span class="number">180</span> <span class="operator">-</span> (<span class="comment">/*longitude*/</span><span class="number">39</span> <span class="operator">*</span> pi()) <span class="operator">/</span> <span class="number">180</span>) <span class="operator">/</span> <span class="number">2</span>), <span class="number">2</span>))))) <span class="keyword">AS</span> distance <span class="keyword">FROM</span> sel_mal m <span class="keyword">WHERE</span> m.status <span class="operator">=</span> <span class="number">1</span> <span class="keyword">AND</span> m.mall_id <span class="operator">=</span> <span class="comment">/*mallId*/</span><span class="number">39</span>) table_count</span><br></pre></td></tr></table></figure>
+
+<p>分页后进行查询的SQL</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> (round(<span class="number">6367000</span> <span class="operator">*</span> <span class="number">2</span> <span class="operator">*</span> <span class="built_in">asin</span>(<span class="built_in">sqrt</span>(pow(<span class="built_in">sin</span>(((m.latitude <span class="operator">*</span> pi()) <span class="operator">/</span> <span class="number">180</span> <span class="operator">-</span> (<span class="comment">/*latitude*/</span><span class="number">39</span> <span class="operator">*</span> pi()) <span class="operator">/</span> <span class="number">180</span>) <span class="operator">/</span> <span class="number">2</span>), <span class="number">2</span>) <span class="operator">+</span> <span class="built_in">cos</span>((<span class="comment">/*latitude*/</span><span class="number">39</span> <span class="operator">*</span> pi()) <span class="operator">/</span> <span class="number">180</span>) <span class="operator">*</span> <span class="built_in">cos</span>((m.latitude <span class="operator">*</span> pi()) <span class="operator">/</span> <span class="number">180</span>) <span class="operator">*</span> pow(<span class="built_in">sin</span>(((m.longitude <span class="operator">*</span> pi()) <span class="operator">/</span> <span class="number">180</span> <span class="operator">-</span> (<span class="comment">/*longitude*/</span><span class="keyword">null</span> <span class="operator">*</span> pi()) <span class="operator">/</span> <span class="number">180</span>) <span class="operator">/</span> <span class="number">2</span>), <span class="number">2</span>))))) <span class="keyword">AS</span> distance <span class="keyword">from</span> sel_mal m <span class="keyword">where</span> m.status<span class="operator">=</span><span class="number">1</span> <span class="keyword">and</span> m.mall_id <span class="operator">=</span> <span class="comment">/*mallId*/</span><span class="keyword">null</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> distance <span class="keyword">ASC</span> LIMIT <span class="comment">/*Second_PageHelper*/</span><span class="number">30</span> </span><br></pre></td></tr></table></figure>
+
+
+
+<p>PageHelper 在判断是否需要分页时的 SQL 还有 mallId 这个参数 </p>
+<p>但是到了 实际分页的 SQL 时 mallId 这个参数就丢失了</p>
+<p>原始XML</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">select (round(6367000 * 2 * asin(sqrt(pow(sin(((m.latitude * pi()) / 180 - (#&#123;latitude&#125; * pi()) / 180) / 2), 2) + cos((#&#123;latitude&#125; * pi()) / 180) * cos((m.latitude * pi()) / 180)</span><br><span class="line">		* pow(sin(((m.longitude * pi()) / 180 - (#&#123;longitude&#125; * pi()) / 180) / 2), 2))))) AS distance</span><br><span class="line">		<span class="keyword">from</span> sel_mal m</span><br><span class="line">		<span class="keyword">where</span></span><br><span class="line">			m.status<span class="operator">=</span><span class="number">1</span></span><br><span class="line">			and m.mall_id = #&#123;mallId&#125;</span><br><span class="line">		<span class="keyword">ORDER</span> <span class="keyword">BY</span> distance <span class="keyword">ASC</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>请求参数在分页时还存在</p>
+<p>分页后却消失了 变成 null 导致查询不到数据</p>
+<p>断点调试 PageHelper </p>
+<p>根据 PageInterceptor 源码</p>
+<p>Count 时 没有修改 parameter 变量</p>
+<p>因为 入参没有变动 所以 PageHelper 使用了原始的 parameter 进行查询 查询结果就没有任何问题</p>
+<p>而 PageHelper  进行分页时</p>
+<p>增加了 /<em>Second_PageHelper</em>/30  参数</p>
+<p>我原方法 是 </p>
+<p>SelMalPo selectByMall(Long mallId);</p>
+<p>单个参数的方法</p>
+<p>PageHelper  对请求参数进行修改</p>
+<p>变更为 paramMap HashMap 用于传递自身所需要的 limit size</p>
+<p>在 AbstractHelperDialect 114行</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"> <span class="comment">//下面这段方法，主要解决一个常见类型的参数时的问题</span></span><br><span class="line"><span class="keyword">if</span> (boundSql.getParameterMappings() != <span class="keyword">null</span> &amp;&amp; boundSql.getParameterMappings().size() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> (ParameterMapping parameterMapping : boundSql.getParameterMappings()) &#123;</span><br><span class="line">        String name = parameterMapping.getProperty();</span><br><span class="line">        <span class="keyword">if</span> (!name.equals(PAGEPARAMETER_FIRST)</span><br><span class="line">            &amp;&amp; !name.equals(PAGEPARAMETER_SECOND)</span><br><span class="line">            &amp;&amp; paramMap.get(name) == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (hasTypeHandler</span><br><span class="line">                || parameterMapping.getJavaType().equals(parameterObject.getClass())) &#123;</span><br><span class="line">                paramMap.put(name, parameterObject);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>注入参数时</p>
+<p>由于我的SQL比较特殊 </p>
+<p>里面有3个  #{latitude} 1个 #{mallId}</p>
+<p>PageHelper  根据 参数类型 Long 匹配后 将  latitude = 39   而 mallId 这个变量没有赋值</p>
+<p>导致了以上问题</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这个问题是由于特殊情况产生的</p>
+<p>SQL 中有多个需要传递的参数</p>
+<p>但方法个只声明了一个参数</p>
+<p>导致 PageHelper  判断错误</p>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>Mybatis</tag>
+        <tag>PageHelper</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>oracle 11g 数组下标越界</title>
+    <url>/2021/11/26/2021-11-26%20oracle%2011g%20%E6%95%B0%E7%BB%84%E4%B8%8B%E8%A1%A8%E8%B6%8A%E7%95%8C/</url>
+    <content><![CDATA[<span id="more"></span>
+
+<h1 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h1><p>SQL 查询 时携带了超过8个参数以后 一直提示下标越界</p>
+<h1 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h1><p>我用的 Oracle11g JDBC 驱动是网上随便下的 oracle 11.1.0.7.0-Produc tion 的 ojdbc6.jar 自己丢到本地Maven上</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//oracle.jdbc.driver.OracleSql 第579行</span></span><br><span class="line"><span class="keyword">case</span> <span class="number">13</span>: &#123;</span><br><span class="line">    <span class="keyword">if</span> (count &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.parameterList == OracleSql.EMPTY_LIST) &#123;</span><br><span class="line">            <span class="keyword">this</span>.parameterList = <span class="keyword">new</span> String[<span class="number">8</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.parameterList.length &lt;= <span class="keyword">this</span>.parameterCount) &#123;</span><br><span class="line">            <span class="keyword">final</span> String[] parameterList = <span class="keyword">new</span> String[<span class="keyword">this</span>.parameterList.length * <span class="number">4</span>];</span><br><span class="line">            System.arraycopy(<span class="keyword">this</span>.parameterList, <span class="number">0</span>, parameterList, <span class="number">0</span>, <span class="keyword">this</span>.parameterList.length);</span><br><span class="line">            <span class="keyword">this</span>.parameterList = parameterList;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">this</span>.parameterList[<span class="keyword">this</span>.parameterCount] = <span class="keyword">new</span> String(<span class="keyword">this</span>.currentParameter, <span class="number">0</span>, count).intern();</span><br><span class="line">        count = <span class="number">0</span>;</span><br><span class="line">        ++<span class="keyword">this</span>.parameterCount;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>更换为Maven 仓库中的最新版</p>
+<blockquote>
+<dependency>
+    <groupId>com.oracle.database.jdbc</groupId>
+    <artifactId>ojdbc6</artifactId>
+    <version>11.2.0.4</version>
+</dependency>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//oracle.jdbc.driver.OracleSql 第633行</span></span><br><span class="line"><span class="keyword">case</span> <span class="number">16</span>: &#123;</span><br><span class="line">    <span class="keyword">if</span> (count &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.parameterList == OracleSql.EMPTY_LIST) &#123;</span><br><span class="line">        <span class="keyword">this</span>.parameterList = <span class="keyword">new</span> String[Math.max(<span class="number">8</span>, <span class="keyword">this</span>.parameterCount * <span class="number">4</span>)];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.parameterList.length &lt;= <span class="keyword">this</span>.parameterCount) &#123;</span><br><span class="line">        <span class="keyword">final</span> String[] parameterList = <span class="keyword">new</span> String[<span class="keyword">this</span>.parameterList.length * <span class="number">4</span>];</span><br><span class="line">        System.arraycopy(<span class="keyword">this</span>.parameterList, <span class="number">0</span>, parameterList, <span class="number">0</span>, <span class="keyword">this</span>.parameterList.length);</span><br><span class="line">        <span class="keyword">this</span>.parameterList = parameterList;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">this</span>.parameterList[<span class="keyword">this</span>.parameterCount] = <span class="keyword">new</span> String(<span class="keyword">this</span>.currentParameter, <span class="number">0</span>, count).intern();</span><br><span class="line">    count = <span class="number">0</span>;</span><br><span class="line">    ++<span class="keyword">this</span>.parameterCount;</span><br><span class="line">    <span class="keyword">if</span> (n != <span class="number">0</span>) &#123;</span><br><span class="line">        ++<span class="keyword">this</span>.returningIntoParameterCount;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//旧版</span></span><br><span class="line"><span class="keyword">this</span>.parameterList = <span class="keyword">new</span> String[<span class="number">8</span>];</span><br><span class="line"><span class="comment">//新版</span></span><br><span class="line"><span class="keyword">this</span>.parameterList = <span class="keyword">new</span> String[Math.max(<span class="number">8</span>, <span class="keyword">this</span>.parameterCount * <span class="number">4</span>)];</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Oracle Jdbc 驱动竟然还会有这么明显的BUG… emm</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>驱动老老实实用最新的</p>
+]]></content>
+      <categories>
+        <category>DateBase</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>Oracle 11g</tag>
+      </tags>
+  </entry>
 </search>
