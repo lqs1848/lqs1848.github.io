@@ -28,7 +28,7 @@
 <meta property="og:site_name" content="Chaos">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-12-15T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-12-16T10:31:03.171Z">
+<meta property="article:modified_time" content="2021-12-30T03:30:30.193Z">
 <meta property="article:author" content="lqs1848">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="Seata">
@@ -187,7 +187,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%B5%B7%E5%9B%A0"><span class="nav-number">1.</span> <span class="nav-text">起因</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E5%9B%A0"><span class="nav-number">2.</span> <span class="nav-text">原因</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%B5%B7%E5%9B%A0"><span class="nav-number">1.</span> <span class="nav-text">起因</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E5%9B%A0"><span class="nav-number">2.</span> <span class="nav-text">原因</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%8D%E6%AC%A1%E5%87%BA%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">再次出现</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -318,6 +318,17 @@
 <p>数据库在使用过程中修改过表结构 添加或删除了字段 </p>
 <p>Seata 的 tableMeta 没有更新 到 seata的更新时间后就没问题了</p>
 <p>坑… 特别是 这些都是同事修改的数据库字段 自己没动</p>
+<h1 id="再次出现"><a href="#再次出现" class="headerlink" title="再次出现"></a>再次出现</h1><p>直接写原因</p>
+<p>数据库 有一列 仓库名称 列名 同事直接写成 name </p>
+<p>Mybatis XML SQL 自动把 name 修改为 NAME </p>
+<p>getColumnMeta(colName);  获取时是 根据列名获取</p>
+<p>用 ‘NAME’ 肯定获取不到 </p>
+<p>Seata 的 Map 存储的是小写 ‘name’</p>
+<p>不确定项目里面还有没有其它的大小写问题</p>
+<p>直接修改 Seata 源码</p>
+<p>io.seata.rm.datasource.sql.struct.TableMeta</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">     * key: column name</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, ColumnMeta&gt; allColumns = <span class="keyword">new</span> LinkedHashMap&lt;&gt;();</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * key: index name</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, IndexMeta&gt; allIndexes = <span class="keyword">new</span> LinkedHashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line"><span class="comment">//修改为</span></span><br><span class="line">	 </span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">     * key: column name</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, ColumnMeta&gt; allColumns = <span class="keyword">new</span> LinkedCaseInsensitiveMap&lt;&gt;();</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * key: index name</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, IndexMeta&gt; allIndexes = <span class="keyword">new</span> LinkedCaseInsensitiveMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line"><span class="comment">//修改成不区分大小写的 Map</span></span><br></pre></td></tr></table></figure>
+
 
     </div>
 	

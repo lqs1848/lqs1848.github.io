@@ -1859,6 +1859,17 @@
 <p>数据库在使用过程中修改过表结构 添加或删除了字段 </p>
 <p>Seata 的 tableMeta 没有更新 到 seata的更新时间后就没问题了</p>
 <p>坑… 特别是 这些都是同事修改的数据库字段 自己没动</p>
+<h1 id="再次出现"><a href="#再次出现" class="headerlink" title="再次出现"></a>再次出现</h1><p>直接写原因</p>
+<p>数据库 有一列 仓库名称 列名 同事直接写成 name </p>
+<p>Mybatis XML SQL 自动把 name 修改为 NAME </p>
+<p>getColumnMeta(colName);  获取时是 根据列名获取</p>
+<p>用 ‘NAME’ 肯定获取不到 </p>
+<p>Seata 的 Map 存储的是小写 ‘name’</p>
+<p>不确定项目里面还有没有其它的大小写问题</p>
+<p>直接修改 Seata 源码</p>
+<p>io.seata.rm.datasource.sql.struct.TableMeta</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">     * key: column name</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, ColumnMeta&gt; allColumns = <span class="keyword">new</span> LinkedHashMap&lt;&gt;();</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * key: index name</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, IndexMeta&gt; allIndexes = <span class="keyword">new</span> LinkedHashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line"><span class="comment">//修改为</span></span><br><span class="line">	 </span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">     * key: column name</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, ColumnMeta&gt; allColumns = <span class="keyword">new</span> LinkedCaseInsensitiveMap&lt;&gt;();</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * key: index name</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, IndexMeta&gt; allIndexes = <span class="keyword">new</span> LinkedCaseInsensitiveMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line"><span class="comment">//修改成不区分大小写的 Map</span></span><br></pre></td></tr></table></figure>
+
 ]]></content>
       <categories>
         <category>Java</category>
