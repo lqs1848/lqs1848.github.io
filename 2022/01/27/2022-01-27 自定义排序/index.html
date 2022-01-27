@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+<a target="_blank" rel="noopener" href="https://github.com/lqs1848" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.lqs1848.top","root":"/","images":"/images","scheme":"Gemini","version":"8.3.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+<meta property="og:type" content="article">
+<meta property="og:title" content="自定义排序">
+<meta property="og:url" content="https://blog.lqs1848.top/2022/01/27/2022-01-27%20%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8E%92%E5%BA%8F/index.html">
+<meta property="og:site_name" content="Chaos">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-01-26T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-01-27T08:38:46.581Z">
+<meta property="article:author" content="lqs1848">
+<meta property="article:tag" content="排序">
+<meta property="article:tag" content="转载">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.lqs1848.top/2022/01/27/2022-01-27%20%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8E%92%E5%BA%8F/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<title>自定义排序 | Chaos</title>
+  
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chaos" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Chaos</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-book fa-fw"></i>留言板</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%81%8F%E4%BB%A3%E7%A0%81%E8%A7%92%E5%BA%A6%E6%8F%8F%E8%BF%B0%E6%96%B9%E6%A1%88-link"><span class="nav-number">2.</span> <span class="nav-text">偏代码角度描述方案(link)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80-%E5%85%A8%E9%87%8F%E6%9B%B4%E6%96%B0%E5%85%83%E7%B4%A0%E4%BD%8D%E7%BD%AE%E6%B3%95"><span class="nav-number">2.1.</span> <span class="nav-text">方法一 全量更新元素位置法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.1.1.</span> <span class="nav-text">具体实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C-%E5%8F%96%E4%B8%AD%E5%80%BC%E6%B3%95%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">方法二 取中值法（推荐）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%89-%E5%8D%95%E8%A1%A8%E5%8D%95%E5%88%97"><span class="nav-number">2.3.</span> <span class="nav-text">方法三 单表单列</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%81%8F%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A7%92%E5%BA%A6%E6%8F%8F%E8%BF%B0%E6%96%B9%E6%A1%88-link"><span class="nav-number">3.</span> <span class="nav-text">偏数据库角度描述方案(link)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%8D%95%E8%A1%A8%E5%8D%95%E5%88%97%E7%BB%93%E6%9E%84%EF%BC%88%E6%95%B0%E7%BB%84%E7%BB%93%E6%9E%84%EF%BC%89"><span class="nav-number">3.0.0.1.</span> <span class="nav-text">1. 单表单列结构（数组结构）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%8D%95%E8%A1%A8%E5%8F%8C%E5%88%97%E7%BB%93%E6%9E%84%EF%BC%88%E9%93%BE%E8%A1%A8%E7%BB%93%E6%9E%84%EF%BC%89"><span class="nav-number">3.0.0.2.</span> <span class="nav-text">2.单表双列结构（链表结构）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E5%8F%8C%E8%A1%A8%E5%8F%8C%E5%88%97%E7%BB%93%E6%9E%84%EF%BC%88%E5%88%86%E9%A1%B5%E7%BB%93%E6%9E%84%EF%BC%89"><span class="nav-number">3.0.0.3.</span> <span class="nav-text">3.双表双列结构（分页结构）</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E6%96%B9%E6%A1%88"><span class="nav-number">4.</span> <span class="nav-text">其他方案</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">lqs1848</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">62</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lqs1848" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lqs1848" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.lqs1848.top/2022/01/27/2022-01-27%20%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8E%92%E5%BA%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="lqs1848">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chaos">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          自定义排序
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-01-27 00:00:00" itemprop="dateCreated datePublished" datetime="2022-01-27T00:00:00+08:00">2022-01-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <span id="more"></span>
+
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>新增功能时发现 修改个 栏目 修改了2秒多 速度很慢</p>
+<p>查找了下代码 原来是 自定义 栏目排序的 order</p>
+<p>同事写的逻辑 </p>
+<p>查出所有的 栏目 再一个个 Update 数量一多就会慢的要死</p>
+<p>借鉴下网上其他人的思路</p>
+<h1 id="偏代码角度描述方案-link"><a href="#偏代码角度描述方案-link" class="headerlink" title="偏代码角度描述方案(link)"></a>偏代码角度描述方案(<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/9ee708e43ebf">link</a>)</h1><h2 id="方法一-全量更新元素位置法"><a href="#方法一-全量更新元素位置法" class="headerlink" title="方法一 全量更新元素位置法"></a>方法一 全量更新元素位置法</h2><p>适用场景：排序元素数量较少</p>
+<p>原理：每个元素拥有一个字段，表示元素当前排序的位置。通过前端排序，将排好的元素位置，一次性发送到后端。然后，后端统一更新所有元素的位置。</p>
+<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><p>实体设计：增加排序字段 <code>sort</code>，表示元素当前的位置。例如，<code>sort = 1</code>，则表示元素处于第一位。</p>
+<p>接口设计：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 排序接口</span></span><br><span class="line">POST /courses/sorting</span><br><span class="line"></span><br><span class="line"><span class="comment">// 格式：JSON</span></span><br><span class="line"><span class="comment">// 数组中为元素的ID</span></span><br><span class="line"><span class="comment">// 元素在数组中的序号，表示了元素的位置</span></span><br><span class="line"><span class="comment">// 例如，ID为3的元素，排序为 1，ID为2的元素，排序为2</span></span><br><span class="line">[<span class="meta">3, 2, 4, 1</span>]</span><br></pre></td></tr></table></figure>
+
+<p>前端逻辑：当前端排序后，或删除元素后，将剩余元素ID，以数组的形式发送给后端。数组的索引序号，则表示元素当前的排序。</p>
+<p>后端实现逻辑：</p>
+<ul>
+<li>删除不存在前端数组中的ID。将前端 <code>ids</code>，与服务器端的 <code>ids</code> 进行对比。删除服务器端存在但前端不存在的 <code>ids</code>。</li>
+<li>按照数组的排序，更新所有元素排序。</li>
+</ul>
+<p>总结，此方法仅适用于排序元素较少（例如，总元素为5~15个）的场景。对于大量数据排序并不适用，适合首页轮播图管理、任务卡片管理。<a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=https://www.leangoo.com/">leangoo 的看板卡片管理就是采用这种方式。</a></p>
+<h2 id="方法二-取中值法（推荐）"><a href="#方法二-取中值法（推荐）" class="headerlink" title="方法二 取中值法（推荐）"></a>方法二 取中值法（推荐）</h2><p>原理与实现步骤：</p>
+<ol>
+<li>创建元素时给元素赋默认位置（<code>pos</code>字段记录该值）。赋值规则为，当创建第一个元素时，默认位置赋值为65536，第二个元素为 <code>2 * 65536 = 13172</code>，增加第N个元素时，位置赋值为N*65536。</li>
+<li>当拖拽改变元素位置时，更新 <code>pos</code>。更新规则如下：</li>
+</ol>
+<ul>
+<li>调整一个元素到两个元素中间时，<code>(pre_item.pos + after_item.pos）/ 2 = pos</code></li>
+<li>调整一个元素到第一个元素时， <code>old_first_item.pos / 2 = pos</code></li>
+<li>调整一个元素到最后一个元素时， <code>old_last_item.post + 65536 = pos</code></li>
+</ul>
+<ol>
+<li>当前后两个元素的数值，不满足整数时，更新所有元素的排序。依次给每个元素的 <code>pos</code>赋新值。例如，第一位赋值65536，第二位为<code>2 * 65536</code>，第N位赋值N*65536。</li>
+</ol>
+<p>通过取中值的方法，改变元素的位置。当需要按序获取时，只需要对 <code>pos</code>进行排序，就可以获取元素的位置。</p>
+<p>关于中值重排的问题，解决方法有多种。例如，我们可以使用浮点数储存 <code>pos</code>，但是需要考虑数据库存储的精度问题。而且，数值过小，会在前端丢失精度，元素排序会出现问题。当然，如果在接口层，当检测到中值过小，则对所有元素进行重排，接口相应速度会存在问题（如果是后端管理系统就不用考虑性能问题了）。</p>
+<p>有人提出，利用定时任务每天对所有元素定时重排，来解决单次接口的性能问题。个人觉得这个方法，还是存在问题。若定时任务不及时，那么排序由于精度问题，发生了排序错乱的问题。那么，定时重排已经无意义。</p>
+<h2 id="方法三-单表单列"><a href="#方法三-单表单列" class="headerlink" title="方法三 单表单列"></a>方法三 单表单列</h2><p>每个元素，都有一个字段<code>index</code>，表示元素的排序信息。<br>规定元素从0开始递增。<br>基本操作如下：</p>
+<ul>
+<li>增加数据。 新增元素时，序号为当前元素数据总量值。</li>
+<li>删除元素。删除元素时，将大于该元素的序号，都减1。</li>
+<li>修改元素排序。当元素从 x 移动到 y 时，<ul>
+<li>若 x &lt; y 时，则将(x, y)范围内的元素都减1</li>
+<li>若 x &gt; y 时，则将(y, x)范围内的元素都加1</li>
+</ul>
+</li>
+<li>查询元素。展示列表时，按照 <code>index</code> 字段进行排序即可。若需要查第n位元素时，元素位置为 <code>index = n - 1</code>。</li>
+</ul>
+<p>这种方式优点是，查询快，修改慢。而且，修改接口的逻辑较重，处理起来比较麻烦。我们很多项目都是采用这种模式。在接口设计方面，我们让前端传给后端是一个偏移值（<code>offset</code>），<code>offset = y - x。当元素向排序大的方向移动时，</code>offset<code>的为正值；若往排序小的方向移动时，</code>offset`为负值。</p>
+<h1 id="偏数据库角度描述方案-link"><a href="#偏数据库角度描述方案-link" class="headerlink" title="偏数据库角度描述方案(link)"></a>偏数据库角度描述方案(<a target="_blank" rel="noopener" href="https://www.cnblogs.com/kesimin/p/9441448.html">link</a>)</h1><h4 id="1-单表单列结构（数组结构）"><a href="#1-单表单列结构（数组结构）" class="headerlink" title="1. 单表单列结构（数组结构）"></a>1. 单表单列结构（数组结构）</h4><p>此设计是使用一个表中的一列来表示数据的序号，通常我们使用的方法就是这种。</p>
+<p>数据表tb_data(n)：</p>
+<table>
+<thead>
+<tr>
+<th>data</th>
+<th>index</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>···</td>
+<td>0</td>
+</tr>
+<tr>
+<td>···</td>
+<td>1</td>
+</tr>
+<tr>
+<td>···</td>
+<td>2</td>
+</tr>
+</tbody></table>
+<p>这里规定序号从0开始递增。</p>
+<p>其基本数据操作如下：</p>
+<ul>
+<li>增 → 当增加一个数据时，定义data的序号为数据总数量值。</li>
+<li>删 → 当删除一个数据时，将大于该序号的数据的序号都减1。</li>
+<li>改 → 当修改位置将数据a从x移动到y时，若x小于y，则将(x,y]范围内的数据序号都减1；若x大于y，则将[y,x)范围内的数据序号都加1（注：修改数据库时，要先将a的序号x修改为未被使用的序号z，然后再修改范围内的数据，最后再将z修改为y，顺序不能乱）。</li>
+<li>查 → 当查找数据时添加 order by index 即可得到自定义排列的数据，查找第n个数据时查找条件为 index=n-1 即可。</li>
+</ul>
+<p>总结：此方法查找速度最快，修改速度最慢。</p>
+<h4 id="2-单表双列结构（链表结构）"><a href="#2-单表双列结构（链表结构）" class="headerlink" title="2.单表双列结构（链表结构）"></a>2.单表双列结构（链表结构）</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">此设计是使用一个表中的两列来表示数据的序号，一列表示该数据的前置id，一列表示该数据的后置序id（id为数据表本身的自增序号），即相当于我们经常使用的双向链表。</span><br></pre></td></tr></table></figure>
+
+<p>数据表tb_data(n)：</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>data</th>
+<th>pre_no</th>
+<th>next_no</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>···</td>
+<td>-1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>···</td>
+<td>0</td>
+<td>2</td>
+</tr>
+<tr>
+<td>2</td>
+<td>···</td>
+<td>1</td>
+<td>3</td>
+</tr>
+<tr>
+<td>3</td>
+<td>···</td>
+<td>2</td>
+<td>-1</td>
+</tr>
+</tbody></table>
+<p>这里规定第一个数据的pre_no为-1，最后一个数据的next_no为-1。</p>
+<p>其基本数据操作如下：</p>
+<ul>
+<li>增 → 当增加一个数据a时，先查找出最后一个数据b的id号，a的pre_no定义为b的id号（若此数据为第一个则定义为-1），next_no定义为-1，再将b的next_no定义为a的id号。</li>
+<li>删 → 当删除一个数据a时，取出a的pre_no和next_no，将pre_no对应的id的数据的next_no修改为a的next_no，将next_no对应的id的数据的pre_no修改为a的pre_no。</li>
+<li>改 → 令位置x-1、x+1数据分别为b、c，位置y-1、y、y+1的数据分别为d、e、f，现修改位置将数据a从x移动到y时，<br>当x小于y时，修改b的next_no为c的id，修改c的pre_no为b的id，修改e的next_no为a的id，修改f的pre_no为a的id，最后修改a的pre_no为e的id，next_no为f的id；<br>当x大于y时，修改b的next_no为c的id，修改c的pre_no为b的id，修改d的next_no为a的id，修改e的pre_no为a的id，最后修改a的pre_no为d的id，next_no为e的id。</li>
+<li>查 → 当查找第n个数据时，需要先查找出第一个数据，在根据第一个数据逐个往后查找数据的next_no，查找n次后得到第n个数据。</li>
+</ul>
+<p>总结：此方法查找速度最慢，修改速度最快。</p>
+<h4 id="3-双表双列结构（分页结构）"><a href="#3-双表双列结构（分页结构）" class="headerlink" title="3.双表双列结构（分页结构）"></a>3.双表双列结构（分页结构）</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">此设计是使用一个页码表记录全部页码和页码的序号范围，另一个数据表来记录基本数据、自身序号和页码，通过在一个表中给数据设置不同的序号和页码来达到分页排序的效果。</span><br></pre></td></tr></table></figure>
+
+<p>页码表tb_page：</p>
+<table>
+<thead>
+<tr>
+<th>tb_name</th>
+<th>page</th>
+<th>start_index</th>
+<th>end_index</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>tb_data0</td>
+<td>0</td>
+<td>1</td>
+<td>1000</td>
+</tr>
+<tr>
+<td>tb_data0</td>
+<td>1</td>
+<td>1</td>
+<td>1000</td>
+</tr>
+<tr>
+<td>tb_data0</td>
+<td>2</td>
+<td>1</td>
+<td>120</td>
+</tr>
+<tr>
+<td>tb_data1</td>
+<td>0</td>
+<td>1</td>
+<td>1000</td>
+</tr>
+<tr>
+<td>tb_data1</td>
+<td>1</td>
+<td>1</td>
+<td>130</td>
+</tr>
+</tbody></table>
+<p>table_name为一个基本数据表的表名，对于每一个table_name，其对应的page都从0开始递增且不能重复，每个page有一定的数据范围（这里设定为一页有1000条数据），则每个数据表对应的数据总量即可计算出来。</p>
+<p>基本数据表tb_data(n)：</p>
+<table>
+<thead>
+<tr>
+<th>data</th>
+<th>page</th>
+<th>index</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>···</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>···</td>
+<td>0</td>
+<td>···</td>
+</tr>
+<tr>
+<td>···</td>
+<td>0</td>
+<td>1000</td>
+</tr>
+<tr>
+<td>···</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>···</td>
+<td>1</td>
+<td>···</td>
+</tr>
+<tr>
+<td>···</td>
+<td>1</td>
+<td>1000</td>
+</tr>
+<tr>
+<td>···</td>
+<td>2</td>
+<td>1</td>
+</tr>
+<tr>
+<td>···</td>
+<td>2</td>
+<td>···</td>
+</tr>
+<tr>
+<td>···</td>
+<td>2</td>
+<td>120</td>
+</tr>
+</tbody></table>
+<p>data为数据域，记录基本数据，对于每一个不相同的data都有对应的page和index，通过page、index和每一页的数据范围即可计算出对应的全局序号。</p>
+<p>其基本数据操作如下：</p>
+<ul>
+<li>增 → 当增加一个数据时，先从页码表中查找出最后的page及其对应的start_index和end_index，若end_index-start_index+1没有数据超出范围，则插入数据的page不变，index为end_index+1，若超出范围，则需在页码表中新建一页，插入数据的page自加一，index赋值初始值。</li>
+<li>删 → 当删除一个数据时，因为需要保证除末页以外的页码的数据范围都为规定值，所以需要对删除数据对应的页码及以上页码的数据进行调整，对于删除数据的页码，可以通过对比该数据在页码中的相对位置来调整较小数据量的一方数据执行加减1，对于大于其的页码，可以将每一页的首数据调整为上一页的末数据（末页数量为0即可将末页删除）。</li>
+<li>改 → 当修改位置将数据a从x移动到y，计算x、y对应的页码，当x、y的页码相同时，只需调整该页数据，可通过对比x到y的数量和页码数量来决定调整x、y范围内还是范围外的数据信息；当x、y页码不同时，可通过对x、y在页码中的相对位置来调整较小数据量的一方数据执行加减1，若x小于y，(x,y]范围内的页的首数据调整为上一页的末数据，若x大于y，[y,x)范围内的页的末数据调整为下一页的首数据。</li>
+<li>查 → 当查找数据总量时，可以通过查找页码表计算得出；当查找序号为n的数据时，可以通过页码表计算得到对应的page和index，然后再通过查找数据表取得数据（由于页码表的数据会经常使用，所以最好从数据库取出一次后保存在内存中再进行使用即可提高速度）。</li>
+</ul>
+<p>总结：此方法查找速度和修改速度比较均衡，适合大多数情况使用。</p>
+<h1 id="其他方案"><a href="#其他方案" class="headerlink" title="其他方案"></a>其他方案</h1><p>手动控制加数值or减数值 +1/-1   +10/-10</p>
+<p>按照数值大小排序</p>
+<p>和指定 数值 差不多的逻辑</p>
+
+    </div>
+	
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>lqs1848
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.lqs1848.top/2022/01/27/2022-01-27%20%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8E%92%E5%BA%8F/" title="自定义排序">https://blog.lqs1848.top/2022/01/27/2022-01-27 自定义排序/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%8E%92%E5%BA%8F/" rel="tag"># 排序</a>
+              <a href="/tags/%E8%BD%AC%E8%BD%BD/" rel="tag"># 转载</a>
+          </div>
+
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/01/24/2022-01-24%20Spring%E5%8F%82%E6%95%B0%E7%BB%91%E5%AE%9A(%E4%BA%8C)/" rel="prev" title="Spring参数绑定 适应多种提交方式(二)">
+                  <i class="fa fa-chevron-left"></i> Spring参数绑定 适应多种提交方式(二)
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+
+    </footer>
+    
+
+  </article>
+
+</div>
+
+
+
+
+
+
+
+   <script src="//cdn.jsdelivr.net/npm/@waline/client/dist/Waline.min.js"></script>
+    <div class="comments" id="waline"></div>
+    <script>
+      new Waline({
+        el: '#waline',
+        path: location.pathname,
+        serverURL: 'https://imnerd-api-one.vercel.app/',
+      });
+    </script>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+<div class="footer-image" style="
+    background: url(/images/footer.png) no-repeat 50%;
+    height: 368px;
+    width: 100%;
+    margin: -65px 0px;
+    z-index: -1;
+">
+</div>
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fas fa-dragon"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lqs1848</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
