@@ -4,6 +4,64 @@
   
     
     <entry>
+      <title>SSL/TSL SNI</title>
+      <link href="/2022/03/15/2022-03-15%20%20SNI/"/>
+      <url>/2022/03/15/2022-03-15%20%20SNI/</url>
+      
+        <content type="html"><![CDATA[<span id="more"></span><h1 id="SNI-Server-Name-Indication-是什么"><a href="#SNI-Server-Name-Indication-是什么" class="headerlink" title="SNI(Server Name Indication)是什么"></a>SNI(Server Name Indication)是什么</h1><blockquote><p>在使用TLS的时候，http server希望根据HTTP请求中HOST的不同，来决定使用不同的证书。</p></blockquote><p>在使用没有使用 TLS时 服务器可以通过 http 请求中的 Host 区分用户请求的是哪个网站</p><p>但是通过 TLS 请求握手时 并不知道 Host 早期的服务器是直接返回第一个证书</p><p>就导致了 1个ip 只能绑定一个 域名的 https</p><blockquote><p>这个问题是早期 SSL2.0 时就引入的一个问题，由此 SNI 协议就诞生了。SNI 协议允许客户端在发起 SSL 握手请求时，就提交请求的 Host 信息，使服务器能够切换到正确的域并返回相应的证书。</p><p>SNI（Server Name Indication）是为了解决一个服务器使用多个域名和证书的 SSL/TLS 扩展。一句话简述它的工作原理就是，在连接到服务器建立 SSL 连接之前先发送要访问站点的域名（Hostname），这样服务器根据这个域名返回一个合适的证书。目前，大多数操作系统和浏览器都已经很好地支持 SNI 扩展，OpenSSL 0.9.8 已经内置这一功能。</p></blockquote><h1 id="SNI阻断"><a href="#SNI阻断" class="headerlink" title="SNI阻断"></a>SNI阻断</h1><p>以下内容摘自《SNI阻断与解决方案》：</p><blockquote><p>在建立新的TLS连接时，客户端（如浏览器）发出的第一个握手包（称为Client Hello）中，包含了想要访问的域名信息（称为SNI，Server Name Indication）。<br>某些服务器会同时支持多个域名。在加密传输之前，它需要知道客户端访问的是哪个域名。于是SNI必须以明文的方式传输。并且由于浏览器并不知道服务器是否需要SNI，浏览器会对所有的TLS握手都加入SNI。<br>于是，根据黑名单，某些防火墙可以根据明文SNI信息，对TLS连接进行精确阻断。</p></blockquote><h1 id="解决SNI阻断"><a href="#解决SNI阻断" class="headerlink" title="解决SNI阻断"></a>解决SNI阻断</h1><h2 id="1-去除SNI"><a href="#1-去除SNI" class="headerlink" title="1.去除SNI"></a>1.去除SNI</h2><p>大部分解决SNI阻断的工具基本就是 去除掉 SNI 让服务端 以旧版本SSL的逻辑 提供默认证书</p><p>这需要 GFW 没有把这些网站的IP封锁 只阻断 SNI </p><h2 id="2-域前置-Domain-Fronting"><a href="#2-域前置-Domain-Fronting" class="headerlink" title="2.域前置(Domain Fronting)"></a>2.域前置(Domain Fronting)</h2><p>也是去除SNI或者说是替换掉SNI</p><p>SNI 写访问A网站 但是http host填写的是B 网站</p><p>cloudflare CDN就有这个功能</p><p>我自己弄的使用 cloudflare 搭建的 免翻墙 <a href="https://ancient-mud-95e3.lqs1848.workers.dev/">Pronhub</a> </p><p>(原先是域前置 现在应该变成纯粹的 CDN 了Host给的也是 CDN的加速域名)</p><p>Domain Fronting的工作原理:</p><blockquote><ul><li>用户用合法的域名<code>allow.com</code>向DNS请求CDN的IP，然后向CDN发起请求，这一步自然是没有任何问题的</li><li>因为在处理HTTPS请求时，CDN会首先将它解密，并根据HTTP Host的值做请求转发，所以用户想要访问一个非法网站<code>forbidden.com</code>，可以使用一个CDN上的合法的域名<code>allow.com</code>作为SNI，然后使用<code>forbidden.com</code>作为HTTP Host与CDN进行HTTPS通信</li><li>由于HTTP Host只能被转发看到，而审查者是看不到的，故CDN会放过这条请求，并将HTTP请求根据HTTP Host重新封装，发往<code>forbidden.com</code>的服务器</li><li>这种情况下，客户端实际通信的对象是<code>forbidden.com</code>，但在流量监控设备看来，客户端是在与<code>allow.com</code>通信，即客户端将流量成功伪装成了与<code>allow.com</code>通信的流量</li></ul></blockquote><h1 id="ESNI（Encrypted-SNI）"><a href="#ESNI（Encrypted-SNI）" class="headerlink" title="ESNI（Encrypted SNI）"></a>ESNI（Encrypted SNI）</h1><p>SNI 是明文的 会被 GFW 识别阻断 并且SPI 或任何中间代理 都可以获取到 SSL请求中的SNI 从而记录你访问的内容</p><p>ESNI 就是为了解决该问题而诞生的</p><blockquote><p>ESNI（Encrypted SNI）正如其名，其设计的目标就是为了加密 SNI，是最先为解决这一问题提出的一个 TLS 拓展。虽然这一方案即将被废弃，但对于了解其后继者 ECH 有着极大的帮助。</p><p>ESNI 为了能够让客户端获得密钥发送密文，依赖于另一个服务 DNS 来分发密钥。客户端在使用 ESNI 连接服务器之前，会在常规的请求网站 IP 的 A/AAAA 请求上再进行一次 TXT 的请求以获得 ESNI 的公钥</p></blockquote><p>将加密的公钥放到 记录到DNS当中 DNS必须采用 DoH（DNS over HTTPS）</p><p>DNS把公钥给到客户端后 客户端使用 公钥加密 SNI 得到 ESNI</p><h1 id="ECH（Encrypted-Client-Hello）"><a href="#ECH（Encrypted-Client-Hello）" class="headerlink" title="ECH（Encrypted Client Hello）"></a>ECH（Encrypted Client Hello）</h1><p>相比 ESNI 只加密了 SNI </p><p>ECH 把 SSL中的  Client Hello 消息 整个加密了</p><h1 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h1><p>有点圆环套圆环的感觉</p><p>SSL 通过证书信任建立了安全通信</p><p>但为了一个IP能部署多个域名 使用多个证书</p><p>SSL 引入了 SNI 来识别本次加密使用的证书</p><p>又为了加密 SNI 让 DNS 使用 DoH 加密通信 再提供一个公钥</p><p>保护本次 SSL 的 握手请求</p><p>最终 DNS 的 DoH 其实还是只能有一个证书</p><p>ESNI和ECH的普及 必定会导致 GFW 升级</p><p>一刀切把所有加密请求 和 黑名单网站的所有IP都拦截</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> NetWork </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Nginx </tag>
+            
+            <tag> HTTPS </tag>
+            
+            <tag> GFW </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Dubbo ExceedPayloadLimitException</title>
+      <link href="/2022/03/08/2022-03-08%20Dubbo%20Data%20length%20too%20large/"/>
+      <url>/2022/03/08/2022-03-08%20Dubbo%20Data%20length%20too%20large/</url>
+      
+        <content type="html"><![CDATA[<span id="more"></span><h1 id="Data-length-too-large"><a href="#Data-length-too-large" class="headerlink" title="Data length too large"></a>Data length too large</h1><p>这个异常的详细堆栈信息如下所示：</p><blockquote><p>Caused by: org.apache.dubbo.remoting.transport.ExceedPayloadLimitException: Data length too large: 11557979, max payload: 11557050, channel: NettyChannel [channel=[id: 0x59059885, L:/172.30.0.3:50822 - R:/172.30.0.3:20880]]</p></blockquote><p>已经从8388608 改到 11557979 依旧报错</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> ProviderConfig <span class="title">providerConfig</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ProviderConfig config = <span class="keyword">new</span> ProviderConfig();</span><br><span class="line">    config.setRetries(<span class="number">0</span>);</span><br><span class="line">    config.setTimeout(<span class="number">60000</span>);</span><br><span class="line">    config.setPayload(<span class="number">11557979</span>);</span><br><span class="line">    <span class="keyword">return</span> config;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>本来想从 11557979  直接改到 104857600 100兆</p><p>仔细想想不对</p><p>这里是 请求或者响应的报文体长度超过了8k </p><p>我请求的内容应该没有这么长</p><p>检查了下</p><p>原来是之前写的 SpringCloud 整合 Dubbo (<a href="/2021/04/23/2021-04-23%20%20SpringCloud%20%E6%95%B4%E5%90%88%20Dubbo/">Link</a>) <strong>#### 封装 dubbo 隐式传递</strong></p><p>中写了一个 日志收集</p><p>这个调用时 同步数据 同步了一个多小时 产生了超过8兆的日志</p><p>而我为了日志追踪 把日志放在 dubbo 的请求参数中 导致了长度超过dubbo的限制</p><p>还有个类似 <a href="https://github.com/apache/dubbo/issues/111">dubbo 抛不出自定义的异常</a> 的问题</p><p>这个我已经自己写了一个异常过滤器(SpringCloud 整合 Dubbo <strong># 异常传递</strong>) 但是偶尔还是有自定义异常 被认定为 Rpc 异常的问题</p><p>大概是我封装的依赖包 有时 几个微服务依赖的依赖包版本不相同 加密出来的jar包逻辑不同导致</p><p>有空再研究下</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Java </category>
+          
+          <category> Dubbo </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> SpringCloud </tag>
+            
+            <tag> Dubbo </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>自定义排序</title>
       <link href="/2022/01/27/2022-01-27%20%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8E%92%E5%BA%8F/"/>
       <url>/2022/01/27/2022-01-27%20%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8E%92%E5%BA%8F/</url>
@@ -23,35 +81,6 @@
             <tag> 排序 </tag>
             
             <tag> 转载 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Dubbo ExceedPayloadLimitException</title>
-      <link href="/2022/01/27/2022-03-08%20Dubbo%20Data%20length%20too%20large/"/>
-      <url>/2022/01/27/2022-03-08%20Dubbo%20Data%20length%20too%20large/</url>
-      
-        <content type="html"><![CDATA[<span id="more"></span><h1 id="Data-length-too-large"><a href="#Data-length-too-large" class="headerlink" title="Data length too large"></a>Data length too large</h1><p>这个异常的详细堆栈信息如下所示：</p><blockquote><p>Caused by: org.apache.dubbo.remoting.transport.ExceedPayloadLimitException: Data length too large: 11557979, max payload: 11557050, channel: NettyChannel [channel=[id: 0x59059885, L:/172.30.0.3:50822 - R:/172.30.0.3:20880]]</p></blockquote><p>已经从8388608 改到 11557979 依旧报错</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> ProviderConfig <span class="title">providerConfig</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ProviderConfig config = <span class="keyword">new</span> ProviderConfig();</span><br><span class="line">    config.setRetries(<span class="number">0</span>);</span><br><span class="line">    config.setTimeout(<span class="number">60000</span>);</span><br><span class="line">    config.setPayload(<span class="number">11557979</span>);</span><br><span class="line">    <span class="keyword">return</span> config;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>本来想从 11557979  直接改到 104857600 100兆</p><p>仔细想想不对</p><p>这里是 请求或者响应的报文体长度超过了8k </p><p>我请求的内容应该没有这么长</p><p>检查了下</p><p>原来是之前写的 SpringCloud 整合 Dubbo (<a href="/2021/04/23/2021-04-23%20%20SpringCloud%20%E6%95%B4%E5%90%88%20Dubbo/">Link</a>) <strong>#### 封装 dubbo 隐式传递</strong></p><p>中写了一个 日志收集</p><p>这个调用时 同步数据 同步了一个多小时 产生了超过8兆的日志</p><p>而我为了日志追踪 把日志放在 dubbo 的请求参数中 导致了长度超过dubbo的限制</p><p>还有个类似 <a href="https://github.com/apache/dubbo/issues/111">dubbo 抛不出自定义的异常</a> 的问题</p><p>这个我已经自己写了一个异常过滤器(SpringCloud 整合 Dubbo <strong># 异常传递</strong>) 但是偶尔还是有自定义异常 被认定为 Rpc 异常的问题</p><p>大概是我封装的依赖包 有时 几个微服务依赖的依赖包版本不相同 加密出来的jar包逻辑不同导致</p><p>有空再研究下</p>]]></content>
-      
-      
-      <categories>
-          
-          <category> Java </category>
-          
-          <category> Dubbo </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> SpringCloud </tag>
-            
-            <tag> Dubbo </tag>
             
         </tags>
       
@@ -357,7 +386,7 @@
       
       <categories>
           
-          <category> TCP </category>
+          <category> NetWork </category>
           
       </categories>
       
