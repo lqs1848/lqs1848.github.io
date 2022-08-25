@@ -1296,7 +1296,7 @@
 </ol>
 ]]></content>
       <categories>
-        <category>java</category>
+        <category>Java</category>
         <category>Spring</category>
       </categories>
       <tags>
@@ -2303,6 +2303,42 @@
         <tag>Spring</tag>
         <tag>RequestBody</tag>
         <tag>RequestParam</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MyBatisPlusJoin单表Join多次</title>
+    <url>/2022/08/25/2022-08-25%20%20MyBatisPlusJoin%E5%8D%95%E8%A1%A8Join%E5%A4%9A%E6%AC%A1/</url>
+    <content><![CDATA[<span id="more"></span>
+
+<p>MyBatis Plus Join<br>用的是<br><dependency><br>    <groupId>com.github.yulichang</groupId><br>    <artifactId>mybatis-plus-join</artifactId><br>    <version>1.2.4</version><br></dependency></p>
+<h1 id="可能会导致的问题"><a href="#可能会导致的问题" class="headerlink" title="可能会导致的问题"></a>可能会导致的问题</h1><p>最近面前端 经常问面试者 有没有碰到过跨域然后怎么处理</p>
+<p>突然想到一点</p>
+<p>跨域这件事 都是浏览器在控制</p>
+<p>如果 后端的所有参数都可以随意传递</p>
+<p>那么原本是需要判断 跨域的复杂请求</p>
+<p>就可以被前端以简单请求的方式去请求到</p>
+<h1 id="栗子"><a href="#栗子" class="headerlink" title="栗子"></a>栗子</h1><p>后端一个接口 </p>
+<p>只接收 JSON 参数 Content-Type 为 application/json</p>
+<p>但是由于后端一般不会去写限制 Content-Type 的逻辑</p>
+<p>一般就区分个 Get Post</p>
+<p>JSON 参数 的接口 是复杂请求接口 </p>
+<p>本来如果被浏览器调用时需要判断跨域的</p>
+<p>但是如果参数可以随意携带 后端也能获取到的话</p>
+<p>前端可以用 multipart/form-data 或 application/x-www-http-urlencoded</p>
+<p>将请求变成 简单请求 浏览器就不会发出 预检请求(OPTIONS请求)</p>
+<h1 id="怎么解决"><a href="#怎么解决" class="headerlink" title="怎么解决"></a>怎么解决</h1><p>如果可以的话 判断请求的 referer 必须是自己的网站就好了</p>
+<h1 id="end"><a href="#end" class="headerlink" title="end"></a>end</h1><p>大概这也就是 Spring 要区分 @RquestParam @RquestBody 的部分原因吧</p>
+<p>不过如果是提供 API 给其它后端调用就无所谓了</p>
+]]></content>
+      <categories>
+        <category>Java</category>
+        <category>MyBatis</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>MyBatis</tag>
+        <tag>MyBatis Plus</tag>
+        <tag>MyBatis Plus Join</tag>
       </tags>
   </entry>
 </search>
