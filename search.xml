@@ -2401,7 +2401,7 @@
     <content><![CDATA[<span id="more"></span>
 
 <p>公司开发了自己的套壳浏览器</p>
-<p>有用户反馈 我们的浏览器在登录QQ的情况下 访问<a href="https://mail.qq.com登录时没有出现已经登录的qq/">https://mail.qq.com登录时没有出现已经登录的QQ</a> 无法快速登录</p>
+<p>有用户反馈 我们的浏览器在登录QQ的情况下 访问 <a href="https://mail.qq.com/">https://mail.qq.com</a> 登录时没有出现已经登录的QQ 无法快速登录</p>
 <h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>首先用我平时使用的浏览器Yandex访问 QQ邮箱  嗯 也没有出现 快速登陆</p>
 <p>换Chrome 访问QQ邮箱 出现了快速登录</p>
 <p>看了下网络请求</p>
@@ -2423,7 +2423,16 @@
 <p>TCP握手成功 刚发送 TLS 的 client hello包 时 QQ立刻就回复 rst包 断开连接了 根本还没到传输HTTP</p>
 <p>问题应该出在 TLS 的 client hello上</p>
 <p>搜索 TLS区分客户端时 看到了 TLS指纹 JA3指纹</p>
-<p>问题找到了</p>
+<p>猜测是因为QQ有校验JA3指纹</p>
+<h1 id="再转折"><a href="#再转折" class="headerlink" title="再转折"></a>再转折</h1><p>有同事的电脑 右键以管理员权限运行 就能显示快捷登录</p>
+<p>排查到这已经裂开…</p>
+<p>应该是QQ的问题吧</p>
+<p>让朋友下载浏览器测试了一下 人不用管理员权限也能显示快捷登录</p>
+<p>自己的电脑卸载QQ 安装新版本 QQNT 也能显示了</p>
+<p>这下给我整不会了</p>
+<p>找不到问题了  有异常的时候 Edge能访问 Chrome也能访问 就自己封装的浏览器不行</p>
+<p>实在没找到问题</p>
+<p>就当多了解了下 ja3吧</p>
 ]]></content>
       <categories>
         <category>NetWork</category>

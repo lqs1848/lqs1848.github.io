@@ -6,7 +6,7 @@
   <link href="https://blog.lqs1848.top/atom.xml" rel="self"/>
   
   <link href="https://blog.lqs1848.top/"/>
-  <updated>2023-11-23T08:46:38.799Z</updated>
+  <updated>2023-11-27T05:57:54.557Z</updated>
   <id>https://blog.lqs1848.top/</id>
   
   <author>
@@ -21,9 +21,9 @@
     <link href="https://blog.lqs1848.top/2023/11/23/2023-11-23%20%E6%B5%8F%E8%A7%88%E5%99%A8%E6%97%A0%E6%B3%95QQ%E5%BF%AB%E9%80%9F%E7%99%BB%E5%BD%95/"/>
     <id>https://blog.lqs1848.top/2023/11/23/2023-11-23%20%E6%B5%8F%E8%A7%88%E5%99%A8%E6%97%A0%E6%B3%95QQ%E5%BF%AB%E9%80%9F%E7%99%BB%E5%BD%95/</id>
     <published>2023-11-22T16:00:00.000Z</published>
-    <updated>2023-11-23T08:46:38.799Z</updated>
+    <updated>2023-11-27T05:57:54.557Z</updated>
     
-    <content type="html"><![CDATA[<span id="more"></span><p>公司开发了自己的套壳浏览器</p><p>有用户反馈 我们的浏览器在登录QQ的情况下 访问<a href="https://mail.qq.com登录时没有出现已经登录的qq/">https://mail.qq.com登录时没有出现已经登录的QQ</a> 无法快速登录</p><h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>首先用我平时使用的浏览器Yandex访问 QQ邮箱  嗯 也没有出现 快速登陆</p><p>换Chrome 访问QQ邮箱 出现了快速登录</p><p>看了下网络请求</p><p><a href="https://localhost.ptlogin2.qq.com:4301/pt_get_uins?callback=ptui_getuins_CB&amp;r=0.5179631540816915&amp;pt_local_tk=1345995641">https://localhost.ptlogin2.qq.com:4301/pt_get_uins?callback=ptui_getuins_CB&amp;r=0.5179631540816915&amp;pt_local_tk=1345995641</a></p><p>网页访问了 localhost.ptlogin2.qq.com 对应的地址是 127.0.0.1</p><p>看来是 QQ启动了个web服务</p><p>用postman试试先 chrome和自己封装的浏览器差别应该只有ua</p><p>postman 模拟 chrome 的user-agent 也不行</p><p>百度</p><p><a href="https://blog.csdn.net/qq_39190622/article/details/128907064">2023年最新版获取QQ Clientkey。</a></p><p>尝试了下文章提供的工具和代码 也不行</p><p>继续百度</p><p><a href="https://blog.csdn.net/weolar/article/details/100528075">19.9.3日报：QQ快捷登录无法显示本地已登录QQ的问题</a></p><p>讲的有点不明不白的 没搞懂 到底是限制了什么</p><p>23年的blog说可以获取 19年的blog说QQ检测访问的来源</p><p>给整不会了 按理说 http 请求 客户端是没办法知道是谁发送的</p><p>陷入迷茫</p><h1 id="转折"><a href="#转折" class="headerlink" title="转折"></a>转折</h1><p>抓包对比查看请求有什么区别发现</p><p>TCP握手成功 刚发送 TLS 的 client hello包 时 QQ立刻就回复 rst包 断开连接了 根本还没到传输HTTP</p><p>问题应该出在 TLS 的 client hello上</p><p>搜索 TLS区分客户端时 看到了 TLS指纹 JA3指纹</p><p>问题找到了</p>]]></content>
+    <content type="html"><![CDATA[<span id="more"></span><p>公司开发了自己的套壳浏览器</p><p>有用户反馈 我们的浏览器在登录QQ的情况下 访问 <a href="https://mail.qq.com/">https://mail.qq.com</a> 登录时没有出现已经登录的QQ 无法快速登录</p><h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>首先用我平时使用的浏览器Yandex访问 QQ邮箱  嗯 也没有出现 快速登陆</p><p>换Chrome 访问QQ邮箱 出现了快速登录</p><p>看了下网络请求</p><p><a href="https://localhost.ptlogin2.qq.com:4301/pt_get_uins?callback=ptui_getuins_CB&amp;r=0.5179631540816915&amp;pt_local_tk=1345995641">https://localhost.ptlogin2.qq.com:4301/pt_get_uins?callback=ptui_getuins_CB&amp;r=0.5179631540816915&amp;pt_local_tk=1345995641</a></p><p>网页访问了 localhost.ptlogin2.qq.com 对应的地址是 127.0.0.1</p><p>看来是 QQ启动了个web服务</p><p>用postman试试先 chrome和自己封装的浏览器差别应该只有ua</p><p>postman 模拟 chrome 的user-agent 也不行</p><p>百度</p><p><a href="https://blog.csdn.net/qq_39190622/article/details/128907064">2023年最新版获取QQ Clientkey。</a></p><p>尝试了下文章提供的工具和代码 也不行</p><p>继续百度</p><p><a href="https://blog.csdn.net/weolar/article/details/100528075">19.9.3日报：QQ快捷登录无法显示本地已登录QQ的问题</a></p><p>讲的有点不明不白的 没搞懂 到底是限制了什么</p><p>23年的blog说可以获取 19年的blog说QQ检测访问的来源</p><p>给整不会了 按理说 http 请求 客户端是没办法知道是谁发送的</p><p>陷入迷茫</p><h1 id="转折"><a href="#转折" class="headerlink" title="转折"></a>转折</h1><p>抓包对比查看请求有什么区别发现</p><p>TCP握手成功 刚发送 TLS 的 client hello包 时 QQ立刻就回复 rst包 断开连接了 根本还没到传输HTTP</p><p>问题应该出在 TLS 的 client hello上</p><p>搜索 TLS区分客户端时 看到了 TLS指纹 JA3指纹</p><p>猜测是因为QQ有校验JA3指纹</p><h1 id="再转折"><a href="#再转折" class="headerlink" title="再转折"></a>再转折</h1><p>有同事的电脑 右键以管理员权限运行 就能显示快捷登录</p><p>排查到这已经裂开…</p><p>应该是QQ的问题吧</p><p>让朋友下载浏览器测试了一下 人不用管理员权限也能显示快捷登录</p><p>自己的电脑卸载QQ 安装新版本 QQNT 也能显示了</p><p>这下给我整不会了</p><p>找不到问题了  有异常的时候 Edge能访问 Chrome也能访问 就自己封装的浏览器不行</p><p>实在没找到问题</p><p>就当多了解了下 ja3吧</p>]]></content>
     
     
     <summary type="html">&lt;span id=&quot;more&quot;&gt;&lt;/span&gt;</summary>
