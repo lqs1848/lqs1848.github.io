@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+<a target="_blank" rel="noopener" href="https://github.com/lqs1848" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.lqs1848.top","root":"/","images":"/images","scheme":"Gemini","version":"8.3.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+<meta name="description" content="上线时长两年半的项目 突然出现异常报错内容如下">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CXF异常">
+<meta property="og:url" content="https://blog.lqs1848.top/2024/07/23/2024-07-23%20CXF%E5%BC%82%E5%B8%B8/index.html">
+<meta property="og:site_name" content="Chaos">
+<meta property="og:description" content="上线时长两年半的项目 突然出现异常报错内容如下">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-07-22T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-07-23T09:26:20.642Z">
+<meta property="article:author" content="lqs1848">
+<meta property="article:tag" content="CXF">
+<meta property="article:tag" content="编码">
+<meta property="article:tag" content="乱码">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.lqs1848.top/2024/07/23/2024-07-23%20CXF%E5%BC%82%E5%B8%B8/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<title>CXF异常 | Chaos</title>
+  
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Chaos" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Chaos</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-book fa-fw"></i>留言板</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">lqs1848</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lqs1848" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lqs1848" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.lqs1848.top/2024/07/23/2024-07-23%20CXF%E5%BC%82%E5%B8%B8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="lqs1848">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chaos">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CXF异常
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-07-23 00:00:00" itemprop="dateCreated datePublished" datetime="2024-07-23T00:00:00+08:00">2024-07-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/WebService/" itemprop="url" rel="index"><span itemprop="name">WebService</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>上线时长两年半的项目 突然出现异常<br>报错内容如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br></pre></td><td class="code"><pre><span class="line">org.apache.cxf.interceptor.Fault: Unmarshalling Error: Illegal character entity: <span class="function">expansion <span class="title">character</span> <span class="params">(code <span class="number">0xd855</span>)</span></span></span><br><span class="line"><span class="function"> at [row,col </span>&#123;unknown-source&#125;]: [<span class="number">1</span>,<span class="number">986</span>] </span><br><span class="line">	at org.apache.cxf.jaxb.JAXBEncoderDecoder.unmarshall(JAXBEncoderDecoder.java:<span class="number">931</span>)</span><br><span class="line">	at org.apache.cxf.jaxb.JAXBEncoderDecoder.unmarshall(JAXBEncoderDecoder.java:<span class="number">737</span>)</span><br><span class="line">	at org.apache.cxf.jaxb.io.DataReaderImpl.read(DataReaderImpl.java:<span class="number">168</span>)</span><br><span class="line">	at org.apache.cxf.wsdl.interceptors.DocLiteralInInterceptor.handleMessage(DocLiteralInInterceptor.java:<span class="number">109</span>)</span><br><span class="line">	at org.apache.cxf.phase.PhaseInterceptorChain.doIntercept(PhaseInterceptorChain.java:<span class="number">307</span>)</span><br><span class="line">	at org.apache.cxf.endpoint.ClientImpl.onMessage(ClientImpl.java:<span class="number">921</span>)</span><br><span class="line">	at org.apache.cxf.transport.http.HTTPConduit$WrappedOutputStream.handleResponseInternal(HTTPConduit.java:<span class="number">1760</span>)</span><br><span class="line">	at org.apache.cxf.transport.http.HTTPConduit$WrappedOutputStream.handleResponse(HTTPConduit.java:<span class="number">1626</span>)</span><br><span class="line">	at org.apache.cxf.transport.http.HTTPConduit$WrappedOutputStream.close(HTTPConduit.java:<span class="number">1420</span>)</span><br><span class="line">	at org.apache.cxf.transport.http.HttpClientHTTPConduit$HttpClientWrappedOutputStream.close(HttpClientHTTPConduit.java:<span class="number">662</span>)</span><br><span class="line">	at org.apache.cxf.transport.AbstractConduit.close(AbstractConduit.java:<span class="number">56</span>)</span><br><span class="line">	at org.apache.cxf.transport.http.HTTPConduit.close(HTTPConduit.java:<span class="number">717</span>)</span><br><span class="line">	at org.apache.cxf.transport.http.HttpClientHTTPConduit.close(HttpClientHTTPConduit.java:<span class="number">249</span>)</span><br><span class="line">	at org.apache.cxf.interceptor.MessageSenderInterceptor$MessageSenderEndingInterceptor.handleMessage(MessageSenderInterceptor.java:<span class="number">63</span>)</span><br><span class="line">	at org.apache.cxf.phase.PhaseInterceptorChain.doIntercept(PhaseInterceptorChain.java:<span class="number">307</span>)</span><br><span class="line">	at org.apache.cxf.endpoint.ClientImpl.doInvoke(ClientImpl.java:<span class="number">530</span>)</span><br><span class="line">	at org.apache.cxf.endpoint.ClientImpl.invoke(ClientImpl.java:<span class="number">441</span>)</span><br><span class="line">	at org.apache.cxf.endpoint.ClientImpl.invoke(ClientImpl.java:<span class="number">356</span>)</span><br><span class="line">	at org.apache.cxf.endpoint.ClientImpl.invoke(ClientImpl.java:<span class="number">314</span>)</span><br><span class="line">	at org.apache.cxf.frontend.ClientProxy.invokeSync(ClientProxy.java:<span class="number">96</span>)</span><br><span class="line">	at org.apache.cxf.jaxws.JaxWsClientProxy.invoke(JaxWsClientProxy.java:<span class="number">140</span>)</span><br><span class="line">	at com.sun.proxy.$Proxy497.service(Unknown Source)</span><br><span class="line">	at com.mysd.fast.ssp.SspWsUtils.execute(SspWsUtils.java:<span class="number">113</span>)</span><br><span class="line">	at com.mysd.fast.ssp.SspWsUtils.queryObject(SspWsUtils.java:<span class="number">91</span>)</span><br><span class="line">	at com.mysd.project.service.DataExchangeServiceImpl.syncContractInfoTransaction(DataExchangeServiceImpl.java:<span class="number">819</span>)</span><br><span class="line">	at com.mysd.project.service.DataExchangeServiceImpl$$FastClassBySpringCGLIB$$422a7876.invoke(&lt;generated&gt;)</span><br><span class="line">	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:<span class="number">218</span>)</span><br><span class="line">	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:<span class="number">771</span>)</span><br><span class="line">	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:<span class="number">163</span>)</span><br><span class="line">	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:<span class="number">749</span>)</span><br><span class="line">	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:<span class="number">367</span>)</span><br><span class="line">	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:<span class="number">118</span>)</span><br><span class="line">	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:<span class="number">186</span>)</span><br><span class="line">	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:<span class="number">749</span>)</span><br><span class="line">	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:<span class="number">691</span>)</span><br><span class="line">	at com.mysd.project.service.DataExchangeServiceImpl$$EnhancerBySpringCGLIB$$c8337f24.syncContractInfoTransaction(&lt;generated&gt;)</span><br><span class="line">	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</span><br><span class="line">	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:<span class="number">62</span>)</span><br><span class="line">	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:<span class="number">43</span>)</span><br><span class="line">	at java.base/java.lang.reflect.Method.invoke(Method.java:<span class="number">566</span>)</span><br><span class="line">	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:<span class="number">344</span>)</span><br><span class="line">	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:<span class="number">205</span>)</span><br><span class="line">	at com.sun.proxy.$Proxy505.syncContractInfoTransaction(Unknown Source)</span><br><span class="line">	at com.mysd.project.service.DataExchangeServiceImpl.syncContractInfo(DataExchangeServiceImpl.java:<span class="number">587</span>)</span><br><span class="line">	at com.mysd.project.service.DataExchangeServiceImpl$$FastClassBySpringCGLIB$$422a7876.invoke(&lt;generated&gt;)</span><br><span class="line">	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:<span class="number">218</span>)</span><br><span class="line">	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:<span class="number">687</span>)</span><br><span class="line">	at com.mysd.project.service.DataExchangeServiceImpl$$EnhancerBySpringCGLIB$$c8337f24.syncContractInfo(&lt;generated&gt;)</span><br><span class="line">	at com.mysd.realty.api.webservice.RealtyWsServiceImpl.syncContractInfo(RealtyWsServiceImpl.java:<span class="number">842</span>)</span><br><span class="line">	at com.mysd.realty.api.webservice.RealtyWsServiceImpl$$FastClassBySpringCGLIB$$<span class="number">46568144.</span>invoke(&lt;generated&gt;)</span><br><span class="line">	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:<span class="number">218</span>)</span><br><span class="line">	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:<span class="number">687</span>)</span><br><span class="line">	at com.mysd.realty.api.webservice.RealtyWsServiceImpl$$EnhancerBySpringCGLIB$$73a48a4e.syncContractInfo(&lt;generated&gt;)</span><br><span class="line">	at com.mysd.project.controller.ExternalCallController.syncContractInfoTest(ExternalCallController.java:<span class="number">74</span>)</span><br><span class="line">	at com.mysd.project.controller.ExternalCallController$$FastClassBySpringCGLIB$$45542be.invoke(&lt;generated&gt;)</span><br><span class="line">	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:<span class="number">218</span>)</span><br><span class="line">	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:<span class="number">771</span>)</span><br><span class="line">	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:<span class="number">163</span>)</span><br><span class="line">	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:<span class="number">749</span>)</span><br><span class="line">	at org.springframework.aop.aspectj.AspectJAfterAdvice.invoke(AspectJAfterAdvice.java:<span class="number">47</span>)</span><br><span class="line">	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:<span class="number">186</span>)</span><br><span class="line">	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:<span class="number">749</span>)</span><br><span class="line">	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:<span class="number">95</span>)</span><br><span class="line">	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:<span class="number">186</span>)</span><br><span class="line">	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:<span class="number">749</span>)</span><br><span class="line">	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:<span class="number">691</span>)</span><br><span class="line">	at com.mysd.project.controller.ExternalCallController$$EnhancerBySpringCGLIB$$d35e8fc9.syncContractInfoTest(&lt;generated&gt;)</span><br><span class="line">	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</span><br><span class="line">	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:<span class="number">62</span>)</span><br><span class="line">	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:<span class="number">43</span>)</span><br><span class="line">	at java.base/java.lang.reflect.Method.invoke(Method.java:<span class="number">566</span>)</span><br><span class="line">	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:<span class="number">190</span>)</span><br><span class="line">	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:<span class="number">138</span>)</span><br><span class="line">	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:<span class="number">105</span>)</span><br><span class="line">	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:<span class="number">878</span>)</span><br><span class="line">	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:<span class="number">792</span>)</span><br><span class="line">	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:<span class="number">87</span>)</span><br><span class="line">	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:<span class="number">1040</span>)</span><br><span class="line">	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:<span class="number">943</span>)</span><br><span class="line">	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:<span class="number">1006</span>)</span><br><span class="line">	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:<span class="number">909</span>)</span><br><span class="line">	at javax.servlet.http.HttpServlet.service(HttpServlet.java:<span class="number">681</span>)</span><br><span class="line">	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:<span class="number">883</span>)</span><br><span class="line">	at javax.servlet.http.HttpServlet.service(HttpServlet.java:<span class="number">764</span>)</span><br><span class="line">	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:<span class="number">227</span>)</span><br><span class="line">	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:<span class="number">162</span>)</span><br><span class="line">	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:<span class="number">53</span>)</span><br><span class="line">	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:<span class="number">189</span>)</span><br><span class="line">	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:<span class="number">162</span>)</span><br><span class="line">	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:<span class="number">92</span>)</span><br><span class="line">	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:<span class="number">119</span>)</span><br><span class="line">	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:<span class="number">189</span>)</span><br><span class="line">	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:<span class="number">162</span>)</span><br><span class="line">	at com.alibaba.druid.support.http.WebStatFilter.doFilter(WebStatFilter.java:<span class="number">124</span>)</span><br><span class="line">	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:<span class="number">189</span>)</span><br><span class="line">	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:<span class="number">162</span>)</span><br><span class="line">	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:<span class="number">100</span>)</span><br><span class="line">	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:<span class="number">119</span>)</span><br><span class="line">	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:<span class="number">189</span>)</span><br><span class="line">	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:<span class="number">162</span>)</span><br><span class="line">	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:<span class="number">93</span>)</span><br><span class="line">	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:<span class="number">119</span>)</span><br><span class="line">	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:<span class="number">189</span>)</span><br><span class="line">	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:<span class="number">162</span>)</span><br><span class="line">	at com.mysd.framework.web.filter.TraceFilter.filter(TraceFilter.java:<span class="number">151</span>)</span><br><span class="line">	at com.mysd.framework.web.filter.ActionFilter.doFilter(ActionFilter.java:<span class="number">34</span>)</span><br><span class="line">	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:<span class="number">189</span>)</span><br><span class="line">	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:<span class="number">162</span>)</span><br><span class="line">	at org.springframework.boot.web.servlet.support.ErrorPageFilter.doFilter(ErrorPageFilter.java:<span class="number">126</span>)</span><br><span class="line">	at org.springframework.boot.web.servlet.support.ErrorPageFilter.access$<span class="number">000</span>(ErrorPageFilter.java:<span class="number">64</span>)</span><br><span class="line">	at org.springframework.boot.web.servlet.support.ErrorPageFilter$<span class="number">1.</span>doFilterInternal(ErrorPageFilter.java:<span class="number">101</span>)</span><br><span class="line">	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:<span class="number">119</span>)</span><br><span class="line">	at org.springframework.boot.web.servlet.support.ErrorPageFilter.doFilter(ErrorPageFilter.java:<span class="number">119</span>)</span><br><span class="line">	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:<span class="number">189</span>)</span><br><span class="line">	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:<span class="number">162</span>)</span><br><span class="line">	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:<span class="number">201</span>)</span><br><span class="line">	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:<span class="number">119</span>)</span><br><span class="line">	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:<span class="number">189</span>)</span><br><span class="line">	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:<span class="number">162</span>)</span><br><span class="line">	at com.mysd.framework.web.filter.CryptoFilter.filter(CryptoFilter.java:<span class="number">72</span>)</span><br><span class="line">	at com.mysd.framework.web.filter.ActionFilter.doFilter(ActionFilter.java:<span class="number">34</span>)</span><br><span class="line">	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:<span class="number">189</span>)</span><br><span class="line">	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:<span class="number">162</span>)</span><br><span class="line">	at com.mysd.framework.core.filter.XssFilter.doFilter(XssFilter.java:<span class="number">65</span>)</span><br><span class="line">	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:<span class="number">189</span>)</span><br><span class="line">	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:<span class="number">162</span>)</span><br><span class="line">	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:<span class="number">197</span>)</span><br><span class="line">	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:<span class="number">97</span>)</span><br><span class="line">	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:<span class="number">540</span>)</span><br><span class="line">	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:<span class="number">135</span>)</span><br><span class="line">	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:<span class="number">92</span>)</span><br><span class="line">	at org.apache.catalina.valves.AbstractAccessLogValve.invoke(AbstractAccessLogValve.java:<span class="number">687</span>)</span><br><span class="line">	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:<span class="number">78</span>)</span><br><span class="line">	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:<span class="number">357</span>)</span><br><span class="line">	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:<span class="number">382</span>)</span><br><span class="line">	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:<span class="number">65</span>)</span><br><span class="line">	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:<span class="number">895</span>)</span><br><span class="line">	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:<span class="number">1732</span>)</span><br><span class="line">	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:<span class="number">49</span>)</span><br><span class="line">	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:<span class="number">1191</span>)</span><br><span class="line">	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:<span class="number">659</span>)</span><br><span class="line">	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:<span class="number">61</span>)</span><br><span class="line">	at java.base/java.lang.Thread.run(Thread.java:<span class="number">834</span>)</span><br><span class="line">Caused by: javax.xml.bind.UnmarshalException: <span class="keyword">null</span></span><br><span class="line">	at com.sun.xml.bind.v2.runtime.unmarshaller.UnmarshallerImpl.handleStreamException(UnmarshallerImpl.java:<span class="number">485</span>)</span><br><span class="line">	at com.sun.xml.bind.v2.runtime.unmarshaller.UnmarshallerImpl.unmarshal0(UnmarshallerImpl.java:<span class="number">417</span>)</span><br><span class="line">	at com.sun.xml.bind.v2.runtime.unmarshaller.UnmarshallerImpl.unmarshal(UnmarshallerImpl.java:<span class="number">394</span>)</span><br><span class="line">	at org.apache.cxf.jaxb.JAXBEncoderDecoder.doUnmarshal(JAXBEncoderDecoder.java:<span class="number">880</span>)</span><br><span class="line">	at org.apache.cxf.jaxb.JAXBEncoderDecoder$<span class="number">3.</span>run(JAXBEncoderDecoder.java:<span class="number">919</span>)</span><br><span class="line">	at java.base/java.security.AccessController.doPrivileged(Native Method)</span><br><span class="line">	at org.apache.cxf.jaxb.JAXBEncoderDecoder.unmarshall(JAXBEncoderDecoder.java:<span class="number">917</span>)</span><br><span class="line">	... <span class="number">142</span> common frames omitted</span><br><span class="line">Caused by: com.ctc.wstx.exc.WstxParsingException: Illegal character entity: <span class="function">expansion <span class="title">character</span> <span class="params">(code <span class="number">0xd855</span>)</span></span></span><br><span class="line"><span class="function"> at [row,col </span>&#123;unknown-source&#125;]: [<span class="number">1</span>,<span class="number">986</span>]</span><br><span class="line">	at com.ctc.wstx.sr.StreamScanner.constructWfcException(StreamScanner.java:<span class="number">634</span>)</span><br><span class="line">	at com.ctc.wstx.sr.StreamScanner.throwParseError(StreamScanner.java:<span class="number">504</span>)</span><br><span class="line">	at com.ctc.wstx.sr.StreamScanner.reportIllegalChar(StreamScanner.java:<span class="number">2463</span>)</span><br><span class="line">	at com.ctc.wstx.sr.StreamScanner.validateChar(StreamScanner.java:<span class="number">2392</span>)</span><br><span class="line">	at com.ctc.wstx.sr.StreamScanner.resolveCharEnt(StreamScanner.java:<span class="number">2376</span>)</span><br><span class="line">	at com.ctc.wstx.sr.StreamScanner.resolveCharOnlyEntity(StreamScanner.java:<span class="number">1358</span>)</span><br><span class="line">	at com.ctc.wstx.sr.BasicStreamReader.nextFromTree(BasicStreamReader.java:<span class="number">2838</span>)</span><br><span class="line">	at com.ctc.wstx.sr.BasicStreamReader.next(BasicStreamReader.java:<span class="number">1122</span>)</span><br><span class="line">	at com.sun.xml.bind.v2.runtime.unmarshaller.StAXStreamConnector.bridge(StAXStreamConnector.java:<span class="number">196</span>)</span><br><span class="line">	at com.sun.xml.bind.v2.runtime.unmarshaller.UnmarshallerImpl.unmarshal0(UnmarshallerImpl.java:<span class="number">415</span>)</span><br><span class="line">	... <span class="number">147</span> common frames omitted</span><br></pre></td></tr></table></figure>
+
+<p>线上代码 在CXF调用WebService时出现异常</p>
+<p>cxf未打印出xml异常</p>
+<p>实际是 cxf 调用 XML解析时对方返回的数据有异常</p>
+<p>传递时变为</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">soap:Envelope</span> <span class="attr">xmlns:soap</span>=<span class="string">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span> <span class="attr">xmlns:xsd</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">soap:Body</span>&gt;</span><span class="tag">&lt;<span class="name">ns1:serviceResponse</span> <span class="attr">xmlns:ns1</span>=<span class="string">&quot;http://service.ssp.pansky.com.cn&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">ns1:out</span>&gt;</span>&#123;&quot;xxx&quot;:&quot;中文<span class="symbol">&amp;#55381;</span><span class="symbol">&amp;#56708;</span>&quot;&#125;<span class="tag">&lt;/<span class="name">ns1:out</span>&gt;</span><span class="tag">&lt;/<span class="name">ns1:serviceResponse</span>&gt;</span><span class="tag">&lt;/<span class="name">soap:Body</span>&gt;</span><span class="tag">&lt;/<span class="name">soap:Envelope</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>原文字为 𥖄 变成了 &#55381;&#56708; </p>
+<p>导致解析 xml 转义&amp;时出现异常了</p>
+<p>cxf框架不好修改 直接使用 <a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44917045/article/details/139175628">http请求WebService</a> 获取原始 xml</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">service</span><span class="params">(String url, String param1, String param2, String param3)</span> </span>&#123;</span><br><span class="line">	String xml = getServiceParam(param1, param2, param3);</span><br><span class="line">	<span class="keyword">try</span> (CloseableHttpClient httpClient = HttpClients.createDefault()) &#123;</span><br><span class="line">		HttpPost httpPost = <span class="keyword">new</span> HttpPost(url);</span><br><span class="line">		httpPost.setHeader(<span class="string">&quot;Content-Type&quot;</span>, <span class="string">&quot;text/xml;charset=UTF-8&quot;</span>);</span><br><span class="line">		httpPost.setEntity(<span class="keyword">new</span> StringEntity(xml));</span><br><span class="line">		HttpResponse response = httpClient.execute(httpPost);</span><br><span class="line">		String responseXml = EntityUtils.toString(response.getEntity());</span><br><span class="line">		log.info(<span class="string">&quot;httpWsResult:&quot;</span> + responseXml);</span><br><span class="line">		responseXml = responseXml.replace(<span class="string">&quot;&amp;lt;&quot;</span>, <span class="string">&quot;&lt;&quot;</span>).replace(<span class="string">&quot;&amp;gt;&quot;</span>, <span class="string">&quot;&gt;&quot;</span>).replace(<span class="string">&quot;&amp;amp;&quot;</span>, <span class="string">&quot;&amp;&quot;</span>)</span><br><span class="line">				.replace(<span class="string">&quot;&amp;apos;&quot;</span>, <span class="string">&quot;&#x27;&quot;</span>).replace(<span class="string">&quot;&amp;quot;&quot;</span>, <span class="string">&quot;\&quot;&quot;</span>);</span><br><span class="line">		Pattern pattern = Pattern.compile(<span class="string">&quot;&lt;ns1\\:out&gt;(.*?)&lt;/ns1\\:out&gt;&quot;</span>);</span><br><span class="line">		Matcher matcher = pattern.matcher(responseXml);</span><br><span class="line">		<span class="keyword">if</span> (matcher.find())</span><br><span class="line">			<span class="keyword">return</span> StringEscapeUtils.unescapeHtml4(matcher.group(<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> responseXml;</span><br><span class="line">	&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">		log.info(<span class="string">&quot;httpWsError:&quot;</span> + e.getMessage());</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;<span class="comment">// method</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//用SoapUI 解析xml生成</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> String <span class="title">getServiceParam</span><span class="params">(String param0,String param1,String param2)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="string">&quot;&lt;soapenv:Envelope xmlns:soapenv=\&quot;http://schemas.xmlsoap.org/soap/envelope/\&quot; xmlns:ser=\&quot;http://service.ssp.pansky.com.cn\&quot;&gt;&quot;</span></span><br><span class="line">			+ <span class="string">&quot;   &lt;soapenv:Header/&gt;&quot;</span></span><br><span class="line">			+ <span class="string">&quot;   &lt;soapenv:Body&gt;&quot;</span></span><br><span class="line">			+ <span class="string">&quot;      &lt;ser:service&gt;&quot;</span></span><br><span class="line">			+ <span class="string">&quot;         &lt;ser:in0&gt;&quot;</span>+param0+<span class="string">&quot;&lt;/ser:in0&gt;&quot;</span></span><br><span class="line">			+ <span class="string">&quot;         &lt;ser:in1&gt;&quot;</span>+param1+<span class="string">&quot;&lt;/ser:in1&gt;&quot;</span></span><br><span class="line">			+ <span class="string">&quot;         &lt;ser:in2&gt;&quot;</span>+param2+<span class="string">&quot;&lt;/ser:in2&gt;&quot;</span></span><br><span class="line">			+ <span class="string">&quot;      &lt;/ser:service&gt;&quot;</span></span><br><span class="line">			+ <span class="string">&quot;   &lt;/soapenv:Body&gt;&quot;</span></span><br><span class="line">			+ <span class="string">&quot;&lt;/soapenv:Envelope&gt;&quot;</span>;</span><br><span class="line">&#125;<span class="comment">// method</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>使用 StringEscapeUtils 工具将乱码转为中文</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.commons.lang3.StringEscapeUtils;</span><br><span class="line"></span><br><span class="line">StringEscapeUtils.unescapeHtml4(<span class="string">&quot;&amp;#55381;&amp;#56708;&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+	
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>lqs1848
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.lqs1848.top/2024/07/23/2024-07-23%20CXF%E5%BC%82%E5%B8%B8/" title="CXF异常">https://blog.lqs1848.top/2024/07/23/2024-07-23 CXF异常/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/CXF/" rel="tag"># CXF</a>
+              <a href="/tags/%E7%BC%96%E7%A0%81/" rel="tag"># 编码</a>
+              <a href="/tags/%E4%B9%B1%E7%A0%81/" rel="tag"># 乱码</a>
+          </div>
+
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/11/23/2023-11-23%20%E6%B5%8F%E8%A7%88%E5%99%A8%E6%97%A0%E6%B3%95QQ%E5%BF%AB%E9%80%9F%E7%99%BB%E5%BD%95/" rel="prev" title="浏览器无法QQ快速登录">
+                  <i class="fa fa-chevron-left"></i> 浏览器无法QQ快速登录
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+
+    </footer>
+    
+
+  </article>
+
+</div>
+
+
+
+
+
+
+
+   <script src="//cdn.jsdelivr.net/npm/@waline/client/dist/Waline.min.js"></script>
+    <div class="comments" id="waline"></div>
+    <script>
+      new Waline({
+        el: '#waline',
+        path: location.pathname,
+        serverURL: 'https://imnerd-api-one.vercel.app/',
+      });
+    </script>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+<div class="footer-image" style="
+    background: url(/images/footer.png) no-repeat 50%;
+    height: 368px;
+    width: 100%;
+    margin: -65px 0px;
+    z-index: -1;
+">
+</div>
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fas fa-dragon"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lqs1848</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
