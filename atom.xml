@@ -6,7 +6,7 @@
   <link href="https://blog.lqs1848.top/atom.xml" rel="self"/>
   
   <link href="https://blog.lqs1848.top/"/>
-  <updated>2024-07-23T09:33:49.430Z</updated>
+  <updated>2024-09-05T01:29:53.871Z</updated>
   <id>https://blog.lqs1848.top/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>WebFlux WebClient无法打满CPU</title>
+    <link href="https://blog.lqs1848.top/2024/09/05/2024-09-05%20WebFlux%20WebClient%E6%97%A0%E6%B3%95%E6%89%93%E6%BB%A1CPU/"/>
+    <id>https://blog.lqs1848.top/2024/09/05/2024-09-05%20WebFlux%20WebClient%E6%97%A0%E6%B3%95%E6%89%93%E6%BB%A1CPU/</id>
+    <published>2024-09-04T16:00:00.000Z</published>
+    <updated>2024-09-05T01:29:53.871Z</updated>
+    
+    <content type="html"><![CDATA[<span id="more"></span><p>项目大概是 WebFlux 通过 WebClient 转发http请求 中间进行逻辑处理</p><p>验收需要提供性能测试报告</p><p>使用 wrk 进行测试</p><p>目标接口原始性能</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"> # wrk -c600 -t4 -T10  -d180 --latency http:&#x2F;&#x2F;192.168.101.164:8086</span><br><span class="line">Running 3m test @ http:&#x2F;&#x2F;192.168.101.164:8086</span><br><span class="line">  4 threads and 600 connections</span><br><span class="line">  Thread Stats   Avg      Stdev     Max   +&#x2F;- Stdev</span><br><span class="line">    Latency    46.19ms   46.03ms 794.41ms   92.85%</span><br><span class="line">    Req&#x2F;Sec     3.85k   771.54     7.05k    85.61%</span><br><span class="line">  Latency Distribution</span><br><span class="line">     50%   35.74ms</span><br><span class="line">     75%   40.53ms</span><br><span class="line">     90%   78.09ms</span><br><span class="line">     99%  255.88ms</span><br><span class="line">  2756389 requests in 3.00m, 473.17MB read</span><br><span class="line">  Socket errors: connect 0, read 0, write 440, timeout 0</span><br><span class="line">Requests&#x2F;sec:  15306.22</span><br><span class="line">Transfer&#x2F;sec:      2.63MB</span><br></pre></td></tr></table></figure><p>Nginx转发性能</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># wrk -c600 -t4 -T10  -d180 --latency http:&#x2F;&#x2F;192.168.101.233:901</span><br><span class="line">Running 3m test @ http:&#x2F;&#x2F;192.168.101.233:901</span><br><span class="line">  4 threads and 600 connections</span><br><span class="line">  Thread Stats   Avg      Stdev     Max   +&#x2F;- Stdev</span><br><span class="line">    Latency   524.59ms    1.04s    9.54s    93.65%</span><br><span class="line">    Req&#x2F;Sec   474.22    135.68     1.38k    74.30%</span><br><span class="line">  Latency Distribution</span><br><span class="line">     50%  250.51ms</span><br><span class="line">     75%  312.01ms</span><br><span class="line">     90%  590.12ms</span><br><span class="line">     99%    6.14s</span><br><span class="line">  338358 requests in 3.00m, 90.03MB read</span><br><span class="line">  Socket errors: connect 0, read 9830, write 2898, timeout 0</span><br><span class="line">Requests&#x2F;sec:   1879.47</span><br><span class="line">Transfer&#x2F;sec:    512.08KB</span><br></pre></td></tr></table></figure><p>WebClient性能</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># wrk -c600 -t4 -T10 -d180 --latency http:&#x2F;&#x2F;192.168.101.233:9195&#x2F;gateway&#x2F;sys&#x2F;api</span><br><span class="line">Running 3m test @ http:&#x2F;&#x2F;192.168.101.233:9195&#x2F;gateway&#x2F;sys&#x2F;api</span><br><span class="line">  4 threads and 600 connections</span><br><span class="line">  Thread Stats   Avg      Stdev     Max   +&#x2F;- Stdev</span><br><span class="line">    Latency     3.17s     3.10s    9.84s    76.92%</span><br><span class="line">    Req&#x2F;Sec   473.03    366.87     1.79k    55.65%</span><br><span class="line">  Latency Distribution</span><br><span class="line">     50%    2.32s</span><br><span class="line">     75%    5.89s</span><br><span class="line">     90%    7.60s</span><br><span class="line">     99%    9.78s</span><br><span class="line">  35926 requests in 3.00m, 8.81MB read</span><br><span class="line">  Socket errors: connect 0, read 0, write 2669, timeout 712</span><br><span class="line">Requests&#x2F;sec:    199.51</span><br><span class="line">Transfer&#x2F;sec:     50.07KB</span><br></pre></td></tr></table></figure><p>网络环境和电脑状态一直有变化 所以每次测试都有上下浮动 但是差距不会到10倍 电脑Cpu也没打满</p><p>并且项目开始是按 ShenYu 为参考 技术架构也相同 性能理应相同</p><p>但实际 WebClient 转发延迟一直在秒级 性能差到两个数量级了 看日志基本都停留在等待请求结果上</p><p>给我整不会了 开始查资料优化 WebClient 线程池什么都用上了 netty 的 ioWorkerCount 也设置了</p><p>都没有效果 又以为是Windows有什么Tcp连接数什么的问题 但是nginx性能又正常</p><p>在Linux上重新部署了一套 情况依旧 </p><p>对比 Apache ShenYu 的源码一行一行比较 转发逻辑应该是相同的</p><p>ShenYu 600并发性能为</p><table><thead><tr><th>currency</th><th>QPS</th><th>50% latency (ms)</th><th>75% latency (ms)</th><th>90% latency (ms)</th><th>99% latency (ms)</th><th>平均响应时间(ms)</th><th>最大响应时间(ms)</th></tr></thead><tbody><tr><td>600 并发</td><td>18640.47</td><td>15.77</td><td>24.77</td><td>38.26</td><td>80.31</td><td>20.32</td><td>852.06</td></tr></tbody></table><p>差距过大</p><p>并且我的Mock接口报文只是把请求来源的header ip之类的返回出来的测试接口 理论上来说应该 延迟会更低</p><p>但是 QPS比 ShenYu 好 延迟却高了太多</p><p>修改了两天延迟还是降不下来</p><p>反复观看ShenYu的基准测试报告时发现</p><p>有这么一条 日志级别为WARN</p><p>那不就是不打日志 马上修改日志配置</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># wrk -c600 -t4 -T10 -d180 --latency http:&#x2F;&#x2F;192.168.101.233:9195&#x2F;gateway&#x2F;sys&#x2F;api</span><br><span class="line">Running 3m test @ http:&#x2F;&#x2F;192.168.101.233:9195&#x2F;gateway&#x2F;sys&#x2F;api</span><br><span class="line">  4 threads and 600 connections</span><br><span class="line">  Thread Stats   Avg      Stdev     Max   +&#x2F;- Stdev</span><br><span class="line">    Latency    85.97ms   35.67ms 662.17ms   89.15%</span><br><span class="line">    Req&#x2F;Sec     1.79k   538.31     3.60k    70.62%</span><br><span class="line">  Latency Distribution</span><br><span class="line">     50%   74.64ms</span><br><span class="line">     75%   89.36ms</span><br><span class="line">     90%  123.86ms</span><br><span class="line">     99%  231.92ms</span><br><span class="line">  1276703 requests in 3.00m, 312.91MB read</span><br><span class="line">  Socket errors: connect 0, read 0, write 2142, timeout 0</span><br><span class="line">Requests&#x2F;sec:   7089.33</span><br><span class="line">Transfer&#x2F;sec:      1.74MB</span><br></pre></td></tr></table></figure><p>性能立刻翻了两个数量级 延迟也正常了</p><p>测试环境性能波动很大 一会性能会超过Nginx 一会又低 主要是 mock的项目放同事电脑上了 看了大概就行</p>]]></content>
+    
+    
+    <summary type="html">&lt;span id=&quot;more&quot;&gt;&lt;/span&gt;</summary>
+    
+    
+    
+    <category term="WebFlux" scheme="https://blog.lqs1848.top/categories/WebFlux/"/>
+    
+    
+    <category term="WebFlux" scheme="https://blog.lqs1848.top/tags/WebFlux/"/>
+    
+    <category term="Gateway" scheme="https://blog.lqs1848.top/tags/Gateway/"/>
+    
+    <category term="WebClient" scheme="https://blog.lqs1848.top/tags/WebClient/"/>
+    
+    <category term="ShenYu" scheme="https://blog.lqs1848.top/tags/ShenYu/"/>
+    
+  </entry>
   
   <entry>
     <title>CXF异常</title>
@@ -498,27 +525,6 @@
     
     
     <category term="pay" scheme="https://blog.lqs1848.top/tags/pay/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>BBR为什么可以加速SS</title>
-    <link href="https://blog.lqs1848.top/2021/06/07/2021-06-07%20%20BBR/"/>
-    <id>https://blog.lqs1848.top/2021/06/07/2021-06-07%20%20BBR/</id>
-    <published>2021-06-06T16:00:00.000Z</published>
-    <updated>2022-03-15T01:48:41.620Z</updated>
-    
-    <content type="html"><![CDATA[<span id="more"></span><p>之前自己部署SS的时候，搭建教程大部分都有 修改服务器TCP算法为 BBR 的步骤,，为什么要使用BBR? BBR为什么能加速SS? 一直没去研究</p><p>最近有点时间，查阅了一下资料</p><h1 id="TCP判断线路的理想速率"><a href="#TCP判断线路的理想速率" class="headerlink" title="TCP判断线路的理想速率"></a>TCP判断线路的理想速率</h1><p>服务器发送数据包，当然越快越好，最好一次性全发出去。但是，发得太快，就有可能丢包。带宽小、路由器过热、缓存溢出等许多因素都会导致丢包。线路不好的话，发得越快，丢得越多。</p><p>最理想的状态是，在线路允许的情况下，达到最高速率。但是我们怎么知道，对方线路的理想速率是多少呢？答案就是慢慢试。</p><p>TCP 协议为了做到效率与可靠性的统一，设计了一个慢启动（slow start）机制。开始的时候，发送得较慢，然后根据丢包的情况，调整速率：如果不丢包，就加快发送速度；如果丢包，就降低发送速度。</p><p>即使对于带宽很大、线路很好的连接，TCP 也总是从10个数据包开始慢慢试，过了一段时间以后，才达到最高的传输速率。这就是 TCP 的慢启动。</p><h1 id="Delay-Based"><a href="#Delay-Based" class="headerlink" title="Delay-Based"></a>Delay-Based</h1><p>BBR是 delay-based，而不是 loss-based，不受丢包影响</p><p>国内的运营商，为了减少跨国流量，故意在出口随机丢包…</p><p>如果是 loss based 速度自然就无法达到带宽上限</p><p>同样是 delay-based 的 TCP Vegas, Fast, Ledbat, Google CC 也可以提高 SS 的速度</p><h1 id="Loss-Based的几个问题"><a href="#Loss-Based的几个问题" class="headerlink" title="Loss-Based的几个问题"></a>Loss-Based的几个问题</h1><ul><li><p><strong>丢包即拥塞</strong> 现实中网络环境很复杂会存在错误丢包，很多算法无法很好区分拥塞丢包和错误丢包，因此在存在一定错误丢包的前提下在某些网络场景中并不能充分利用带宽。</p></li><li><p><strong>缓冲区膨胀问题BufferBloat</strong> 网络连接中路由器、交换机、核心网设备等等为了平滑网络波动而存在缓冲区，这些缓存区就像输液管的膨胀部分让数据更加平稳，但是Loss-Based策略在最初就像网络中发生数据类似于灌水，此时是将Buffer全部算在内的，一旦buffer满了，就可能出现RTT增加丢包等问题，就相当于有的容量本不该算在其中，但是策略是基于包含Buffer进行预测的，特别地在深缓冲区网络就会出现一些问题。</p></li><li><p><strong>网络负载高但无丢包事件</strong> 假设网络中的负载已经很高了，只要没有丢包事件出现，算法就不会主动减窗降低发送速率，这种情况下虽然充分利用了网络带宽，同时由于一直没有丢包事件出现发送方仍然在加窗，表现出了较强的网络带宽侵略性，加重了网络负载压力。</p></li><li><p><strong>高负载丢包</strong> 高负载无丢包情况下算法一直加窗，这样可以预测丢包事件可能很快就出现了，一旦丢包出现窗口将呈现乘性减少，由高位发送速率迅速降低会造成整个网络的瞬时抖动性，总体呈现较大的锯齿状波动。</p></li><li><p><strong>低负载高延时丢包</strong> 在某些弱网环境下RTT会增加甚至出现非拥塞引起丢包，此时基于丢包反馈的拥塞算法的窗口会比较小，对带宽的利用率很低，吞吐量下降很明显，但是实际上网络负载并不高，所以在弱网环境下效果并不是非常理想。</p></li></ul><h1 id="TCP-BBR算法基本原理"><a href="#TCP-BBR算法基本原理" class="headerlink" title="TCP BBR算法基本原理"></a>TCP BBR算法基本原理</h1><p>TCP BBR算法是一种主动式机制，简单来说BBR算法不再基于丢包判断并且也不再使用AIMD线性增乘性减策略来维护拥塞窗口，而是分别采样估计极大带宽和极小延时，并用二者乘积作为发送窗口，并且BBR引入了Pacing Rate限制数据发送速率，配合cwnd使用来降低冲击。</p><p>BBR算法的一些思想在之前的基于延时的拥塞控制算法中也有出现，其中必有有名的是TCP WestWood算法。</p><blockquote><p>TCP Westwood改良自New Reno，不同于以往其他拥塞控制算法使用丢失来测量，其通过对确认包测量来确定一个合适的发送速度，并以此调整拥塞窗口和慢启动阈值。其改良了慢启动阶段算法为敏捷探测和设计了一种持续探测拥塞窗口的方法来控制进入敏捷探测，使链接尽可能地使用更多的带宽。</p></blockquote><p>TCP WestWood算法也是基于带宽和延时乘积进行设计的，但是带宽和延时两个指标无法同时测量，因为这两个值是有些矛盾的极值，要测量最大带宽就要发送最大的数据量但是此时的RTT可能会很大，如果要测量最小的RTT那么久意味着数据量非常少最大带宽就无法获得。</p><p>TCP BBR算法采用交替采样测量两个指标，取一段时间内的带宽极大值和延时极小值作为估计值。</p><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>简单讲就是 默认的TCP 拥堵算法 是基于丢包判断带宽的理想速率</p><p>而国际带宽容易丢包 导致默认算法判断出的带宽上限并非真实带宽</p><!--在Linux4.19内核中已经将拥塞控制算法从CUBIC（该算法从2.6.19内核就引入Linux了）改为BBR，而HTTP3也使用此算法。-->]]></content>
-    
-    
-    <summary type="html">&lt;span id=&quot;more&quot;&gt;&lt;/span&gt;</summary>
-    
-    
-    
-    <category term="NetWork" scheme="https://blog.lqs1848.top/categories/NetWork/"/>
-    
-    
-    <category term="BBR" scheme="https://blog.lqs1848.top/tags/BBR/"/>
     
   </entry>
   

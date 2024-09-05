@@ -2513,4 +2513,81 @@
         <tag>WebClient</tag>
       </tags>
   </entry>
+  <entry>
+    <title>WebFlux WebClient无法打满CPU</title>
+    <url>/2024/09/05/2024-09-05%20WebFlux%20WebClient%E6%97%A0%E6%B3%95%E6%89%93%E6%BB%A1CPU/</url>
+    <content><![CDATA[<span id="more"></span>
+
+<p>项目大概是 WebFlux 通过 WebClient 转发http请求 中间进行逻辑处理</p>
+<p>验收需要提供性能测试报告</p>
+<p>使用 wrk 进行测试</p>
+<p>目标接口原始性能</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> # wrk -c600 -t4 -T10  -d180 --latency http:&#x2F;&#x2F;192.168.101.164:8086</span><br><span class="line">Running 3m test @ http:&#x2F;&#x2F;192.168.101.164:8086</span><br><span class="line">  4 threads and 600 connections</span><br><span class="line">  Thread Stats   Avg      Stdev     Max   +&#x2F;- Stdev</span><br><span class="line">    Latency    46.19ms   46.03ms 794.41ms   92.85%</span><br><span class="line">    Req&#x2F;Sec     3.85k   771.54     7.05k    85.61%</span><br><span class="line">  Latency Distribution</span><br><span class="line">     50%   35.74ms</span><br><span class="line">     75%   40.53ms</span><br><span class="line">     90%   78.09ms</span><br><span class="line">     99%  255.88ms</span><br><span class="line">  2756389 requests in 3.00m, 473.17MB read</span><br><span class="line">  Socket errors: connect 0, read 0, write 440, timeout 0</span><br><span class="line">Requests&#x2F;sec:  15306.22</span><br><span class="line">Transfer&#x2F;sec:      2.63MB</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Nginx转发性能</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># wrk -c600 -t4 -T10  -d180 --latency http:&#x2F;&#x2F;192.168.101.233:901</span><br><span class="line">Running 3m test @ http:&#x2F;&#x2F;192.168.101.233:901</span><br><span class="line">  4 threads and 600 connections</span><br><span class="line">  Thread Stats   Avg      Stdev     Max   +&#x2F;- Stdev</span><br><span class="line">    Latency   524.59ms    1.04s    9.54s    93.65%</span><br><span class="line">    Req&#x2F;Sec   474.22    135.68     1.38k    74.30%</span><br><span class="line">  Latency Distribution</span><br><span class="line">     50%  250.51ms</span><br><span class="line">     75%  312.01ms</span><br><span class="line">     90%  590.12ms</span><br><span class="line">     99%    6.14s</span><br><span class="line">  338358 requests in 3.00m, 90.03MB read</span><br><span class="line">  Socket errors: connect 0, read 9830, write 2898, timeout 0</span><br><span class="line">Requests&#x2F;sec:   1879.47</span><br><span class="line">Transfer&#x2F;sec:    512.08KB</span><br></pre></td></tr></table></figure>
+
+
+
+<p>WebClient性能</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># wrk -c600 -t4 -T10 -d180 --latency http:&#x2F;&#x2F;192.168.101.233:9195&#x2F;gateway&#x2F;sys&#x2F;api</span><br><span class="line">Running 3m test @ http:&#x2F;&#x2F;192.168.101.233:9195&#x2F;gateway&#x2F;sys&#x2F;api</span><br><span class="line">  4 threads and 600 connections</span><br><span class="line">  Thread Stats   Avg      Stdev     Max   +&#x2F;- Stdev</span><br><span class="line">    Latency     3.17s     3.10s    9.84s    76.92%</span><br><span class="line">    Req&#x2F;Sec   473.03    366.87     1.79k    55.65%</span><br><span class="line">  Latency Distribution</span><br><span class="line">     50%    2.32s</span><br><span class="line">     75%    5.89s</span><br><span class="line">     90%    7.60s</span><br><span class="line">     99%    9.78s</span><br><span class="line">  35926 requests in 3.00m, 8.81MB read</span><br><span class="line">  Socket errors: connect 0, read 0, write 2669, timeout 712</span><br><span class="line">Requests&#x2F;sec:    199.51</span><br><span class="line">Transfer&#x2F;sec:     50.07KB</span><br></pre></td></tr></table></figure>
+
+
+
+<p>网络环境和电脑状态一直有变化 所以每次测试都有上下浮动 但是差距不会到10倍 电脑Cpu也没打满</p>
+<p>并且项目开始是按 ShenYu 为参考 技术架构也相同 性能理应相同</p>
+<p>但实际 WebClient 转发延迟一直在秒级 性能差到两个数量级了 看日志基本都停留在等待请求结果上</p>
+<p>给我整不会了 开始查资料优化 WebClient 线程池什么都用上了 netty 的 ioWorkerCount 也设置了</p>
+<p>都没有效果 又以为是Windows有什么Tcp连接数什么的问题 但是nginx性能又正常</p>
+<p>在Linux上重新部署了一套 情况依旧 </p>
+<p>对比 Apache ShenYu 的源码一行一行比较 转发逻辑应该是相同的</p>
+<p>ShenYu 600并发性能为</p>
+<table>
+<thead>
+<tr>
+<th>currency</th>
+<th>QPS</th>
+<th>50% latency (ms)</th>
+<th>75% latency (ms)</th>
+<th>90% latency (ms)</th>
+<th>99% latency (ms)</th>
+<th>平均响应时间(ms)</th>
+<th>最大响应时间(ms)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>600 并发</td>
+<td>18640.47</td>
+<td>15.77</td>
+<td>24.77</td>
+<td>38.26</td>
+<td>80.31</td>
+<td>20.32</td>
+<td>852.06</td>
+</tr>
+</tbody></table>
+<p>差距过大</p>
+<p>并且我的Mock接口报文只是把请求来源的header ip之类的返回出来的测试接口 理论上来说应该 延迟会更低</p>
+<p>但是 QPS比 ShenYu 好 延迟却高了太多</p>
+<p>修改了两天延迟还是降不下来</p>
+<p>反复观看ShenYu的基准测试报告时发现</p>
+<p>有这么一条 日志级别为WARN</p>
+<p>那不就是不打日志 马上修改日志配置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># wrk -c600 -t4 -T10 -d180 --latency http:&#x2F;&#x2F;192.168.101.233:9195&#x2F;gateway&#x2F;sys&#x2F;api</span><br><span class="line">Running 3m test @ http:&#x2F;&#x2F;192.168.101.233:9195&#x2F;gateway&#x2F;sys&#x2F;api</span><br><span class="line">  4 threads and 600 connections</span><br><span class="line">  Thread Stats   Avg      Stdev     Max   +&#x2F;- Stdev</span><br><span class="line">    Latency    85.97ms   35.67ms 662.17ms   89.15%</span><br><span class="line">    Req&#x2F;Sec     1.79k   538.31     3.60k    70.62%</span><br><span class="line">  Latency Distribution</span><br><span class="line">     50%   74.64ms</span><br><span class="line">     75%   89.36ms</span><br><span class="line">     90%  123.86ms</span><br><span class="line">     99%  231.92ms</span><br><span class="line">  1276703 requests in 3.00m, 312.91MB read</span><br><span class="line">  Socket errors: connect 0, read 0, write 2142, timeout 0</span><br><span class="line">Requests&#x2F;sec:   7089.33</span><br><span class="line">Transfer&#x2F;sec:      1.74MB</span><br></pre></td></tr></table></figure>
+
+<p>性能立刻翻了两个数量级 延迟也正常了</p>
+<p>测试环境性能波动很大 一会性能会超过Nginx 一会又低 主要是 mock的项目放同事电脑上了 看了大概就行</p>
+]]></content>
+      <categories>
+        <category>WebFlux</category>
+      </categories>
+      <tags>
+        <tag>WebFlux</tag>
+        <tag>Gateway</tag>
+        <tag>WebClient</tag>
+        <tag>ShenYu</tag>
+      </tags>
+  </entry>
 </search>
